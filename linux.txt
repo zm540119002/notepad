@@ -1,0 +1,401 @@
+=======================================================================================================
+man
+tldr（命令手册）、tree（树形命令）、rlwrap（历史命令）、script（记录会话输出）、autojump（一键直达）
+=======================================================================================================
+find . -name *~HEAD*  | xargs -n 1000 rm -f
+=======================================================================================================
+查看已安装的CentOS版本信息：
+	cat /proc/version
+	uname -a
+	cat /etc/issue
+	cat /etc/redhat-release
+查看系统是64位还是32位:
+	getconf LONG_BIT
+查看cpu相关信息，包括型号、主频、内核信息等
+	cat /proc/cpuinfo
+查看端口：
+	netstat 	-ntpl	portno
+	netstat   -anp   |   grep  portno
+	kill 进程PID
+查看用户：		cat /etc/passwd
+查看用户组：  	cat /etc/group
+查看用户所属组：groups user1
+	新建用户和用户组：useradd和groupadd
+	useradd [-d home] [-s shell] [-c comment] [-m [-k template]] [-f inactive] [-e expire ] [-p passwd] [-r] name
+	useradd git -g nginx -p git_20181016
+	passwd zhangmin
+	usermod -g group
+	usermod
+查看监听端口：	netstat -an | grep LISTEN
+查看php-fpm是否启动了：	netstat -nlp|grep php-fpm
+=======================================================================================================
+查看服务：
+	chkconfig --list       			# 列出所有系统服务
+	chkconfig --list | grep on    	# 列出所有启动的系统服务
+=======================================================================================================
+查看应用程序用户：
+	ps -ef|grep http
+=======================================================================================================
+查看已安装软件信息
+	rpm -qal  | grep httpd        	# 查看apache安装的软件包
+	rpm -qa  | grep httpd        	# 查看apache版本
+=======================================================================================================
+查看软件文件安装路径：
+	whereis oracle	# 查看文件安装路径
+	which oracle	# 查询运行文件所在路径
+=======================================================================================================
+查看端口：
+	cat /etc/services 		# 查看所有服务默认的端口列表信息。
+=======================================================================================================
+查看运行用户信息：
+	ps aux |grep nginx 		# 查看nginx运行用户信息
+	ps aux |grep php-fpm	# 查看php-fpm运行用户信息
+查看进程号：	pgrep php-fpm
+追踪进程号：	strace -f -e connect  -p 你的进程编号
+=======================================================================================================
+文件操作：
+文件权限：
+	cd /yjdata/www/www/web/thinkphp5.1/msy
+	chown -R git:git /yjdata/www/www/web/thinkphp5.1/msy/vendor
+	chmod -R 664 /yjdata/www/www/web/thinkphp5.1/msy/vendor
+文件备份：
+	cp -pdr no-debug-non-zts-20131226  no-debug-non-zts-20131226_bak
+列出 删除 属主或属组为git的文件 的语句
+	ls -ltr|awk '{if($4 == "git") print "rm "$NF}'
+=======================================================================================================
+常用服务：  nginx | mysql | httpd | vsftpd | php-fpm
+	nginx: 		service nginx 	(start|stop|restart)
+	systemctl (start|stop|restart) nginx.service
+在Centos 中 systemctl  是设置系统服务的命令，它融合之前service和chkconfig的功能于一体。
+可以使用它永久性或只在当前会话中启用/禁用服务。
+启动一个服务：systemctl start postfix.service
+关闭一个服务：systemctl stop postfix.service
+重启一个服务：systemctl restart postfix.service
+显示一个服务的状态：	systemctl status postfix.service
+在开机时启用一个服务：	systemctl enable postfix.service
+在开机时禁用一个服务：	systemctl disable postfix.service
+查看服务是否自启动：	systemctl is-enabled docker.service
+列出系统所有服务的启动情况：	systemctl list-units --type=service
+列出所有自启动服务：			systemctl list-unit-files|grep enabled
+查看启动失败的服务列表：   systemctl --failed
+PS：使用命令 systemctl is-enabled postfix.service 得到的值可以是enable、disable或static，这里的 static 它是指对应的 Unit 文件中没有定义[Install]区域，因此无法配置为开机启动服务。
+systemctl   list-unit-files       列出所有已经安装的  服务  及  状态 
+systemctl restart sshd.service		#重启sshd服务
+systemctl status firewalld.service  #查看防火墙状态
+systemctl stop firewalld.service	#关闭防火墙
+systemctl disable firewalld.service #禁止防火墙开机启动
+=======================================================================================================
+yum list all|grep nginx
+yum list all mysql*
+只显示已安装的包。
+命令：yum list installed
+只显示没有安装，但可安装的包。
+命令：yum list available
+查看所有可更新的包。
+命令：yum list updates
+显示不属于任何仓库的，额外的包。
+命令：yum list extras
+显示被废弃的包
+命令：yum list obsoletes
+新添加进yum仓库的包
+命令：yum list recent
+=======================================================================================================
+cp /usr/lib64/php/modules/xmlwriter.so /usr/local/php/lib/php/extensions/no-debug-non-zts-20131226/xmlwriter.so
+ll -a /usr/lib64/php/modules
+php 动态库路径：extension_dir = "/usr/local/php/lib/php/extensions/no-debug-non-zts-20131226"
+ll -a /usr/local/php/lib/php/extensions/no-debug-non-zts-20131226
+cd /usr/local/php/lib/php/extensions/no-debug-non-zts-20131226
+php 源码路径
+	cd /usr/local/src/php-5.6.23
+	cd /usr/local/src/php-5.6.38
+##################安装curl扩展示例#############################
+1. 进到 php curl 扩展目录：
+	cd /usr/local/src/php-5.6.23/ext/curl	（美尚云）
+	cd /usr/local/src/php-5.6.38/ext/curl	（维雅）
+2. 调用phpize程序生成编译配置文件
+/usr/local/php/bin/phpize
+3. 调用configure生成Makefile文件，然后调用make编译，make install安装
+	./configure -with-php-config=/usr/local/php/bin/php-config -with-curl=/usr/local/curl 			（配置:错误:请重新安装libcurl：yum install curl curl-devel）
+4.编译安装
+	make && make install
+5. 修改php配置文件
+	vim /etc/php.ini
+	extension=curl.so
+6.重启php-fpm服务和nginx服务
+美尚云：
+	service php-fpm restart
+	service nginx restart
+维雅：
+	systemctl restart php-fpm
+	systemctl restart nginx
+##################安装curl扩展示例#############################
+
+##################安装	mysql	扩展示例#######################
+cd /usr/local/src/php-5.6.38/ext/pdo_mysql
+/usr/local/php/bin/phpize
+./configure -with-php-config=/usr/local/php/bin/php-config --with-pdo-mysql=/usr/local/mysql
+make && make install
+cd /usr/local/php/lib/php/extensions/no-debug-non-zts-20131226/
+##################安装	mysql	扩展示例#######################
+
+##################安装gd扩展示例###############################
+先查看是否已安装好： libpng 、freetype 、jpeg 扩展
+yum list installed (rpm -qa) | grep libjpeg （libpng、freetype）
+find / -name *libjpeg*
+whereis libpng
+发现少了：libjpeg-devel
+yum -y install libjpeg-devel
+cd /usr/local/src/php-5.6.23/ext/gd
+cd /usr/local/src/php-5.6.38/ext/gd
+/usr/local/php/bin/phpize
+./configure --with-php-config=/usr/local/php/bin/php-config  --with-jpeg-dir=/usr/lib64  --with-png-dir=/usr/lib64   --with-freetype-dir=/usr/lib64
+make && make install
+##################安装gd扩展示例###############################
+
+##################安装pcntl扩展示例############################
+1. 进到 php pcntl 扩展目录：
+cd /usr/local/src/php-5.6.38/ext/pcntl
+2. 调用phpize程序生成编译配置文件
+/usr/local/php/bin/phpize
+3. 调用configure生成Makefile文件，然后调用make编译，make install安装
+./configure -with-php-config=/usr/local/php/bin/php-config
+make && make install
+4. 修改php配置文件
+vim /etc/php.ini
+extension=pcntl.so
+5.重启php-fpm服务和nginx服务
+service php-fpm restart
+service nginx restart
+##################安装pcntl扩展示例############################
+
+##################php相关命令##################################
+vim ~/.bash_profile
+PATH 路径加上php安装路径（/usr/local/php）
+PATH=/usr/local/php/bin:$PATH:$HOME/bin
+source ~/.bash_profile
+php -v				#查看php版本
+php -m				#查看php模块
+##################php相关命令##################################
+
+##################卸载php############################
+yum list installed | grep php	#列出需要卸载的软件包
+rpm -qa|grep php	#列出需要卸载的软件包
+rpm -e php-devel-5.4.16-45.el7.x86_64 | yum remove php-devel-5.4.16-45.el7.x86_64
+php-devel-5.4.16-45.el7.x86_64
+php-pear-1.9.4-21.el7.noarch
+php-process-5.4.16-45.el7.x86_64
+php-xml-5.4.16-45.el7.x86_64
+php-common-5.4.16-45.el7.x86_64
+php-cli-5.4.16-45.el7.x86_64
+##################卸载php######################################
+
+##################安装php######################################
+wget -c http://cn2.php.net/distributions/php-7.1.3.tar.gz
+https://segmentfault.com/a/1190000002717262 #编译说明
+./configure \
+-prefix=/usr/local/php \
+--with-config-file-path=/usr/local/php/etc \
+--enable-inline-optimization \
+--disable-debug \
+--disable-rpath \
+--enable-shared \
+--enable-opcache \
+--enable-fpm \
+--with-mysql=/usr/local/mysql \
+--with-mysqli=/usr/local/mysql/bin/mysql_config \
+--with-pdo-mysql=/usr/local/mysql \
+--with-gettext \
+--enable-mbstring \
+--with-iconv \
+--with-mcrypt \
+--with-mhash \
+--with-openssl \
+--enable-bcmath \
+--enable-soap \
+--with-libxml-dir \
+--enable-pcntl \
+--enable-posix \
+--enable-shmop \
+--enable-sysvmsg \
+--enable-sysvsem \
+--enable-sysvshm \
+--enable-sockets \
+--with-curl \
+--with-zlib \
+--enable-zip \
+--with-bz2 \
+--with-gd \
+--with-freetype-dir \
+--with-jpeg-dir \
+--with-png-dir
+##################安装php######################################
+
+一、修改环境变量有以下方法（以增加jdk环境变量为例）
+1、只对当前登录用户有作用
+vim ~/.bash_profile
+export JAVA_HOME=/home/java/jdk1.8
+export JAVA_BIN=$JAVA_HOME/bin
+export PATH=$JAVA_BIN:$PATH
+2、对所有用户有效
+vi /etc/profile
+export JAVA_HOME=/home/java/jdk1.8
+export JAVA_BIN=$JAVA_HOME/bin
+export PATH=$JAVA_BIN:$PATH
+
+使环境变量生效 source /etc/profile
+二、查看环境变量
+1、查看某一个环境变量（PATH）
+     echo $PATH
+2、查看所有的环境变量
+    env
+=======================================================================================================
+MYSQL
+# 修改root密码
+第一步：用帐号登录mysql
+[root@CentOs5 ~]# mysql -u root 或 # mysql -uroot -p
+第二步：改变用户数据库
+mysql> use mysql
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+Database changed
+第三步：修改密码，记得密码要用password()函数进行加密，一定不要忘记！！！
+mysql> update user set password=password('qwe123') where user='root';
+Query OK, 1 row affected (0.04 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+第四步：刷新权限表
+mysql> flush privileges;
+Query OK, 0 rows affected (0.00 sec)
+第五步：退出mysql
+mysql> quit
+Bye
+第六步：对mysql进行重启
+[root@CentOs5 ~]# service mysql restart;
+
+localhost无法登录时试试#mysql -u root -p xxxx -h 127.0.0.1
+select user();
+select current_user();
+
+MySQL root password: msy
+MySQL database name: msy
+
+FTP account: www
+FTP password: v7y6LqemgzTp
+=======================================================================================================
+服务器之间copy文件：
+scp -r git@120.79.201.125:/home/www/web/thinkphp5.1/msy/public/uploads/weiya_project .
+=======================================================================================================
+
+ssh 登录免密码：
+
+1、登录A机器 
+2、ssh-keygen -t [rsa|dsa]，将会（在当前用户目录下）生成公钥文件（id_rsa.pub）和私钥文件 （id_rsa）
+3、将 .pub 文件复制到B机器的 .ssh 目录， 并 ssh-copy-id -i ~/.ssh/id_rsa.pub  git@meishangyun.com （如果服务器git用户主目录下没有.ssh/authorized_keys文件的话手动建立）
+4、大功告成，从A机器登录B机器的目标账户，不再需要密码了；
+如果希望ssh公钥生效需满足至少下面两个条件：/home/git下
+1) .ssh目录的权限必须是700
+2) .ssh/authorized_keys文件权限必须是600
+
+git:
+一、在Git Bash内执行cd ~/.ssh命令，如果存在该目录，表明之前生成果SSH Key，利用ll命令即可以查看。
+二、生成新的SSH Key，输入ssh-keygen -t rsa -C "540119002@qq.com"命令，其中"540119002@qq.com"是GitHub账号。
+三、在~/.ssh目录下有 id_rsa和 id_rsa.pub两个文件，其中id_rsa.pub文件里存放的即是公钥key。
+五、测试是否配置成功ssh -T git@github.com，如图即为配置成功。
+//清除服务器公匙
+ssh-keygen -R 47.106.79.38
+ssh-keygen -t rsa
+ssh-copy-id -i ~/.ssh/id_rsa.pub git@120.79.201.125	//美尚
+ssh-copy-id -i ~/.ssh/id_rsa.pub git@47.106.79.38	//维雅
+ssh-copy-id -i ~/.ssh/id_rsa.pub git@127.0.0.1		//本地
+git config --global credential.helper store
+git config --global user.name = 'zm'
+git config --global user.email = 'zm@qq.com'
+=======================================================================================================
+禁止/允许ip访问linux 的ssh功能
+vim /etc/hosts.deny
+vim /etc/hosts.allow
+sshd:ip
+sshd:all
+service sshd restart
+=======================================================================================================
+Linux平台下PHP zip模块
+1、依次运行以下命令：
+wget http://pecl.php.net/get/zip-1.12.4.tgz 
+tar zxvf zip-1.12.4.tgz
+cd zip-1.12.4
+/usr/local/php/bin/phpize （对应的phpize路径）(安装好的php位置)
+./configure  --with-php-config=/usr/local/php/bin/php-config （对应的php-config路径）（php-config文件名不能更改）
+make
+make install
+//此时会在zip/modules/下生成一个zip.so文件，将它拷贝到make之后给的一个路径下，如有同名的，覆盖之。
+2、生成的模块路径：
+/usr/local/php/lib/php/extensions/no-debug-non-zts-20050922/zip.so （对应的extensions路径）
+3、修改php.ini
+extension_dir = "./"修改为extension_dir = "/usr/local/php/lib/php/extensions/no-debug-non-zts-20050922/"
+增加extension=zip.so
+4、重启apache
+apache2/bin/apachectl restart
+=======================================================================================================
+Linux平台下PHP pdo_mysql模块:
+cd /usr/local/src/php-5.6.23/ext/pdo_mysql
+/usr/local/php/bin/phpize
+./configure --with-php-config=/usr/local/php/bin/php-config --with-pdo-mysql=/usr/local/mysql/
+make && make install
+vim /etc/php.ini
+extension=pdo_mysql.so
+service php-fpm restart
+=======================================================================================================
+userdel，只有一个参数可选 -r ；如果加参数-r ，表示在删除用户的同时，一并把用户的家目录及本地邮件存储的目录或文件也一同删除；比如我们现在有个用户linuxso，其家目录位于/var目录中，现在我们来删除这个用户。
+userdel linuxso 注：删除用户linuxso，但不删除其家目录及文件；
+userdel -r linuxso 注：删除用户linuxso，其家目录及文件一并删除；
+
+userdel -r 用户名
+rm -rf /home/用户名
+
+在linux下用useradd添加用户时,出现错误:Creating mailbox file: 文件已存在?
+  怎么解决:
+      原来linux下添加用户后,会在系统里自动加一个邮箱(系统邮箱),路径是:/var/spool/mail/用户名.
+      可以直接用命令#rm -rf /var/spool/mail/用户名
+      这样就可以再次添加同一名字的用户.
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================

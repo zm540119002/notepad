@@ -1,0 +1,68 @@
+==========================================================================================================================================
+header("Content-type: text/html; charset=utf-8");
+header("Content-type: text/html; charset=gb2312");
+==========================================================================================================================================
+查看php-fpm的master进程号 ：
+ps aux|grep php-fpm
+netstat -tnl | grep 9000
+kill -9 pid
+==========================================================================================================================================
+//php-fpm配置文件
+vim /usr/local/php/etc/php-fpm.conf
+pid = /usr/local/php/var/run/php-fpm.pid
+==========================================================================================================================================
+//php-fpm开机启动配置文件
+vim /usr/lib/systemd/system/php-fpm.service
+==========================================================================================================================================
+[Unit]
+Description=The PHP FastCGI Process Manager
+After=network.target
+
+[Service]
+Type=simple
+PIDFile=/usr/local/php/var/run/php-fpm.pid 
+ExecStart=/usr/local/php/sbin/php-fpm --nodaemonize
+--fpm-config=/usr/local/php/etc/php-fpm.conf
+ExecReload=/bin/kill -USR2 $MAINPID
+ExecStop=/bin/kill -SIGINT $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+==========================================================================================================================================
+#chmod 754 /usr/lib/systemd/system/php-fpm.service
+systemctl daemon-reload
+systemctl start php-fpm.service
+systemctl stop php-fpm.service
+systemctl reload php-fpm.service
+systemctl enable php-fpm.service
+systemctl disable php-fpm.service
+systemctl status php-fpm.service -l
+//启动php-fpm
+/usr/local/php/sbin/php-fpm
+==========================================================================================================================================
+下面以代码说明PHP中去除字符串中换行的三种常用的方法
+
+复制代码
+// 1)使用转义字符函数
+<?php
+$str = str_replace(array("/r/n", "/r", "/n"), '', $str);
+?>
+// 2)使用正则表达式替换
+<?php
+$str = preg_replace('//s*/', '', $str);
+?>
+// 3)使用PHP系统常量【推荐】
+$str = str_replace(PHP_EOL, '', $str);
+?>
+复制代码
+==========================================================================================================================================
+// 二进制转十进制
+$_POST['belong_to'] = bindec(strrev(implode(input('post.belong_to/a'))));
+// 十进制转二进制
+$goodsInfo['belong_to'] = strrev(decbin($goodsInfo['belong_to']));
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================

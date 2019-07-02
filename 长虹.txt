@@ -1,0 +1,21 @@
+private static String readLine(String filename) throws IOException {
+      BufferedReader reader = new BufferedReader(new FileReader(filename), 256);
+      try {
+          return reader.readLine();
+      } finally {
+          reader.close();
+      }
+  }
+参数filename的值为：/sys/class/net/eth0/address
+这个是读取有线mac地址的端口，目前我们做的发布系统也是读取有线网络的MAC地址绑定
+
+private static String readLine(String filename) throws IOException {
+      BufferedReader reader = new BufferedReader(new FileReader(filename), 256);
+      try {
+          return reader.readLine();
+      } finally {
+          reader.close();
+      }
+  }
+参数filename的值为：/sys/class/net/wlan0/address
+这个是读取WiFimac地址的软件接口

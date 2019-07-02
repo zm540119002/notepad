@@ -1,0 +1,87 @@
+
+1、求y和z的值是多少？
+	var x = 1;
+	var y = 0;
+	function add(n){n=n+1;}
+	y = add(x);
+	console.log(y);
+	答案：
+	原因：
+2、var add = function(x){
+        var sum = 0;
+        var tmp = function(x){
+            sum = sum + x;
+            return tmp;
+        };
+        tmp.toString = function(){
+            return sum;
+        };
+        return tmp;
+    };
+    console.log(add(100)(2)(3));
+	答案：
+3、javascript是面向对象的，怎么体现javascript的继承关系？
+	参考答案：
+	
+	
+	
+	
+	
+	
+	
+4、form中的input可以设置为readonly和disable，请问二者有什么区别？
+	参考答案：
+	
+	
+5、javaScript的2种变量范围有什么不同？
+	参考答案：
+
+	
+	
+6、程序中捕获异常的方法？
+	参考答案：
+
+	
+7、写出程序运行的结果？
+	for(i=0, j=0; i<10, j<6; i++, j++){
+	  k = i + j;
+	}
+	console.log(k);
+	答案：
+8、前端页面由哪三层构成，分别是什么?作用是什么?
+	参考答案：
+	
+	
+	
+	
+9、标签上title与alt属性的区别是什么?
+	参考答案：
+	
+	
+	
+10、如何优化网页加载速度?
+　　参考答案：
+	
+	
+	
+	
+	
+	
+11、用过哪些前端框架，适合移动端的有哪些，并简单述说一下它们的优缺点。
+	参考答案：
+	
+	
+	
+	
+	
+	
+12、return 、return false 、return true 区别：
+	参考答案：
+	
+
+	
+13、描述一下vue的状态管理：
+	参考答案：
+	
+	
+	

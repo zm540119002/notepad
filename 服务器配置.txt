@@ -1,0 +1,50 @@
+美尚云
+
+域名：
+meishangyun.com
+
+服务器信息：
+--------------------------------------
+
+公网IP：218.244.134.208
+
+服务器登录名：administrator
+登录密码：meiShangyuN20150321
+
+管理终端连接密码： 747403
+
+
+服务器开放端口：
+
+80:WWW服务，Windos环境下通常对应IIS服务
+
+3389：windows远程桌面服务默认端口，关闭后将无法远程
+
+3306:Mysql远程连接端口
+
+FTP服务器： 218.244.134.208   
+FTP用户名： meishangyunmyftp
+FTP密  码：2015msy^&>0323worldview
+
+数据库信息 MySQL
+
+phpmyadmin管理入口：http://www.meishangyun.com/
+
+数据库地址： local
+数据库用户名:	root
+用户密码：	meishangyunmysql2015
+
+数据库名称： meishangyun
+数据库用户名： mysql_maketrend   
+数据库密码：  jfQxAUYTLK5SSYf9
+
+
+数据库名称： maketrend_worldview
+数据库用户名： mysql_maketrend   
+数据库密码：  jfQxAUYTLK5SSYf9
+
+
+数据库名称： maketrend_cgpt
+数据库用户名： mysql_maketrend   
+数据库密码：  jfQxAUYTLK5SSYf9
+--------------------------

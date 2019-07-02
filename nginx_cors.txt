@@ -1,0 +1,265 @@
+
+location /api/ {
+		# 把 /api 路径下的请求转发给真正的后端服务器
+		proxy_pass http://localhost:18080/;
+
+		# 把host头传过去，后端服务程序将收到your.domain.name, 否则收到的是localhost:8080
+		proxy_set_header Host $http_host;
+
+		# 把cookie中的path部分从/api替换成/service
+		proxy_cookie_path /api /;
+
+		# 把cookie的path部分从localhost:8080替换成your.domain.name
+		proxy_cookie_domain localhost:18080 tosim.top;
+	}
+============================================================================================================================================================
+https://blog.csdn.net/u012207345/article/details/78586120
+2.跨域的常见解决方法
+
+目前来讲没有不依靠服务器端来跨域请求资源的技术
+
+　　1.jsonp 需要目标服务器配合一个callback函数。
+
+　　2.window.name+iframe 需要目标服务器响应window.name。
+
+　　3.window.location.hash+iframe 同样需要目标服务器作处理。
+
+　　4.html5的 postMessage+ifrme 这个也是需要目标服务器或者说是目标页面写一个postMessage，主要侧重于前端通讯。
+
+　　5.CORS  需要服务器设置header ：Access-Control-Allow-Origin。
+
+　　6.nginx反向代理 这个方法一般很少有人提及，但是他可以不用目标服务器配合，不过需要你搭建一个中转nginx服务器，用于转发请求。
+============================================================================================================================================================
+
+nginx 之 proxy_pass详解
+2017年04月14日 15:59:06 天蓝Skyline 阅读数：87470
+在nginx中配置proxy_pass代理转发时，如果在proxy_pass后面的url加/，表示绝对根路径；如果没有/，表示相对路径，把匹配的路径部分也给代理走。
+
+
+假设下面四种情况分别用 http://192.168.1.1/proxy/test.html 进行访问。
+
+
+第一种：
+location /proxy/ {
+    proxy_pass http://127.0.0.1/;
+}
+代理到URL：http://127.0.0.1/test.html
+
+
+第二种（相对于第一种，最后少一个 / ）
+location /proxy/ {
+    proxy_pass http://127.0.0.1;
+}
+代理到URL：http://127.0.0.1/proxy/test.html
+
+
+第三种：
+location /proxy/ {
+    proxy_pass http://127.0.0.1/aaa/;
+}
+代理到URL：http://127.0.0.1/aaa/test.html
+
+
+第四种（相对于第三种，最后少一个 / ）
+location /proxy/ {
+    proxy_pass http://127.0.0.1/aaa;
+}
+代理到URL：http://127.0.0.1/aaatest.html
+============================================================================================================================================================
+
+server {
+	listen       80;
+	server_name  tosim.top;
+
+	location / {
+			root html/build;
+			try_files $uri /index.html;  # try_files：检查文件； $uri：监测的文件路径； /index.html：文件不存在重定向的新路径 
+			index index.html; 
+	}
+
+	location /api/ {
+		# 把 /api 路径下的请求转发给真正的后端服务器
+		proxy_pass http://localhost:8080/;
+
+		# 把host头传过去，后端服务程序将收到your.domain.name, 否则收到的是localhost:8080
+		proxy_set_header Host $http_host;
+
+		# 把cookie中的path部分从/api替换成/service
+		proxy_cookie_path /api /;
+
+		# 把cookie的path部分从localhost:8080替换成your.domain.name
+		proxy_cookie_domain localhost:8080 tosim.top;
+	}
+	location /api/ {
+				proxy_pass https://api.meishangyun.com/;
+				proxy_set_header Host $http_host;
+				proxy_cookie_path /api/;
+				proxy_cookie_domain https://api.meishangyun.com;
+        }
+	error_page   500 502 503 504  /50x.html;
+	location = /50x.html {
+		root   html;
+	}
+}
+
+
+	
+server {
+	listen       80;
+	server_name  b.com;
+	location /{
+		add_header 'Access-Control-Allow-Origin' 'http://a.com';
+		add_header 'Access-Control-Allow-Credentials' 'true';
+		add_header 'Access-Control-Allow-Methods' 'GET';
+	}
+}
+
+add_header：授权从a.com的请求
+
+第二条add_header：当该标志为真时，响应于该请求是否可以被暴露
+
+第三条add_header：指定请求的方法，可以是GET，POST，PUT，DELETE，HEAD 
+同样支持通配符，如允许来自任何域的请求:
+
+server {
+	listen 80;
+	server_name b.com;
+	location /{
+		Access-Control-Allow-Origin: *
+	}
+}
+
+location / {
+     if ($request_method = 'OPTIONS') {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        #
+        # Custom headers and headers various browsers *should* be OK with but aren't
+        #
+        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+        #
+        # Tell client that this pre-flight info is valid for 20 days
+        #
+        add_header 'Access-Control-Max-Age' 1728000;
+        add_header 'Content-Type' 'text/plain charset=UTF-8';
+        add_header 'Content-Length' 0;
+        return 204;
+     }
+     if ($request_method = 'POST') {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+     }
+     if ($request_method = 'GET') {
+        add_header 'Access-Control-Allow-Origin' '*';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+     }
+}
+
+因为POST跨域请求会先发一次OPTIONS的嗅探请求，所有有的场景涉及到设置OPTIONS。
+
+
+location /api/{
+    rewrite ^(api/?.*)$ /$1 break;
+    proxy_pass "http://localhost:8881";
+    proxy_set_header   Host             $host;  
+    proxy_set_header   X-Real-IP        $remote_addr;  
+    proxy_set_header   X-Forwarded-For  $proxy_add_x_forwarded_for;  
+    proxy_set_header   Cookie $http_cookie;  
+    add_header Access-Control-Allow-Origin *;  
+    add_header Access-Control-Allow-Headers Content-Type;  
+    add_header Access-Control-Allow-Methods GET,POST,OPTIONS;  
+    add_header Access-Control-Allow-Credentials true;  
+}
+========================================================================================================================================================================
+# /a会被分发到myserver
+        location /a {
+            proxy_pass http://myserver; # 负载均衡名
+            proxy_set_header X-real-ip $remote_addr;
+            proxy_set_header Host $http_host;
+        }
+========================================================================================================================================================================	
+反向代理http配置D:\nginx-1.12.2\conf\nginx.conf中：
+
+location / {
+		#root   html;
+		#index  index.html index.htm;
+		proxy_pass  http://agent.dest.address;
+		### force timeouts if one of backend is died ##  
+		proxy_next_upstream error timeout invalid_header http_500 http_502 http_503;  
+
+		### Set response headers ####  
+		#proxy_set_header Host $host;
+		proxy_set_header Host $host:51109;         
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  
+
+		### Most PHP, Python, Rails, Java App can use this header ###  
+		proxy_set_header X-Forwarded-Proto http;  
+
+		### By default we don't want to redirect it ####  
+		proxy_redirect     off;
+	}
+----------------------------------------------------------------------------------	
+反向代理https配置D:\nginx-1.12.2\conf\nginx.conf中：
+# HTTPS server
+server {
+	listen       443 ssl;
+	server_name  localhost;
+
+	ssl_certificate      ryans-cert.pem;
+	ssl_certificate_key  ryans-key.pem;
+
+	ssl_session_cache    shared:SSL:1m;
+	ssl_session_timeout  5m;
+
+	ssl_ciphers  HIGH:!aNULL:!MD5;
+	ssl_prefer_server_ciphers  on;
+
+	location / {
+	#        root   html;
+	#        index  index.html index.htm;
+
+		proxy_pass  http://agent.dest.address:8080;  
+		### force timeouts if one of backend is died ##  
+		proxy_next_upstream error timeout invalid_header http_500 http_502 http_503;  
+
+		### Set headers ####  
+		proxy_set_header Host $host;  
+		proxy_set_header X-Real-IP $remote_addr;  
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  
+
+		### Most PHP, Python, Rails, Java App can use this header ###  
+		proxy_set_header X-Forwarded-Proto https;  
+
+		### By default we don't want to redirect it ####  
+		proxy_redirect     off;
+
+	}
+} 
+========================================================================================================================================================================
+
+========================================================================================================================================================================
+
+========================================================================================================================================================================
+
+========================================================================================================================================================================
+
+========================================================================================================================================================================
+
+========================================================================================================================================================================
+
+========================================================================================================================================================================
+
+========================================================================================================================================================================
+
+========================================================================================================================================================================
+
+========================================================================================================================================================================
+
+========================================================================================================================================================================
+
+========================================================================================================================================================================
+
+========================================================================================================================================================================

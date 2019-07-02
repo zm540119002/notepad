@@ -1,0 +1,133 @@
+property_exists
+method_exists
+get_class
+get_object_vars
+array get_included_files ( void );
+array get_defined_functions ( void );
+array get_class_methods ( mixed $class_name );
+array get_class_vars ( string $class_name );
+array class_parents ( mixed $class [, bool $autoload ] );本函数返回一个包含了指定类class父类名称的数组。 
+array class_uses ( mixed $class [, bool $autoload = true ] );This function returns an array with the names of the traits that the given class uses. This does however not include any traits used by a parent class.
+get_declared_traits — 返回所有已定义的 traits 的数组 
+====================================================================================================================================
+call_user_func
+call_user_func_array
+func_get_arg
+func_num_args
+is_callable
+====================================================================================================================================
+preg_replace
+parse_str
+====================================================================================================================================
+lcfirst 首字母小写
+strtolower 将字符串转化为小写
+====================================================================================================================================
+ReflectionClass
+ReflectionMethod
+====================================================================================================================================
+is_scalar
+bool extension_loaded ( string $name );检查一个扩展是否已经加载。 
+array get_declared_classes ( void );返回由当前脚本中已定义类的名字组成的数组。
+bool interface_exists ( string $interface_name [, bool $autoload = true ] );检查接口是否已被定义。
+
+
+====================================================================================================================================
+string stripslashes ( string $str );反引用一个引用字符串。
+string strip_tags ( string $str [, string $allowable_tags ] );该函数尝试返回给定的字符串 str 去除空字符、HTML 和 PHP 标记后的结果。它使用与函数 fgetss() 一样的机制去除标记。 
+
+====================================================================================================================================
+mixed current ( array &$array )
+ 每个数组中都有一个内部的指针指向它“当前的”单元，初始指向插入到数组中的第一个单元。 
+mixed reset ( array &$array )
+ reset() 将 array的内部指针倒回到第一个单元并返回第一个数组单元的值。 
+====================================================================================================================================
+获取类方法：
+/**人的基类
+ * Class Person
+ */
+class Person{
+    private $_name;
+    public $age;
+    //构造函数
+    public function __construct()
+    {
+        //构造函数的注释
+        echo '构造函数';
+    }
+    //测试函数
+    public function test()
+    {
+        /**测试函数的注释
+         */
+        echo "测试";
+    }
+    //私有类
+    private function aa(){
+
+    }
+}
+
+$class = new ReflectionClass('Person');
+
+//获取类属性
+//print_r($class->getProperties());
+//echo "\n";
+//获取类方法
+//print_r($class->getMethods());
+//echo "\n";
+
+foreach ($class->getMethods() as $method){
+    if($method->isPublic()){
+        echo $method->getName();
+        echo "\r\n";
+        echo '<br/>';
+        echo $method->getDocComment();
+        echo '<br/>';
+        echo "\r\n";
+    }else{
+        echo 123;
+        echo "\r\n";
+        echo '<br/>';
+    }
+}
+
+//获取类注释
+print_r($class->getDocComment());
+echo "\n";
+
+方法一：
+	/**
+     * @desc 仅仅获取这个类的方法，不要父类的
+     * @param class int Y N 类名
+     * @return array3 array 本类的所有方法构成的一个数组
+     */
+    public function get_this_class_methods($class) {
+        $array1 = get_class_methods($class);
+        if ($parent_class = get_parent_class($class)) {
+            $array2 = get_class_methods($parent_class);
+            $array3 = array_diff($array1, $array2);
+        } else {
+            $array3 = $array1;
+        }
+        return $array3;
+    }
+	print_r(get_this_class_methods('Person'));
+方法二：
+	$class = new ReflectionClass('Person');
+	//获取类属性
+	print_r($class->getProperties());
+	echo "\n";
+	//获取类方法
+	print_r($class->getConstants());
+	echo "\n";
+方法三：
+	$p1 = new Person();
+	$obj = new ReflectionObject($p1);
+	//获取对象属性
+	print_r($obj->getProperties());
+	echo "\n";
+	//获取对象方法
+	print_r($obj->getMethods());
+	echo "\n";
+	
+====================================================================================================================================

@@ -1,0 +1,234 @@
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+centos 7.2:
+一、准备编译环境。
+yum install ncurses-devel bison gnutls-devel –y
+yum install cmake -y
+二、准备MySQL数据存放目录。
+mkdir /mnt/data
+groupadd -r mysql
+useradd -r -g mysql -s /sbin/nologin mysql
+id mysql
+三、更改数据目录属主和属组。
+chown -R mysql:mysql /mnt/data
+四、下载稳定版源码包解压编译。
+wget https://downloads.mysql.com/archives/get/file/mysql-5.6.24.tar.gz
+tar xvf mysql-5.6.24.tar.gz -C  /usr/local/src
+cd /usr/local/src/mysql-5.6.24
+cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
+-DMYSQL_DATADIR=/mnt/data \
+-DSYSCONFDIR=/etc \
+-DWITH_INNOBASE_STORAGE_ENGINE=1 \
+-DWITH_ARCHIVE_STORAGE_ENGINE=1 \
+-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
+-DWITH_READLINE=1 \
+-DWITH_SSL=system \
+-DWITH_ZLIB=system \
+-DWITH_LIBWRAP=0 \
+-DMYSQL_TCP_PORT=3306 \
+-DDEFAULT_CHARSET=utf8 \
+-DDEFAULT_COLLATION=utf8_general_ci \
+-DMYSQL_UNIX_ADDR=/usr/local/mysql/mysql.sock \
+-DWITH_SYSTEMD=1 \
+-DINSTALL_SYSTEMD_UNITDIR=/usr/lib/systemd/system
+
+make && make install
+五、修改安装目录的属组为mysql。
+chown -R mysql:mysql /usr/local/mysql/
+六、初始化数据库并复制配置文件。
+cd /usr/local/mysql
+/usr/local/mysql/scripts/mysql_install_db --user=mysql --datadir=/mnt/data/
+mv /etc/my.cnf /etc/my.cnf.bak
+cp /usr/local/mysql/support-files/my-default.cnf /etc/my.cnf
+七、修改配置文件中的安装路径及数据目录存放路径。
+echo -e "basedir = /usr/local/mysql\ndatadir = /mnt/data\n" >> /etc/my.cnf
+八、添加mysql.service启动配置文件。
+输入命令vim /usr/lib/systemd/system/mysql.service打开MySQL的启动配置文件，按下i键，然后在配置文件中写下如下内容：
+[Unit]
+Description=MySQL Community Server
+After=network.target
+After=syslog.target
+
+[Install]
+WantedBy=multi-user.target
+Alias=mysql.service
+
+[Service]
+User=mysql
+Group=mysql
+PermissionsStartOnly=true
+ExecStart=/usr/local/mysql/bin/mysqld
+TimeoutSec=600
+Restart=always
+PrivateTmp=false
+按下Esc键，然后输入:wq并回车以保存并关闭MySQL启动配置文件。
+九、设置PATH环境变量。
+echo "export PATH=$PATH:/usr/local/mysql/bin" > /etc/profile.d/mysql.sh
+source /etc/profile.d/mysql.sh
+十、设置开机启动MySQL。
+systemctl enable mysql
+十一、启动MySQL服务。
+systemctl start mysql
+mysql –h 127.0.0.1
+===================================================================================================================================================================================================================
+初次安装mysql：
+次安装mysql，root账户没有密码。
+
+首先我们通过
+netstat -an|grep 3306
+来查看mysql默认的端口3306是否开启，允许哪个ip使用，如果你发现，前面有127.0.0.1，就说明，3306端口只能本机ip使用
+
+然后登录mysql：
+mysql -u root
+回车
+===================================================================================================================================================================================================================
+设置密码
+mysql> set password for 'root'@'localhost'=password('msy');
+
+配置编码格式
+mysql> default-character-set =utf8;
+
+设置允许远程连接
+mysql> grant all privileges on *.* to root@'%'identified by 'msy';
+
+如果允许root账号远程连接要对系统数据库的root账户设置远程访问的密码，与本地的root访问密码并不冲突。
+grant all privileges on *.* to 'root'@'%' identified by '123456' with grant option; #123456为你需要设置的密码
+grant all privileges on *.* to 'root'@'%' identified by 'msy' with grant option;
+flush privileges;
+===================================================================================================================================================================================================================
+ use mysql;
+ select host,user,password from user;
+ update user set host = ’%’ where user = ’root’;
+  grant all privileges on *.* to root@'%' identified by "msy";
+  flush privileges;
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+
+===================================================================================================================================================================================================================
+mysql：
+编译 mysql5.6.22
+出现以下错误提示：
+— Could NOT find Curses (missing:  CURSES_LIBRARY CURSES_INCLUDE_PATH)
+CMake Error at cmake/readline.cmake:82 (MESSAGE):
+Curses library not found.  Please install appropriate package,
+remove CMakeCache.txt and rerun cmake.On Debian/Ubuntu, package name is libncurses5-dev, on Redhat and derivates it is ncurses-devel.
+Call Stack (most recent call first):
+cmake/readline.cmake:126 (FIND_CURSES)
+cmake/readline.cmake:216 (MYSQL_USE_BUNDLED_LIBEDIT)
+CMakeLists.txt:250 (MYSQL_CHECK_READLINE)
+— Configuring incomplete, errors occurred!
+解决方法：
+[root@localhost mysql-5.5.11]# rm CMakeCache.txt
+[root@localhost mysql-5.5.11]# yum install ncurses-devel
+Warning: Bison executable not found in PATH
+— Configuring done
+— Generating done
+— Build files have been written to: /software/mysql-5.5.11
+
+网上很多方法都是：/usr/local/mysql/scripts/mysql_install_db --user=mysql
+但是很有可能报错，找不到bin目录中的my_print_defaults
+错误信息： 
+FATALERROR:Couldnotfind./bin/my_print_defaults
+If you are using a binary release, you must run this script from
+within the directory the archive extracted into. If you compiled
+MySQL yourself you must run 'make install' first. 
+       或
+[root@bogon scripts]# /usr/local/mysql/scripts/mysql_install_db --user=mysql&
+[1] 16874
+[root@bogon scripts]#
+FATAL ERROR: Could not find ./bin/my_print_defaults
+If you compiled from source, you need to run 'make install' to
+copy the software into the correct location ready for operation.
+If you are using a binary release, you must either be at the top
+level of the extracted archive, or pass the --basedir option
+pointing to that location.
+ 
+解决方法：
+ [root@bogon scripts]# /usr/local/mysql/scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data &(这点非常重要)
+===================================================================================================================================================================================================================
+mysql表复制                                                                              
+ 
+复制表结构+复制表数据
+create table t3 like t1;
+insert into t3 select * from t1;
+
+原则总结
+原则1、仅列出需要查询的字段，这对速度不会明显的影响，主要是考虑节省应用程序服务器的内存。
+ 
+原来语句： select * from admin
+ 
+优化为： select admin_id,admin_name,admin_password from admin
+ 
+原则2、尽量避免在列上做运算，这样导致索引失效。
+ 
+原语句： select * from admin where year(admin_time)>2014
+ 
+优化为： select * from admin where admin_time> '2014-01-01′
+ 
+原则3、使用JOIN 时候，应该用小的结果驱动大的结果（left join 左边表结果尽量小 如果有条件应该放到左边先处理，right join 同理反向），同事尽量把牵涉到多表联合的查询拆分多个query（多个连表查询效率低，容易到之后锁表和阻塞）。
+ 
+原来语句 select * from admin left join log on admin.admin_id = log.admin_id where log.admin_id>10
+ 
+优化为： select * from (select * from admin where admin_id>10) T1 lef join log on T1.admin_id = log.admin_id
+ 
+原则 4、注意LIKE 模糊查询的使用， 避免使用 %% ,可以使用 后面带% ，双%是不走索引的。
+ 
+原来语句： select * from admin where admin_name like ‘%de%'
+ 
+优化为： select * from admin where admin_name >='de' and admin_nam <'df' （注意不是等效的这里试试提供优化的思路）
+ 
+原则5、使用批量插入节省交互 （当如如果使用存储过程来处理批量的sql 各种逻辑是更好的选择）。
+ 
+原来语句：insert into admin(admin_name,admin_password) values (‘test1′,'pass1′);
+ 
+insert into admin(admin_name,admin_password) values (‘test2′,'pass2′);
+ 
+insert into admin(admin_name,admin_password) values (‘test3′,'pass3′)
+ 
+优化为： insert into admin(admin_name,admin_password) values(‘test1′,'pass1′),(‘test2′,'pass2′),(‘test3′,'pass3′)
+ 
+原则6、limit 的基数比较大时使用between。
+ 
+原来语句：select * from admin order by admin_id limit 100000,10
+ 
+优化为：  select * from admin where admin_id between 100000 admin 100010 order by admin_id
+ 
+原则7、不要使用rand函数获取多条随机记录。
+ 
+原来语句： select * from admin order by rand() limit 20
+ 
+优化为： select * from admin as t1 Join(select round(rand()*((select max(admin_id) from admin)-(select min(id) from admin))+(select min(id) from admin)) as id) as t2 where t1.id>=t2.id order by t1.id limit
+ 
+原则8、避免使用NULL。
+ 
+原则9. 不要使用 count(id) 使用 count(*)。
+ 
+原则10、不要做无谓的排序操作，而应该使用索引完成排序。

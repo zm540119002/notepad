@@ -1,0 +1,77 @@
+===========================================================================================================================================
+Array是函数对象，是Function的实例对象，Array是通过new Function创建出来的。因为Array是Function的实例，所以Array.__proto__ ===  Function.prototype
+
+===========================================================================================================================================
+console.log('------------------start--------------------------') ;
+        function Person(){
+            this.a = 'a';
+            this.b = 'b';
+        }
+        var person1 = new Person();
+        person1.c = 'c';
+        Person.prototype.dd = 'dd';
+        var person2 = new Person();
+        person2.d = 'd';
+        console.log(person1.dd);
+        console.log(person2.dd);
+        console.log(person1);
+        console.log(Person.prototype);
+        console.log(person2);
+        console.log('--------------------------------------------') ;
+        console.log(person1.constructor === Person) ;
+        console.log(Person.prototype.constructor === Person) ;
+        console.log(person1.constructor === Person.prototype.constructor);
+        console.log(person1.constructor);
+        console.log(Person.prototype.constructor) ;
+        console.log(Person) ;
+        console.log('--------------------------------------------') ;
+        console.log(person1.__proto__ === Person.prototype);
+        console.log(person1.__proto__);
+        console.log(Person.prototype) ;
+        console.log('--------------------------------------------') ;
+        console.log(person1.__proto__.__proto__ === Object.prototype);
+        console.log(Person.prototype.__proto__ === Object.prototype);
+        console.log(person1.__proto__.__proto__ === Person.prototype.__proto__);
+        console.log(person1.__proto__.__proto__);
+        console.log(Person.prototype.__proto__) ;
+        console.log(Object.prototype) ;
+        console.log('--------------------------------------------') ;
+        //特例
+        console.log(Function.prototype) ;
+        console.log(typeof Function.prototype) ;
+        console.log('--------------------------------------------') ;
+        var obj1 = {};
+        console.log(obj1.constructor) ;
+        console.log(obj1.__proto__) ;
+        console.log('--------------------------------------------') ;
+        console.log(Object.prototype) ;
+        console.log(Object.prototype.constructor) ;
+        console.log(typeof Object.prototype) ;
+        console.log(typeof Function.prototype.prototype) ;//undefined
+        console.log('--------------------------------------------') ;
+        console.log(Object instanceof Function) ;// true
+        console.log(Function instanceof Object) ;// true
+        //Function本身就是函数，Function.__proto__是标准的内置对象Function.prototype。
+        //Function.prototype.__proto__是标准的内置对象Object.prototype。
+        console.log('------------------end--------------------------') ;
+===========================================================================================================================================
+
+===========================================================================================================================================
+
+===========================================================================================================================================
+
+===========================================================================================================================================
+
+===========================================================================================================================================
+
+===========================================================================================================================================
+
+===========================================================================================================================================
+
+===========================================================================================================================================
+
+===========================================================================================================================================
+
+===========================================================================================================================================
+
+===========================================================================================================================================

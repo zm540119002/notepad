@@ -1,0 +1,85 @@
+	=====================================================================================================
+	thinkphp 使用json_encode()方法给js数组赋值
+	PHP：
+		$this->myarr=array('Think','PHP','China');
+	JS:
+		var myarray={:json_encode($myarr)};  //注意，这里不要用双引号或单引号；
+		这个时候，js中的myarray=['Think','PHP','China']; 
+		这样一个json格式的数组，这在js中处理进行处理是相当容易的。
+
+	但是这样不行：
+		PHP：$this->assign('tree', json_encode($tree));
+		JS: var tree = {$tree};
+		
+	html：	{:U($vv['act'].'/'.$vv['op'])}
+	======================================================================================================
+	
+	htmlspecialchars_decode
+	
+	
+	
+	Create操作：
+create()（非链式） 、add()、addAll()
+支持的链式操作有：
+table 、data、field 、relation 、validate、auto 、filter、scope 、bind 、token 、comment
+Update操作
+save()、setField()、setInc()、setDec()
+支持的链式操作有：
+where、table 、alias、field、order、lock 、relation 、scope 、bind 、comment
+Read操作
+find()、select()、getField()、Count 、Max、Min 、Avg 、Sum
+支持的链式操作有：
+where 、table 、alias 、field 、order、group 、having 、join 、union 、distinct、lock、cache 、relation 、result 、scope 、bind 、comment
+Delete操作
+delete()
+支持的链式操作有：
+where 、table 、alias 、order、lock 、relation 、scope 、bind 、comment
+这些方法的可能的返回值有false/true/一位数组/二维数组/numeric(数字)/null/类本身的实例，现在就总结如下：
+
+1、链式操作：
+
+所以链式操作都返回Model类的实例，即可以使用该返回值继续调用实例方法。
+
+$User=M("User");
+$U1=$User->$where("id = 1");//$U1可以继续调用其他方法。
+$result=$U1->select();
+//-------一般情况下没有必要这样，下面一句代码即可实现
+$result=M("User")->$where("id = 1")->select();
+2、Create操作
+
+create 返回值：
+若发生错误，返回false；
+成功则返回创建的数据
+create为非链式操作，返回值为可能为布尔值，所以操作时要进行严格判断：
+$User = M("User");
+if($User->create()){
+//进行更多操作
+}
+add 返回值，addAll 返回值
+成功：如果主键是自动增长型，返回值为新增记录Id值（addAll为最大值），否则返回true；
+发生错误返回 false；
+3、update操作
+
+save 返回值（setField、setInc、setDec最后调用的都是save方法，所以返回值与save一致）：
+save 返回值是影响的记录数（有可能为0），更新出错返回false，因此一定要用恒等来判断是否更新失败。
+4、read操作
+
+find 返回值
+如果查询出错，find的返回值为false
+如果查询结果为空返回NULL，查询成功则返回一个关联数组（键值是字段名或者别名）。
+select 返回值
+如果查询出错，select的返回值是false，
+如果查询结果为空，则返回NULL，否则返回二维数组。
+getField 返回值
+如果查询出错，getField的返回值为false
+查询成功：
+getField($field):$field为一个字段,返回数据库中该字段的第一行的值
+getField($field,true):$field为一个字段,返回包含该字段的一维数组
+getField($fields):$fields为两个字段（以“,”隔开），返回array($field1=>$field2)的数组;若$field为多个字段，返回类似select的多维数组,键名为field1。
+getField($fields,”:”):$field为多个字段,返回类似array($field1=>”$field2:$field3”)的数组
+Count 、Max、Min 、Avg 、Sum返回值
+如果查询出错，返回值为false
+查询成功，则返回对应的值
+5、Delete操作
+
+delete 返回值：成功则返回true，查询错误则返回false

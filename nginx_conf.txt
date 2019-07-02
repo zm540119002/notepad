@@ -1,0 +1,431 @@
+==========================================================================================================================================
+nginx 隐藏index.php		:
+if (!-e $request_filename){
+	rewrite ^/(.*)$ /index.php/$1 last;
+}
+==========================================================================================================================================
+目录权限配置：
+chmod -R 744 /home/www/web_weiya/thinkphp5.1/weiya/runtime
+chown -R nginx:nginx /home/www/web_weiya/thinkphp5.1/weiya/runtime
+
+chmod -R 744 /home/www/web_weiya/thinkphp5.1/weiya/public/uploads/
+chown -R nginx:nginx /home/www/web_weiya/thinkphp5.1/weiya/public/uploads/
+
+chmod -R 757 /home/www/web_weiya/thinkphp5.1/weiya/public/template/
+chown -R git:nginx /home/www/web_weiya/thinkphp5.1/weiya/public/template/
+
+chmod -R 757 /home/www/web_weiya/thinkphp5.1/weiya/public/static/
+chown -R git:nginx /home/www/web_weiya/thinkphp5.1/weiya/public/static/
+==========================================================================================================================================
+https证书：
+	/etc/nginx/cert/1714359_worldview.com.cn.pem
+	/etc/nginx/cert/1714359_worldview.com.cn.key
+==========================================================================================================================================
+server {
+        listen       80;
+        server_name  worldview.cn www.worldview.cn;
+        root /home/www/web_weiya/thinkphp5.1/weiya/public;
+        location / {
+                index  index.html index.htm index.php;
+        }
+        location ~* /(?:html|install|templates)/.*.php$ {
+                deny all;
+                access_log off;
+                log_not_found off;
+        }
+        location = /50x.html {
+                root   html;
+        }
+        location ~ \.php$ {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+        if (!-e $request_filename){
+                rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+                rewrite  ^(.*)$  /index.php?s=$1  last;
+                break;
+        }
+    }
+==========================================================================================================================================
+维雅药妆定制：
+server {
+        listen   80;
+        server_name worldview.com.cn www.worldview.com.cn;
+        return          301 https://www.worldview.com.cn$request_uri;
+    }
+server {
+        listen 443;
+        server_name www.worldview.com.cn;
+        root /home/www/web_weiya/thinkphp5.1/weiya/public;
+        ssl on;
+        ssl_certificate   cert/1714359_worldview.com.cn.pem;
+        ssl_certificate_key  cert/1714359_worldview.com.cn.key;
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        location / {
+                index index.html index.php;
+                if (!-e $request_filename){
+                        rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+                        rewrite  ^(.*)$  /index.php?s=$1  last;
+                        break;
+                }
+        }
+        location ^~ /ucenter/ {
+				proxy_pass https://api.meishangyun.com;
+        }
+        location ~* /(?:html|install|templates|uploads)/.*.php$ {
+                deny all;
+                access_log off;
+                log_not_found off;
+        }
+        location ~ \.php$ {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+    }
+server {
+        listen 443;
+        server_name api.worldview.com.cn;
+        root /home/www/web_weiya/thinkphp5.1/api/public;
+        ssl on;
+        ssl_certificate   cert/1922581_api.worldview.com.cn.pem;
+        ssl_certificate_key  cert/1922581_api.worldview.com.cn.key;
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        location / {
+                index index.html index.php;
+                if (!-e $request_filename){
+                        rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+                        rewrite  ^(.*)$  /index.php?s=$1  last;
+                        break;
+                }
+        }
+        location ~* /(?:html|install|templates|uploads)/.*.php$ {
+                deny all;
+                access_log off;
+                log_not_found off;
+        }
+        location ~ \.php$ {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+    }
+==========================================================================================================================================
+美尚云：
+server {
+        listen   80;
+        server_name msy.meishangyun.com;
+        return          301 https://msy.meishangyun.com$request_uri;
+    }
+server {
+        listen 443;
+        server_name msy.meishangyun.com;
+        root /home/www/web/thinkphp5.1/msy/public;
+        ssl on;
+        ssl_certificate   cert/1886287_msy.meishangyun.com.pem;
+        ssl_certificate_key  cert/1886287_msy.meishangyun.com.key;
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        location / {
+                index index.html index.php;
+                if (!-e $request_filename){
+                        rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+                        rewrite  ^(.*)$  /index.php?s=$1  last;
+                        break;
+                }
+        }
+        location ~* /(?:html|install|templates|uploads)/.*.php$ {
+                deny all;
+                access_log off;
+                log_not_found off;
+        }
+        location ~ \.php$ {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+    }
+==========================================================================================================================================
+美创社：
+server {
+        listen   80;
+        server_name mcs.meishangyun.com;
+        return          301 https://mcs.meishangyun.com$request_uri;
+    }
+server {
+        listen 443;
+        server_name mcs.meishangyun.com;
+        root /home/www/web/thinkphp5.1/mcs/public;
+        ssl on;
+        ssl_certificate   cert/1886201_mcs.meishangyun.com.pem;
+        ssl_certificate_key  cert/1886201_mcs.meishangyun.com.key;
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        location / {
+                index index.html index.php;
+                if (!-e $request_filename){
+                        rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+                        rewrite  ^(.*)$  /index.php?s=$1  last;
+                        break;
+                }
+        }
+        location ^~ /ucenter/ {
+                proxy_pass https://api.meishangyun.com;
+        }
+        location ~* /(?:html|install|templates|uploads)/.*.php$ {
+                deny all;
+                access_log off;
+                log_not_found off;
+        }
+        location ~ \.php$ {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+    }
+==========================================================================================================================================
+api：
+server {
+        listen   80;
+        server_name api.meishangyun.com;
+        return          301 https://api.meishangyun.com$request_uri;
+    }
+server {
+        listen 443;
+        server_name api.meishangyun.com;
+        root /home/www/web/thinkphp5.1/api/public;
+        ssl on;
+        ssl_certificate   cert/1904780_api.meishangyun.com.pem;
+        ssl_certificate_key  cert/1904780_api.meishangyun.com.key;
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        location / {
+                index index.html index.php;
+                if (!-e $request_filename){
+                        rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+                        rewrite  ^(.*)$  /index.php?s=$1  last;
+                        break;
+                }
+        }
+        location ~* /(?:html|install|templates|uploads)/.*.php$ {
+                deny all;
+                access_log off;
+                log_not_found off;
+        }
+        location ~ \.php$ {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+    }
+==========================================================================================================================================
+黑森森：
+server {
+        listen   80;
+        server_name hss.meishangyun.com;
+        return          301 https://hss.meishangyun.com$request_uri;
+    }
+server {
+        listen 443;
+        server_name hss.meishangyun.com;
+        root /home/www/web/thinkphp5.1/hss/public;
+        ssl on;
+        ssl_certificate   cert/1907261_hss.meishangyun.com.pem;
+        ssl_certificate_key  cert/1907261_hss.meishangyun.com.key;
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        location / {
+                index index.html index.php;
+                if (!-e $request_filename){
+                        rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+                        rewrite  ^(.*)$  /index.php?s=$1  last;
+                        break;
+                }
+        }
+        location ^~ /ucenter/ {
+                proxy_pass https://api.meishangyun.com;
+        }
+        location ~* /(?:html|install|templates|uploads)/.*.php$ {
+                deny all;
+                access_log off;
+                log_not_found off;
+        }
+        location ~ \.php$ {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+    }
+location ^~ /ucenter/ {
+                if ($request_method ~ ^(POST)$) {
+                        proxy_pass  https://api.meishangyun.com;
+                        break ;
+                }
+                rewrite ^/(.*)$ https://api.meishangyun.com/$1  permanent;
+        }
+==========================================================================================================================================
+美尚新零售：
+server {
+        listen   80;
+        server_name sjds.meishangyun.com;
+        return          301 https://sjds.meishangyun.com$request_uri;
+    }
+server {
+        listen 443;
+        server_name sjds.meishangyun.com;
+        root /home/www/web/thinkphp5.1/sjds/public;
+        ssl on;
+        ssl_certificate   cert/1923414_sjds.meishangyun.com.pem;
+        ssl_certificate_key  cert/1923414_sjds.meishangyun.com.key;
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        location / {
+                index index.html index.php;
+                if (!-e $request_filename){
+                        rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+                        rewrite  ^(.*)$  /index.php?s=$1  last;
+                        break;
+                }
+        }
+        location ^~ /ucenter/ {
+                proxy_pass https://api.meishangyun.com;
+        }
+        location ~* /(?:html|install|templates|uploads)/.*.php$ {
+                deny all;
+                access_log off;
+                log_not_found off;
+        }
+        location ~ \.php$ {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+    }
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================
+
+==========================================================================================================================================

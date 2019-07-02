@@ -1,0 +1,267 @@
+==========================================================================================================================
+
+==========================================================================================================================
+//下拉加载
+$(window).on('scroll',function(){
+	if(config.loadTrigger && $(document).scrollTop()+$(window).height()>=$(document).height()){
+		config.loadTrigger = false;
+		getPagingList(config,postData);
+	}
+});
+==========================================================================================================================		
+var url = MODULE + '/Common/checkCompanyAuthorise?returnUrl=' + encodeURIComponent(location.href);
+==========================================================================================================================		
+var postData = {};
+var url = MODULE + '/Order/generate';
+$.ajax({
+	url: url,
+	data: postData,
+	type: 'post',
+	beforeSend: function(xhr){
+		$('.loading').show();
+	},
+	error:function(xhr){
+		$('.loading').hide();
+		dialog.error('AJAX错误');
+	},
+	success: function(data){
+		$('.loading').hide();
+		if(data.status == 0){
+			if(data.url){
+				location.href = data.url;
+			}else{
+				dialog.error(data.info);
+			}
+		}else if(data.status == 1){
+			if(data.info=='isAjax'){
+				loginDialog(func);
+			}else{
+				location.href = MODULE + '/Order/orderDetail/orderId/' + data.id;
+			}
+		}
+	}
+});
+==========================================================================================================================
+//数组转json字符串
+var arr = [1,2,3, { a : 1 } ];
+JSON.stringify( arr );
+//json对象转字符串
+JSON.stringify(obj) === '{}';
+---------------------------------------------------------
+//json字符串转数组
+var jsonStr = '[1,2,3,{"a":1}]';
+JSON.parse( jsonStr );
+==========================================================================================================================
+//菜单回显
+var nodeIds = JSON.parse('{:json_encode($nodeIds)}');
+$.each($('[level=2]'),function(){
+	var _this = $(this);
+	var node_id = _this.data('node_id');
+	for(let v of nodeIds){
+		if(v == node_id){
+			_this.find('.check_item_2').prop('checked',true);
+		}
+	}
+});
+JSON.parse('{$unlockingFooterCart|raw}')
+let goodsInfo = '{:json_encode($info)}';
+
+$this->assign('goodsInfo',json_encode([
+	'goods_id'=>$info['id'],
+	'deal_price'=>$info['bulk_price'],
+	'thumb_img'=>$info['thumb_img'],
+	'headline'=>$info['headline'],
+]));
+let goodsInfo = JSON.parse('{$goodsInfo|raw}');
+==========================================================================================================================		
+//省市区初始化
+var province = '{$store.province|default=""}';
+var city = '{$store.city|default=""}';
+var area = '{$store.area|default=""}';
+var region = [];
+if(province && city && area){
+	region.push(province);
+	region.push(city);
+	region.push(area);
+	$('.area_address').setArea(region);
+}
+postData.region = $('.area-address-name').getArea();
+==========================================================================================================================
+var a = [];
+for (var i = 0; i < 10; i++) {
+	a[i] = function () {
+		console.log(i);
+	};
+}
+a[0](); // 10
+a[3](); // 10
+a[6](); // 10
+console.log(a);
+a = [];
+for (let i = 0; i < 10; i++) {
+	a[i] = function () {
+		console.log(i);
+	};
+}
+a[0](); // 0
+a[3](); // 3
+a[6](); // 6
+console.log(a);
+	
+for(let j = 0,len = arr.length; j < len; j++){
+    console.log(arr[j]);
+}
+arr.forEach(function(item,index){
+	console.log('forEach遍历:'+index+'--'+item);
+});
+forEach这种方法也有一个小缺陷：你不能使用break语句中断循环，也不能使用return语句返回到外层函
+arr.map(function(value,index){
+    console.log('map遍历:'+index+'--'+value);
+});
+map遍历支持使用return语句，支持return返回值，例如：
+var temp=arr.map(function(val,index){
+  console.log(val);  
+  return val*val           
+})
+console.log(temp);  
+==========================================================================================================================
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    // 在这里跳转到你的移动端项目首页
+}
+if (!/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+    window.location.href = '/p_index.html#/'
+    return
+  }
+==========================================================================================================================
+let goodsList = [];
+let obj = {
+	'goods_id':param.goods_id,
+	'buy_quantity':param.buy_quantity
+};
+this.goodsList.push(obj);
+let postData = {};
+postData.goodsList = goodsList;
+==========================================================================================================================
+var exp = null; 
+if (!exp && typeof(exp)!=”undefined” && exp!=0) { 
+	alert(“is null”); 
+}　
+var exp = undefined;
+if (typeof(exp) == "undefined"){
+    alert("undefined");
+}
+==========================================================================================================================
+for (var i=0,len=cars.length; i<len; i++)
+{ 
+    document.write(cars[i] + "<br>");
+}
+==========================================================================================================================
+var browser={
+    versions:function(){
+        var u = navigator.userAgent, app = navigator.appVersion;
+        return {
+            trident: u.indexOf('Trident') > -1, //IE内核
+            presto: u.indexOf('Presto') > -1, //opera内核
+            webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+            gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1,//火狐内核
+            mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+            ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+            android: u.indexOf('Android') > -1 || u.indexOf('Adr') > -1, //android终端
+            iPhone: u.indexOf('iPhone') > -1 , //是否为iPhone或者QQHD浏览器
+            iPad: u.indexOf('iPad') > -1, //是否iPad
+            webApp: u.indexOf('Safari') == -1, //是否web应用程序，没有头部与底部
+            safari: u.indexOf('Safari') > -1, //是否Safari
+            weixin: u.indexOf('MicroMessenger') > -1, //是否微信 （2015-01-22新增）
+            qq: u.match(/\sQQ/i) == " qq" //是否QQ
+        };
+    }(),
+    language:(navigator.browserLanguage || navigator.language).toLowerCase()
+};
+==========================================================================================================================
+var a = {n:1};
+var b = a;
+a.x = a = {n:2}; | a = a.x = {n:2}
+console.log(a.x);
+console.log(a);
+console.log(b); 
+答案：
+	undefined
+	{n: 2}
+	{n: 1, x: {n: 2}}
+解析：
+其实js对象添加属性包括两个过程，"解析"和"赋值"，上面也说了，这个“解析”呢，其实就是‘.’操作符的优先级要高于赋值，
+这两个过程的执行方向刚好相反，“解析”从左到右进行，赋值则从右到左，而且“解析”的过程在赋值之前，
+如var obj = {};obj.name='zhangsan';这个过程其实是先“解析”，为对象{}添加一个值为undefined的属性name，
+即obj.name-->{name: undefined}；然后进行赋值，即将'zhangsan'赋值给其name属性，最终对象obj指向{name:zhangsan}。
+==========================================================================================================================
+按位非运算符“~”：
+简单的理解，对任一数值 x 进行按位非操作的结果为 -(x + 1)
+console.log('~null: ', ~null);       // => -1
+console.log('~undefined: ', ~undefined);  // => -1
+console.log('~0: ', ~0);          // => -1
+console.log('~{}: ', ~{});         // => -1
+console.log('~[]: ', ~[]);         // => -1
+console.log('~(1/0): ', ~(1/0));      // => -1
+console.log('~false: ', ~false);      // => -1
+console.log('~true: ', ~true);       // => -2
+console.log('~1.2543: ', ~1.2543);     // => -2
+console.log('~4.9: ', ~4.9);       // => -5
+console.log('~(-2.999): ', ~(-2.999));   // => 1
+
+那么, ~~x就为 -(-(x+1) + 1)
+console.log('~~null: ', ~~null);       // => 0
+console.log('~~undefined: ', ~~undefined);  // => 0
+console.log('~~0: ', ~~0);          // => 0
+console.log('~~{}: ', ~~{});         // => 0
+console.log('~~[]: ', ~~[]);         // => 0
+console.log('~~(1/0): ', ~~(1/0));      // => 0
+console.log('~~false: ', ~~false);      // => 0
+console.log('~~true: ', ~~true);       // => 1
+console.log('~~1.2543: ', ~~1.2543);     // => 1
+console.log('~~4.9: ', ~~4.9);       // => 4
+console.log('~~(-2.999): ', ~~(-2.999));   // => -2
+
+~value的使用
+判断数值中是否有某元素时，以前这样判断：
+
+if(arr.indexOf(ele) > -1){...} //易读
+现在可以这样判断，两者效率：
+
+if(~arr.indexOf(ele)){...} //简洁
+~~value的使用
+对于浮点数，~~value可以代替parseInt(value)，而且前者效率更高些
+
+parseInt(-2.99) //-2
+~~(-2.99) //-2
+
+==========================================================================================================================
+var obj = Object(); // 返回原对象
+console.log(obj); //{}
+console.log('------------------');
+var value = {};
+obj = Object(value); // 返回原对象
+console.log(obj === value); //true
+console.log(obj); //{}
+console.log('------------------');
+obj = Object({});
+console.log(obj === {}); //false
+console.log(obj); //{}
+console.log('------------------');
+var obj2 = {};
+console.log(obj === obj2); //false
+console.log('------------------');
+利用这一点，可以写一个判断变量是否为对象的函数。
+function isObject(value) {
+	return value === Object(value);
+}
+console.log(isObject([])); // true
+console.log(isObject(true)); // false
+console.log(isObject(1)); // false
+console.log(isObject('abc')); // false
+==========================================================================================================================
+
+==========================================================================================================================
+
+==========================================================================================================================
+
+==========================================================================================================================
