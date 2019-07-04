@@ -122,12 +122,59 @@ server {
     }
 ==========================================================================================================================================
 美尚云：
-server {
+#user  nobody;
+worker_processes  1;
+#pid        logs/nginx.pid;
+events {
+    worker_connections  1024;
+}
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+    client_max_body_size 100m;
+    gzip  on;
+    gzip_static on;
+    gzip_min_length 1k;
+    gzip_buffers 4 16k;
+    gzip_comp_level 9;
+    gzip_types text/plain application/x-javascript text/css application/xml text/javascript application/x-httpd-php image/jpeg image/gif image/png;
+    gzip_disable "MSIE [1-6]\.";
+    #http start
+    server {
         listen   80;
         server_name msy.meishangyun.com;
         return          301 https://msy.meishangyun.com$request_uri;
     }
-server {
+    server {
+        listen   80;
+        server_name mcs.meishangyun.com;
+        return          301 https://mcs.meishangyun.com$request_uri;
+    }
+    server {
+        listen   80;
+        server_name api.meishangyun.com;
+        return          301 https://api.meishangyun.com$request_uri;
+    }
+    server {
+        listen   80;
+        server_name hss.meishangyun.com;
+        return          301 https://hss.meishangyun.com$request_uri;
+    }
+    server {
+        listen   80;
+        server_name test.hss.meishangyun.com;
+        return          301 https://test.hss.meishangyun.com$request_uri;
+    }
+    server {
+        listen   80;
+        server_name sjds.meishangyun.com;
+        return          301 https://sjds.meishangyun.com$request_uri;
+    }
+	#http end
+    #https start
+    server {
         listen 443;
         server_name msy.meishangyun.com;
         root /home/www/web/thinkphp5.1/msy/public;
@@ -146,6 +193,9 @@ server {
                         break;
                 }
         }
+        location ^~ /ucenter/ {
+                proxy_pass https://api.meishangyun.com;
+        }
         location ~* /(?:html|install|templates|uploads)/.*.php$ {
                 deny all;
                 access_log off;
@@ -158,6 +208,168 @@ server {
                 include        fastcgi_params;
         }
     }
+	server {
+        listen 443;
+        server_name mcs.meishangyun.com;
+        root /home/www/web/thinkphp5.1/mcs/public;
+        ssl on;
+        ssl_certificate   cert/1886201_mcs.meishangyun.com.pem;
+        ssl_certificate_key  cert/1886201_mcs.meishangyun.com.key;
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        location / {
+                index index.html index.php;
+                if (!-e $request_filename){
+                        rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+                        rewrite  ^(.*)$  /index.php?s=$1  last;
+                        break;
+                }
+        }
+        location ^~ /ucenter/ {
+                proxy_pass https://api.meishangyun.com;
+        }
+        location ~* /(?:html|install|templates|uploads)/.*.php$ {
+                deny all;
+                access_log off;
+                log_not_found off;
+        }
+        location ~ \.php$ {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+    }
+	server {
+        listen 443;
+        server_name api.meishangyun.com;
+        root /home/www/web/thinkphp5.1/api/public;
+        ssl on;
+        ssl_certificate   cert/1904780_api.meishangyun.com.pem;
+        ssl_certificate_key  cert/1904780_api.meishangyun.com.key;
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        location / {
+                index index.html index.php;
+                if (!-e $request_filename){
+                        rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+                        rewrite  ^(.*)$  /index.php?s=$1  last;
+                        break;
+                }
+        }
+        location ~* \.(eot|ttf|woff|svg|otf|json|jpg|jpeg|png|gif)$ {
+                add_header Access-Control-Allow-Origin *;
+        }
+        location ~* /(?:html|install|templates|uploads)/.*.php$ {
+                deny all;
+                access_log off;
+                log_not_found off;
+        }
+        location ~ \.php$ {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+    }
+	server {
+        listen 443;
+        server_name hss.meishangyun.com;
+        root /home/www/web/thinkphp5.1/hss/public;
+        ssl on;
+        ssl_certificate   cert/1907261_hss.meishangyun.com.pem;
+        ssl_certificate_key  cert/1907261_hss.meishangyun.com.key;
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        location / {
+                index index.html index.php;
+                if (!-e $request_filename){
+                        rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+                        rewrite  ^(.*)$  /index.php?s=$1  last;
+                        break;
+                }
+        }
+        location ^~ /ucenter/ {
+                proxy_pass https://api.meishangyun.com;
+        }
+        location ~* /(?:html|install|templates|uploads)/.*.php$ {
+                deny all;
+                access_log off;
+                log_not_found off;
+        }
+        location ~ \.php$ {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+    }
+	server {
+        listen 443;
+        server_name test.hss.meishangyun.com;
+        root /home/www/web/msy/dist;
+        ssl on;
+        ssl_certificate   cert/2399190_test.hss.meishangyun.com.pem;
+        ssl_certificate_key  cert/2399190_test.hss.meishangyun.com.key;
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        location / {
+                try_files $uri $uri/ @router;
+                index  index.html;
+        }
+        location @router{
+                rewrite ^.*$ /index.html last;
+        }
+		#代理后台接口
+		#location /api/ {
+			#proxy_pass http://portalServer/;
+			#proxy_set_header Host $host:$server_port;
+		#}
+    }
+    server {
+        listen 443;
+        server_name sjds.meishangyun.com;
+        root /home/www/web/thinkphp5.1/sjds/public;
+        ssl on;
+        ssl_certificate   cert/1923414_sjds.meishangyun.com.pem;
+        ssl_certificate_key  cert/1923414_sjds.meishangyun.com.key;
+        ssl_session_timeout 5m;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        location / {
+                index index.html index.php;
+                if (!-e $request_filename){
+                        rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+                        rewrite  ^(.*)$  /index.php?s=$1  last;
+                        break;
+                }
+        }
+        location ^~ /ucenter/ {
+                proxy_pass https://api.meishangyun.com;
+        }
+        location ~* /(?:html|install|templates|uploads)/.*.php$ {
+                deny all;
+                access_log off;
+                log_not_found off;
+        }
+        location ~ \.php$ {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+    }
+    #https end
+}
 ==========================================================================================================================================
 美创社：
 server {
