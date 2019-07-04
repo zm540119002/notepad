@@ -27,13 +27,11 @@ git config --global user.email zm@example.com
 	git clone git@47.106.79.38:/home/web.git web_weiya
 	输入git密码		W_y_+g+2018-10-16
 ======================================================================================================
-git remote set-url origin git@120.79.201.125:/home/web.git
+git remote set-url origin ssh://git@47.106.79.38:65123/home/web.git
 ======================================================================================================
 git remote remove msy_origin
 git remote add msy_origin https://github.com/zm540119002/msy.git
 git push -u msy_origin master:master
-
-git clone https://github.com/zm540119002/web_wg.git msy
 
 git remote remove weiya_origin
 git remote add weiya_origin https://github.com/zm540119002/weiya.git
@@ -41,6 +39,9 @@ git push -u weiya_origin master:master
 
 git clone https://github.com/zm540119002/msy.git]
 git clone https://github.com/zm540119002/weiya.git
+
+git branch --set-upstream-to=origin/<branch> master 
+示例：	git branch --set-upstream-to=origin/master 
 ======================================================================================================
 获取远程分支：
 # git checkout -b xxx
