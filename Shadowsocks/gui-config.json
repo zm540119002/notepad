@@ -1,0 +1,40 @@
+{
+  "configs": [
+    {
+      "server": "106.187.94.10",
+      "server_port": 8388,
+      "password": "a7671385",
+      "method": "aes-256-cfb",
+      "remarks": "",
+      "auth": false
+    },
+    {
+      "server": "45.33.63.220",
+      "server_port": 8009,
+      "password": "a7671385",
+      "method": "aes-256-cfb",
+      "remarks": "",
+      "auth": false
+    },
+    {
+      "server": "52.26.152.62",
+      "server_port": 8388,
+      "password": "a7671385",
+      "method": "aes-256-cfb",
+      "remarks": "",
+      "auth": false
+    }
+  ],
+  "strategy": null,
+  "index": 2,
+  "global": true,
+  "enabled": true,
+  "shareOverLan": false,
+  "isDefault": false,
+  "localPort": 1080,
+  "pacUrl": null,
+  "useOnlinePac": false,
+  "availabilityStatistics": false,
+  "autoCheckUpdate": false,
+  "logViewer": null
+}
