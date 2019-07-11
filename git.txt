@@ -253,34 +253,22 @@ $ git revert [commit]
 $ git stash
 $ git stash pop
 ======================================================================================================
+常见问题：
 一、解决git push/git clone代码速度太慢:
 1.使用管理员权限打开hosts文件
 sudo vim /etc/hosts
-
 2.在该文件末尾空一行填入
 151.101.72.249 github.global.ssl.fastly.net
-
 修改之后速度由10k20k左右增到500k-1000k左右
+-------------------------------------------------------------------------------------------------------
 二、检出大项目报错,curl的postBuffer默认值太小:
-error: RPC failed; curl 18 transfer closed with outstanding read data remaining 
-fatal: The remote end hung up unexpectedly 
-fatal: early EOF 
-fatal: index-pack failed
-
 如果项目比较复杂庞大，检出会出现这个错误，就是因为curl的postBuffer默认值太小的原因，重新在终端配置一下这个值就可以:
-git config --global http.postBuffer 524288000 (这个值是kb 500M,根据具体项目大小修改)
-
+git config --global http.postBuffer 1048576000 (这个值是kb 1G,根据具体项目大小修改)
+--global配置对当前用户生效，如果需要对所有用户生效，则用--system
 然后检查一下是否配置成功:
 git config --list
 ======================================================================================================
-常见错误：
-error: RPC failed; curl 56 SSL read: error:00000000:lib(0):func(0):reason(0), errno 10054
-git config --global --add core.compression -1
-git config --global http.postBuffer 524288000
-git config --global http.postBuffer 1048576000
-git config --global http.lowSpeedLimit 0
-git config --global http.lowSpeedTime 999999
---global配置对当前用户生效，如果需要对所有用户生效，则用--system
+
 ======================================================================================================
 
 ======================================================================================================

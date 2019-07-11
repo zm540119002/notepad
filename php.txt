@@ -1,6 +1,13 @@
 ==========================================================================================================================================
 header("Content-type: text/html; charset=utf-8");
 header("Content-type: text/html; charset=gb2312");
+//跨域
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Headers: token,Origin, X-Requested-With, Content-Type, Accept");
+header('Access-Control-Allow-Methods: POST,GET');
+==========================================================================================================================================
+$_SERVER['REQUEST_METHOD']
+$_SERVER['REMOTE_ADDR']
 ==========================================================================================================================================
 查看php-fpm的master进程号 ：
 ps aux|grep php-fpm
@@ -62,7 +69,11 @@ $_POST['belong_to'] = bindec(strrev(implode(input('post.belong_to/a'))));
 // 十进制转二进制
 $goodsInfo['belong_to'] = strrev(decbin($goodsInfo['belong_to']));
 ==========================================================================================================================================
-
+vue-resource发送了一个post请求，在后台$_POST都获取不到数据
+研究完参数 发现参数是通过payload json方式传递的,  这种方式是没有办法从$_POST中获取的,
+只有x-www-form-data multipart/form-data 这两种形式的payload才会填充$_POST, 而application/json则填充 php://input
+$request_body = file_get_contents('php://input');
+$data = json_decode($request_body, true);
 ==========================================================================================================================================
 
 ==========================================================================================================================================

@@ -1,0 +1,43 @@
+<application>
+  <component name="RecentDirectoryProjectsManager">
+    <option name="recentPaths">
+      <list>
+        <option value="E:/web" />
+        <option value="E:/web_weiya" />
+      </list>
+    </option>
+    <option name="openPaths">
+      <list>
+        <option value="E:/web" />
+      </list>
+    </option>
+    <option name="lastPath" value="E:/web" />
+    <option name="pid" value="" />
+    <option name="additionalInfo">
+      <map>
+        <entry key="E:/web">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="PS-183.5912.26" />
+              <option name="productionCode" value="PS" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1562815221077" />
+              <option name="buildTimestamp" value="1551951139888" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+        <entry key="E:/web_weiya">
+          <value>
+            <RecentProjectMetaInfo>
+              <option name="build" value="PS-183.5912.26" />
+              <option name="productionCode" value="PS" />
+              <option name="binFolder" value="$APPLICATION_HOME_DIR$/bin" />
+              <option name="projectOpenTimestamp" value="1562319043048" />
+              <option name="buildTimestamp" value="1551951163857" />
+            </RecentProjectMetaInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</application>

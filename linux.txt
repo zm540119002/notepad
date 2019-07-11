@@ -289,7 +289,7 @@ ssh 登录免密码：
 
 1、登录A机器 
 2、ssh-keygen -t [rsa|dsa]，将会（在当前用户目录下）生成公钥文件（id_rsa.pub）和私钥文件 （id_rsa）
-3、将 .pub 文件复制到B机器的 .ssh 目录， 并 ssh-copy-id -i ~/.ssh/id_rsa.pub  git@meishangyun.com （如果服务器git用户主目录下没有.ssh/authorized_keys文件的话手动建立）
+3、将 .pub 文件复制到B机器的 .ssh 目录， 并 ssh-copy-id -i ~/.ssh/id_rsa.pub  git@meishangyun.com （如果服务器git用户主目录下没有.ssh/authorized_keys 文件的话手动建立）
 4、大功告成，从A机器登录B机器的目标账户，不再需要密码了；
 如果希望ssh公钥生效需满足至少下面两个条件：/home/git下
 1) .ssh目录的权限必须是700
