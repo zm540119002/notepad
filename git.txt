@@ -24,7 +24,7 @@ git config --global user.email zm@example.com
 客户端：	
 	git clone  git@120.79.201.125:/home/web.git msy
 	输入git密码		git;;2018
-	git clone git@47.106.79.38:/home/web.git web_weiya
+	git clone git@47.106.79.38:65123/home/web.git weiya
 	输入git密码		W_y_+g+2018-10-16
 ======================================================================================================
 git remote set-url origin ssh://git@47.106.79.38:65123/home/web.git

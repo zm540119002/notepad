@@ -1,7 +1,0 @@
-<application>
-  <component name="UISettings">
-    <option name="EDITOR_TAB_LIMIT" value="100" />
-    <option name="EDITOR_TAB_PLACEMENT" value="4" />
-    <option name="FONT_FACE" value="Microsoft YaHei" />
-  </component>
-</application>
