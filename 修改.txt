@@ -1,0 +1,124 @@
+===========================================================================================================================
+login.php:
+131行：	recLogonLog($result_array['STAFF_ID'],"0","0",$_REQUEST[GET_SYS_TYPE]); //注释:缺少log_logon表
+===========================================================================================================================
+
+===========================================================================================================================
+172.16.7.95下的oracle：
+数据库：	GDRAS
+用户：		ua_dbg
+缺少视图：sys_staff_role
+===========================================================================================================================
+Array ( 
+[ses_opt_id] => root 
+[ses_opt_name] => root 
+[ses_opt_dept] => Array ( [0] => 1 [1] => ) 
+[ses_opt_prov] => 0 
+[ses_opt_city] => Array ( [0] => 0 [1] => 广东 ) 
+[ses_opt_post] => Array ( [0] => 35 [1] => 普通员工 ) 
+[ses_pwd_simple] => 1 
+[ses_pwd_pwdDesc] => 
+[SERVER_GENERATED_SID] => 1 
+[PREV_USERAGENT] => Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36 
+[PREV_REMOTEADDR] => 172.16.5.235 
+[index_new] => 1 
+[ses_opt_city_type] => 1 )
+===========================================================================================================================
+adt_role_func.php:
+231行：	//注释:去掉--uc_rsc_type
+$sSql = "select $sSql_sel
+			  from (select * from tb_ua_cfg_biz_domain a where a.biz_domain_id  in ('1594714',
+                                       '1594715',
+                                       '1594751',
+                                       '1594752',
+                                       '1586142',
+                                       '50463',
+                                       '1297383','6006000','649661','805598','1248459','100'))       A,
+			       tb_ua_cfg_service_type     B,
+			       tb_ua_cfg_sub_service_type C
+			 where a.biz_domain_id = b.biz_domain(+)
+			   and b.service_id = c.service_id(+)
+			   AND (
+			        ('$staff_id' = 'root' OR '$staff_id' = '1000' )
+
+			        OR
+			   		(
+			        a.biz_domain_id IN
+			        (SELECT uc_rsc_id
+			           FROM TB_UC_ROLE_RIGHT d
+			          WHERE uc_rsc_type = 'SUB_SERVICE' --uc_rsc_type = 'SERVICE'
+                        $sWhere_sub_role
+			            $sWhere_role_in
+			            ))
+
+			        OR
+			   		(
+			        b.service_id IN
+			        (SELECT uc_rsc_id
+			           FROM TB_UC_ROLE_RIGHT d
+			          WHERE uc_rsc_type = 'SUB_SERVICE' --uc_rsc_type = 'SERVICE'
+                        $sWhere_sub_role
+			            $sWhere_role_in
+			            ))
+
+			    	OR
+			    	(
+			        c.sub_service_id IN
+			        (SELECT uc_rsc_id
+			           FROM TB_UC_ROLE_RIGHT d
+			          WHERE uc_rsc_type = 'SUB_SERVICE'
+                        $sWhere_sub_role
+			            $sWhere_role_in
+			            ))
+			   )
+             $sSql_odr " ;
+===========================================================================================================================
+select * from tb_ua_cfg_biz_domain;
+select * from tb_ua_cfg_service_type;
+select * from tb_ua_cfg_sub_service_type;
+select * from tb_ua_sys_host;
+===========================================================================================================================
+/**获取序列值
+ * @param unknown_type $name 序列名/函数名
+ * @param unknown_type $type 类型（S:序列，F:函数）
+ */
+function getSeqId($name,$type="S"){
+    if(!isset($name) || $name=="") return false;
+    if($type=="S"){
+        $sql_str = "SELECT ".$name.".nextval SEQ_ID FROM dual";
+    }else if($type=="F"){
+        $sql_str = "SELECT ".$name." SEQ_ID FROM dual";
+    }
+    $sql_str = encodeChar("utf-8","gbk",$sql_str);
+    global $oEntityDo,$oDBSession;
+    $oEntityDo->m_sAuditFuncId = "rasdev" ;  //设置指向数据库
+    $oEntityDo->openDBSession();
+    $oDBSession = $oEntityDo->getDBSession();
+    $seq_array = $oEntityDo->getItems1(-1,-1,$sql_str,$oDBSession,$total_rows,EntityKeyWord::$DBCommitType["_Commit_Auto_"]);
+    $oEntityDo->m_sAuditFuncId = "1000" ;  //设置指向数据库
+    $oEntityDo->openDBSession();
+    $oDBSession = $oEntityDo->getDBSession();
+    return $seq_array[0]['SEQ_ID'];
+}
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
