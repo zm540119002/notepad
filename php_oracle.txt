@@ -7,6 +7,15 @@ putenv("LD_LIBRARY_PATH=/usr/lib/oracle/12.1/client64/lib");
 putenv("ORACLE_HOME=/usr/lib/oracle/12.1/client64");
 putenv("NLS_LANG=AMERICAN_AMERICA.AL32UTF8");
 ===========================================================================================================================
+$oEntityDo->m_sAuditFuncId = "rasdev" ;  //设置指向数据库(用户：rasdev)
+$oEntityDo->openDBSession();
+$oDBSession = $oEntityDo->getDBSession();
+$oEntityDo->m_sAuditFuncId = "1000" ;  //设置指向数据库(用户：ltdba)
+$oEntityDo->openDBSession();
+$oDBSession = $oEntityDo->getDBSession();
+
+getEntityDo();//设置指向数据库(用户：rasdev)
+===========================================================================================================================
 
 ===========================================================================================================================
 

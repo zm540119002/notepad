@@ -1,31 +1,30 @@
++'&_DEBUG_=1'
++'&_DEBUG_=2'
+dataPara._DEBUG_ = 1;
+dataPara._DEBUG_ = 2;
 ===========================================================================================================================
 login.php:
 131行：	recLogonLog($result_array['STAFF_ID'],"0","0",$_REQUEST[GET_SYS_TYPE]); //注释:缺少log_logon表
 ===========================================================================================================================
-
+pub_lib/pub_head.php:
+log_operate表结构不对
+===========================================================================================================================
+流程图稽核域：
+	新增680行：'1698600',
+===========================================================================================================================
+sys_mng目录下：
+dept_mng.php|dept_add.php|dept_mod.php|post_mng.php|post_add.php|post_mod.php:
+注释掉所有chkMenuRight（权限检查）
 ===========================================================================================================================
 172.16.7.95下的oracle：
-数据库：	GDRAS
-用户：		ua_dbg
-缺少视图：sys_staff_role
+sys_staff_role 在ltdba用户下
 ===========================================================================================================================
-Array ( 
-[ses_opt_id] => root 
-[ses_opt_name] => root 
-[ses_opt_dept] => Array ( [0] => 1 [1] => ) 
-[ses_opt_prov] => 0 
-[ses_opt_city] => Array ( [0] => 0 [1] => 广东 ) 
-[ses_opt_post] => Array ( [0] => 35 [1] => 普通员工 ) 
-[ses_pwd_simple] => 1 
-[ses_pwd_pwdDesc] => 
-[SERVER_GENERATED_SID] => 1 
-[PREV_USERAGENT] => Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36 
-[PREV_REMOTEADDR] => 172.16.5.235 
-[index_new] => 1 
-[ses_opt_city_type] => 1 )
+inc_chk\pub_lib\Util\SysConstant.php 
+"DB_TRANS_OPER_ERR"=>array("CODE" =>-1002 ,"DESC" => "数据库事务操作错误"),
+改为：
+"DB_TRANS_OPER_ERR"=>array("CODE" =>-1003 ,"DESC" => "数据库事务操作错误"),
 ===========================================================================================================================
 adt_role_func.php:
-231行：	//注释:去掉--uc_rsc_type
 $sSql = "select $sSql_sel
 			  from (select * from tb_ua_cfg_biz_domain a where a.biz_domain_id  in ('1594714',
                                        '1594715',
@@ -73,36 +72,29 @@ $sSql = "select $sSql_sel
 			   )
              $sSql_odr " ;
 ===========================================================================================================================
-select * from tb_ua_cfg_biz_domain;
-select * from tb_ua_cfg_service_type;
-select * from tb_ua_cfg_sub_service_type;
-select * from tb_ua_sys_host;
-===========================================================================================================================
-/**获取序列值
- * @param unknown_type $name 序列名/函数名
- * @param unknown_type $type 类型（S:序列，F:函数）
- */
-function getSeqId($name,$type="S"){
-    if(!isset($name) || $name=="") return false;
-    if($type=="S"){
-        $sql_str = "SELECT ".$name.".nextval SEQ_ID FROM dual";
-    }else if($type=="F"){
-        $sql_str = "SELECT ".$name." SEQ_ID FROM dual";
-    }
-    $sql_str = encodeChar("utf-8","gbk",$sql_str);
-    global $oEntityDo,$oDBSession;
-    $oEntityDo->m_sAuditFuncId = "rasdev" ;  //设置指向数据库
-    $oEntityDo->openDBSession();
-    $oDBSession = $oEntityDo->getDBSession();
-    $seq_array = $oEntityDo->getItems1(-1,-1,$sql_str,$oDBSession,$total_rows,EntityKeyWord::$DBCommitType["_Commit_Auto_"]);
-    $oEntityDo->m_sAuditFuncId = "1000" ;  //设置指向数据库
-    $oEntityDo->openDBSession();
-    $oDBSession = $oEntityDo->getDBSession();
-    return $seq_array[0]['SEQ_ID'];
+Request URL: http://172.16.7.74/inc_chk/audit_config/data_quality_etl_configure_opt.php?act=etl_task_cof_save
+if($_POST['isTest']=="true"){
+	// 定义参数
+	$i_etl_task_id = $res->etl_task_id;
+	$o_result = "";
+	$o_err_code="";
+	$o_err_msg="";
+	$o_call_stack="";
+	$sSpName = "uc_service.f_test_node" ;
+	$arr_parm = array(
+		array('name'=>'i_etl_task_id','data_parm'=>'in','data_type'=>'NUMBER','data_val'=>$i_etl_task_id,'data_size'=>32),
+		array('name'=>'o_err_code','data_parm'=>'out','data_type'=>'NUMBER','data_val'=>$o_err_code,'data_size'=>32),
+		array('name'=>'o_err_msg','data_parm'=>'out','data_type'=>'VARCHAR2','data_val'=>$o_err_msg,'data_size'=>8192),
+		array('name'=>'o_call_stack','data_parm'=>'out','data_type'=>'VARCHAR2','data_val'=>$o_call_stack,'data_size'=>8192)
+	);
+	$iRet = -2;
+	$iRet = $oEntityDo->ExcuteSPonClob($sSpName,$arr_parm,$oDBSession,EntityKeyWord::$DBCommitType["_Commit_No_Auto_"]) ;
+	$o_err_code=$arr_parm[1]['data_val'];
+	$o_err_msg=$arr_parm[2]['data_val'];
+	$o_call_stack=$arr_parm[3]['data_val'];
+	$o_err_msg = encodeChar("gbk", "utf-8", $o_err_msg);
+	print_r($o_err_msg);exit;
 }
-
-===========================================================================================================================
-
 ===========================================================================================================================
 
 ===========================================================================================================================
