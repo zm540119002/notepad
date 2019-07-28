@@ -22,3 +22,7 @@ K71U8DBPNE-eyJsaWNlbnNlSWQiOiJLNzFVOERCUE5FIiwibGljZW5zZWVOYW1lIjoibGFuIHl1IiwiY
 "hash":"2911276/0",
 "gracePeriodDays":7,
 "autoProlongated":false}
+
+/*编辑phpstorm64.exe.vmoptions文件，末尾添加一行：
+-javaagent:C:\Program Files\JetBrains\PhpStorm 2018.3.5\bin\JetbrainsIdesCrack-4.2.jar
+*/
