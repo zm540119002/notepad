@@ -1,0 +1,3 @@
+ltdba：
+	log_logon(staff_id,logon_date,logon_status,logon_type,logon_addr,logon_port,sess_id,sys_type)
+	log_operate(staff_id,operate_content,operate_date,operate_addr,operate_port,menu_id,sess_id,request_uri,operate_status,sys_type)
