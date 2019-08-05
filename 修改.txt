@@ -31,6 +31,10 @@ inc_chk\pub_lib\Util\SysConstant.php
 改为：
 "DB_TRANS_OPER_ERR"=>array("CODE" =>-1003 ,"DESC" => "数据库事务操作错误"),
 ===========================================================================================================================
+css_cph/contains.css:
+/*input{vertical-align:middle;height: 100%}*/
+input{vertical-align:middle;}
+===========================================================================================================================
 adt_role_func.php:
 $sSql = "select $sSql_sel
 			  from (select * from tb_ua_cfg_biz_domain a where a.biz_domain_id  in ('1594714',

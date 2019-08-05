@@ -16,6 +16,7 @@ http://172.16.7.74/inc_chk/login.php
 √‹¬Î£∫		123456
 ======================================================================================================
 /usr/local/apache2/htdocs/inc_chk
+/usr/local/apache2/htdocs/inc_chk/audit_config/adt_rpt_index_2018vs.class.php
 ======================================================================================================
 oracle :
 	ltdba/ltdbarica
