@@ -15,13 +15,24 @@ insert into log_logon(staff_id,logon_date,logon_status,logon_type,logon_addr,log
 pub_lib/pub_head.php:
 	log_operate 表结构不对
 	insert into log_operate(staff_id,operate_content,operate_date,operate_addr,operate_port,menu_id,sess_id,request_uri,operate_status,sys_type)
-===========================================================================================================================
-流程图稽核域：
-	新增：'1698600',
-===========================================================================================================================
 sys_mng目录下：
-dept_mng.php|dept_add.php|dept_add_act.php|dept_mod.php|post_mng.php|post_add.php|post_add_act.php|post_mod.php:
-注释掉所有chkMenuRight（权限检查）
+	dept_mng.php|dept_add.php|dept_add_act.php|dept_mod.php|post_mng.php|post_add.php|post_add_act.php|post_mod.php:
+	注释掉所有chkMenuRight（权限检查）
+===========================================================================================================================
+adt_role_func.php
+	修改：'1698600','1698601','1700708','1700709'
+adt_rpt_func.php:
+	覆盖：$id = 198
+adt_rpt_getdata.php、adt_rpt_show.php:添加代码
+	//报表表头字段添加--zhangmin
+	$report_item = getReportHeadItem($REPORT_ID);
+	$SELECT_STMT = '';
+	foreach ($report_item as $key=>$val){
+		$SELECT_STMT .= $val['SOURCE_COLUMN_NAME'] . ',';
+	}
+	$SELECT_STMT = substr($SELECT_STMT,0,strlen($SELECT_STMT)-1);
+	$report['SELECT_STMT'] = $SELECT_STMT;
+	//报表表头字段添加--zhangmin
 ===========================================================================================================================
 172.16.7.95下的oracle：
 sys_staff_role 在ltdba用户下

@@ -1,0 +1,17 @@
+if(1){
+                $oEntityDo->rollbackDBTrans();//回滚
+                $res->desc = $aliasInfo;
+                $res->err_line = __LINE__;
+
+                $json = new Services_JSON();
+                echo $json->encode($res);
+                exit;
+            }
+adt_rpt_tpl.php 
+1322 行
+
+print_r($_REQUEST);exit;
+
+/usr/local/apache2/htdocs/inc_chk/RptCustom
+
+Array ( [REPORT_ID] => 1700629 [NAME] => 报表配置：配变容量一致性报表 [SERVICE_ID] => 1698604 [SUB_SERVICE_ID] => 1700280 [SCHED_TIME] => [SEQU] => 1 [PAGE_LINES] => 25 [MAX_LINES] => 10 [EXPLAIN] => [REPORT_TYPE] => DAY [IMP_METHOD] => SYS [IMP_PARAM] => [LAST_SCHED_TIME] => [SELECT_STMT] => [WHERE_STMT] => 1 = 1 AND ( D5.areafeature is not null ) /*uc_rpt_cond_start*/ AND (D5.circuit_id = 355003686301501) /*uc_rpt_cond_end*/ [FROM_STMT] => ua_dbg.HTGX_RES_1_1 D5 [GROUP_STMT] => [HAVING_STMT] => [ORDER_STMT] => [IS_EDITABLE] => NO [IS_CHECKABLE] => NO [IS_BATCHABLE] => NO [IS_CUSTOM_SQL] => NO [STATUS] => O [INDB_STAFF] => 1000 [INDB_TIME] => 06-AUG-19 [MODIFY_STAFF] => 1000 [MODIFY_TIME] => 08-AUG-19 [REMARK] => [TYPE] => REPORT [IS_CHECK_CONFIRM] => NO )
