@@ -1,6 +1,7 @@
 ========================================================================================
 	https://www.flash.cn/
 	chrome://settings/content/flash
+	chrome://components/
 ========================================================================================
 	git clone https://github.com/swfobject/swfobject.git
 	git clone https://github.com/johan/swfobject.git
