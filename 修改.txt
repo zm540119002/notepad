@@ -23,6 +23,8 @@ adt_role_func.php
 	修改：'1698600','1698601','1700708','1700709'
 adt_rpt_func.php:
 	覆盖：$id = 198
+work_down_head.php:
+	AND Step_code in (100,200,300,400)";
 adt_rpt_getdata.php、adt_rpt_show.php:添加代码
 	//报表表头字段添加--zhangmin
 	$report_item = getReportHeadItem($REPORT_ID);
