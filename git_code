@@ -12,6 +12,7 @@
 则在Chrome地址栏中输入：chrome://flags/#run-all-flash-in-allow-mode，选择Enabled，重启Chrome就可以了。
 注：从Chrome v61开始，这个设置已经被移除，每次打开使用Flash的页面时，都需要手动启用flash。
 
+this is the url that tried to open:../../data-files/y-axis-auto-steps.txt
 ========================================================================================
 	git clone https://github.com/swfobject/swfobject.git
 	git clone https://github.com/johan/swfobject.git
