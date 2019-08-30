@@ -17,7 +17,9 @@ select * from tb_ua_cfg_service_type;
 select * from tb_ua_cfg_sub_service_type;
 select * from tb_ua_sys_host;
 ===========================================================================================================================
-
+同义词创建语句：	
+	create public synonym  RPT_CHART_CUSTOM for ltdba.RPT_CHART_CUSTOM;
+	grant select, insert, update, delete, references, alter, index on LTDBA.RPT_CHART_CUSTOM to UA_DBG;
 ===========================================================================================================================
 
 ===========================================================================================================================

@@ -24,3 +24,7 @@ http://172.16.7.74/inc_chk/
 
 治理专题 http://172.16.7.74/inc_chk/main_domain.php?conf_type=1
 
+/usr/local/apache2/htdocs/inc_chk/RptCustom/tmp/Tmp.Line.1567080783.484917.php
+
+
+{"title":"newFlow_1","nodes":{"1701055":{"name":"GIS单线图设备名称超64个字节校验","left":26,"top":8,"type":"quo_ds","width":243,"height":58,"alt":true},"1713311":{"name":"数据备份：业务备份","left":18,"top":121,"type":"new_ds","width":224,"height":55,"alt":true},"1713343":{"name":"GIS系统数据清洗模块","left":21,"top":259,"type":"new_ds","width":229,"height":55,"alt":true},"1713378":{"name":"数据校验：单线图设备名称","left":346,"top":267,"type":"new_ds","width":220,"height":55,"alt":true},"1713398":{"name":"数据生成：GIS单线图设备名称超64字节","left":661,"top":177,"type":"upd_ds","width":260,"height":48,"alt":true},"1713413":{"name":"数据生成：GIS单线图设备名称超64字节汇总结果","left":663,"top":377,"type":"upd_ds","width":255,"height":51,"alt":true},"1713420":{"name":"报表配置：单线图设备名称","left":1047,"top":370,"type":"report","width":275,"height":72,"alt":true},"1714950":{"name":"报表配置：单线图设备名称明细","left":1043,"top":167,"type":"report","width":248,"height":56,"alt":true}},"lines":{"demo_line_21":{"type":"sl","from":"1701055","to":"1713311","name":""},"demo_line_22":{"type":"sl","from":"1713311","to":"1713343","name":""},"demo_line_24":{"type":"sl","from":"1713343","to":"1713378","name":""},"demo_line_28":{"type":"sl","from":"1713378","to":"1713398","name":""},"demo_line_29":{"type":"sl","from":"1713378","to":"1713413","name":""}},"areas":{},"initNum":47}
