@@ -1,17 +1,25 @@
 ===========================================================================================================================
 SELECT * from tb_ua_sys_host;
 delete from  tb_ua_sys_host;
+drop table tb_ua_sys_host;
 update tb_ua_sys_host set ip='172.16.7.74' where id='HTID0000784918'
 ===========================================================================================================================
 表备份：
 	create table tb_ua_sys_host_bak as select * from tb_ua_sys_host;
+拷贝表 
+	create table table1 as select * from table2 where 1=1;
+复制表结构 
+	create table table1 as select * from table2 where 1<>1;
+链接：https://www.imooc.com/article/41863
 ===========================================================================================================================
 select * from tb_ua_cfg_biz_domain;
 select * from tb_ua_cfg_service_type;
 select * from tb_ua_cfg_sub_service_type;
 select * from tb_ua_sys_host;
 ===========================================================================================================================
-
+同义词创建语句：	
+	create public synonym  RPT_CHART_CUSTOM for ltdba.RPT_CHART_CUSTOM;
+	grant select, insert, update, delete, references, alter, index on LTDBA.RPT_CHART_CUSTOM to UA_DBG;
 ===========================================================================================================================
 
 ===========================================================================================================================

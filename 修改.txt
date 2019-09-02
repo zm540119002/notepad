@@ -3,18 +3,38 @@
 dataPara._DEBUG_ = 1;
 dataPara._DEBUG_ = 2;
 ===========================================================================================================================
+数据变换-更新：
+保存&测试成功没有入库运行日志表：	tb_ua_sub_svc_run_log
+Request URL: http://172.16.7.74/inc_chk/audit_config/etl_cfg_act.php?act=etl_task_udt_save
+存储过程：	uc_service.f_test_node
+===========================================================================================================================
 login.php:
 131行：	recLogonLog($result_array['STAFF_ID'],"0","0",$_REQUEST[GET_SYS_TYPE]); //注释:缺少log_logon表
+insert into log_logon(staff_id,logon_date,logon_status,logon_type,logon_addr,logon_port,sess_id,sys_type)
 ===========================================================================================================================
 pub_lib/pub_head.php:
-log_operate表结构不对
-===========================================================================================================================
-流程图稽核域：
-	新增680行：'1698600',
-===========================================================================================================================
+	log_operate 表结构不对
+	insert into log_operate(staff_id,operate_content,operate_date,operate_addr,operate_port,menu_id,sess_id,request_uri,operate_status,sys_type)
 sys_mng目录下：
-dept_mng.php|dept_add.php|dept_mod.php|post_mng.php|post_add.php|post_mod.php:
-注释掉所有chkMenuRight（权限检查）
+	dept_mng.php|dept_add.php|dept_add_act.php|dept_mod.php|post_mng.php|post_add.php|post_add_act.php|post_mod.php:
+	注释掉所有chkMenuRight（权限检查）
+===========================================================================================================================
+adt_role_func.php
+	修改：'1698600','1698601','1700708','1700709'
+adt_rpt_func.php:
+	覆盖：$id = 198
+work_down_head.php:
+	AND Step_code in (100,200,300,400)";
+adt_rpt_getdata.php、adt_rpt_show.php:添加代码
+	//报表表头字段添加--zhangmin
+	$report_item = getReportHeadItem($REPORT_ID);
+	$SELECT_STMT = '';
+	foreach ($report_item as $key=>$val){
+		$SELECT_STMT .= $val['SOURCE_COLUMN_NAME'] . ',';
+	}
+	$SELECT_STMT = substr($SELECT_STMT,0,strlen($SELECT_STMT)-1);
+	$report['SELECT_STMT'] = $SELECT_STMT;
+	//报表表头字段添加--zhangmin
 ===========================================================================================================================
 172.16.7.95下的oracle：
 sys_staff_role 在ltdba用户下
@@ -23,6 +43,10 @@ inc_chk\pub_lib\Util\SysConstant.php
 "DB_TRANS_OPER_ERR"=>array("CODE" =>-1002 ,"DESC" => "数据库事务操作错误"),
 改为：
 "DB_TRANS_OPER_ERR"=>array("CODE" =>-1003 ,"DESC" => "数据库事务操作错误"),
+===========================================================================================================================
+css_cph/contains.css:
+/*input{vertical-align:middle;height: 100%}*/
+input{vertical-align:middle;}
 ===========================================================================================================================
 adt_role_func.php:
 $sSql = "select $sSql_sel
@@ -96,6 +120,42 @@ if($_POST['isTest']=="true"){
 	print_r($o_err_msg);exit;
 }
 ===========================================================================================================================
+Array
+(
+    [ses_opt_id] => root
+    [ses_opt_name] => root
+    [ses_opt_dept] => Array
+        (
+            [0] => 1
+            [1] => 
+        )
+
+    [ses_opt_prov] => 0
+    [ses_opt_city] => Array
+        (
+            [0] => 0
+            [1] => �㶫
+        )
+
+    [ses_opt_post] => Array
+        (
+            [0] => 35
+            [1] => ��ͨԱ��
+        )
+
+    [ses_pwd_simple] => 1
+    [ses_pwd_pwdDesc] => 
+    [SERVER_GENERATED_SID] => 1
+    [PREV_USERAGENT] => Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
+    [PREV_REMOTEADDR] => 172.16.5.45
+    [index_new] => 1
+    [ses_opt_city_type] => 1
+    [audit_config_home_act] => 1
+    [REPORT_ID_PMS] => 
+    [AUDIT_MANAGE] => 
+    [token] => e0b13b904e7fd528eaf74147a275ebde
+    [token_time] => 1564122187
+)
 
 ===========================================================================================================================
 

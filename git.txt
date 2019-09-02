@@ -27,6 +27,8 @@ git config --global user.email zm@example.com
 	ssh-copy-id -i id_rsa.pub  ssh://git@47.106.79.38:65123
 	git clone ssh://git@47.106.79.38:65123/home/web.git weiya
 	输入git密码		W_y_+g+2018-10-16
+	git clone git@172.16.7.74:/home/web.git inc_chk
+	git clone https://github.com/zm540119002/msy.git	|	https://github.com/zm540119002/msy
 ======================================================================================================
 git remote set-url origin ssh://git@47.106.79.38:65123/home/web.git
 ======================================================================================================
@@ -38,7 +40,7 @@ git remote remove weiya_origin
 git remote add weiya_origin https://github.com/zm540119002/weiya.git
 git push -u weiya_origin master:master
 
-git clone https://github.com/zm540119002/msy.git]
+git clone https://github.com/zm540119002/msy.git
 git clone https://github.com/zm540119002/weiya.git
 
 git branch --set-upstream-to=origin/<branch> master 
