@@ -1,9 +1,594 @@
 ================================================================================
 云账号密码：  	xl@huitone.com   /	xule1990///
 实例：			ins-g5tk0g22
-主机用户密码：	root / Huitone2214@
 公网IP：		193.112.14.227
+主机用户密码：	
+root：		 	Huitone2214@
+mysql：			zm!!xiao@123@chengxu
 ================================================================================
+================================================================================
+================================================================================安装nginx
+首先更新系统软件
+
+# yum update
+安装nginx
+
+1.安装nginx源
+
+# yum localinstall http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+2.安装nginx
+
+# yum install nginx
+3.启动nginx
+
+# service nginx start
+Redirecting to /bin/systemctl start  nginx.service
+
+4.访问http://你的ip/
+
+如果成功安装会出来nginx默认的欢迎界面
+================================================================================安装MySQL5.7.*
+1.安装mysql源
+
+# yum localinstall  http://dev.mysql.com/get/mysql57-community-release-el7-7.noarch.rpm
+2.安装mysql
+
+# yum install mysql-community-server
+3.安装mysql的开发包，以后会有用
+
+# yum install mysql-community-devel
+4.启动mysql
+
+# service mysqld start
+Redirecting to /bin/systemctl start  mysqld.service
+
+5.查看mysql启动状态
+
+# service mysqld status
+出现pid
+
+证明启动成功
+
+6.获取mysql默认生成的密码
+
+# grep 'temporary password' /var/log/mysqld.log | cat /root/.mysql_secret
+选中的就是密码。
+
+7.换成自己的密码
+
+# mysql -uroot -p
+Enter password:输入上页的密码，进入mysql
+
+8. 更换密码
+
+1
+mysql>  ALTER USER 'root'@'localhost' IDENTIFIED BY 'xcx!!m--123';
+这个密码一定要足够复杂，不然会不让你改，提示密码不合法;
+
+9.退出mysql并试用下新密码
+
+mysql> quit;
+
+mysql -uroot -p
+确认密码正确
+================================================================================mysql密码找回
+方法一:
+vi /etc/my.cnf
+在[mysqld]下加上 skip-grant-tables，如：
+
+[mysqld] 
+datadir=/var/lib/mysql 
+socket=/var/lib/mysql/mysql.sock 
+skip-grant-tables 
+重启mysql
+
+service mysqld restart 
+登陆mysql后就可以修改密码了
+
+mysql -u root
+
+update mysql.user set authentication_string=PASSWORD('zm!!xiao@123@chengxu') where User='root'; 
+flush privileges; 
+然后改回my.cnf重启mysql。
+
+方法2：
+先暂停mysql
+以不检查权限的方式启动
+/bin/mysqld_safe  --skip-grant-tables & 
+/bin/mysqld_safe --skip-grant-tables
+
+登陆mysql后就可以修改密码了
+
+mysql -u root
+
+update mysql.user set authentication_string=PASSWORD('zm!!xiao@123@chengxu') where User='root'; 
+flush privileges; 
+然后重启mysql就ok了
+
+service mysqld restart 
+登录后任何操作都会有这个提示：
+
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+还需要刷新一次密码才行
+
+set password for root@localhost = password('zm!!xiao@123@chengxu'); 
+flush privileges; 
+================================================================================
+ 	yum -y install openssl
+	yum -y install openssl-devel
+	yum -y install curl
+	yum -y install curl-devel
+	yum -y install libcurl 
+	yum -y install libcurl-devel
+	yum -y install libjpeg 
+	yum -y install libjpeg-devel
+	yum -y install libpng
+	yum -y install libpng-devel
+	yum -y install freetype 
+	yum -y install freetype-devel
+	yum -y install gmp 
+	yum -y install gmp-devel
+	yum -y install libmcrypt 
+	yum -y install libmcrypt-devel
+	yum -y install readline 
+	yum -y install readline-devel
+	yum -y install libxslt 
+	yum -y install libxslt-devel
+	yum -y install libtool-ltdl
+	yum -y install libXpm-devel
+	---------------------------------
+	yum -y info openssl
+	rpm -qa | grep ltdl	 
+	./configure 后，直接make可能会出现libtool: link: `ext/date/php_date.lo' is not a valid libtool object 的错误。
+	make clean 一下然后再make，即可。原因未知，可能是某些脚本执行顺序的问题？做个标记~
+	yum remove php-common
+	/usr/share/doc/php70w-common-7.0.33
+================================================================================安装php依赖包　
+1.下载php7源码包
+
+# cd /root & wget -O php7.tar.gz http://cn2.php.net/get/php-7.0.1.tar.gz/from/this/mirror
+2.解压源码包
+
+# tar -xvf php7.tar.gz
+3.进入目录
+
+# cd php-7.0.1
+4.安装php依赖包　
+
+# yum install libxml2 libxml2-devel openssl openssl-devel bzip2 bzip2-devel libcurl libcurl-devel libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel gmp gmp-devel libmcrypt libmcrypt-devel readline readline-devel libxslt libxslt-devel
+5.编译配置，这里如果上一步的某些依赖包没有安装好，就会遇到很多configure error，我们一一解决，安装上相关软件开发包就可以
+
+复制代码
+复制代码
+# ./configure \
+--prefix=/usr/local/php \
+--with-config-file-path=/etc \
+--enable-fpm \
+--with-fpm-user=nginx  \
+--with-fpm-group=nginx \
+--enable-inline-optimization \
+--disable-debug \
+--disable-rpath \
+--enable-shared  \
+--enable-soap \
+--with-libxml-dir \
+--with-xmlrpc \
+--with-openssl \
+--with-mcrypt \
+--with-mhash \
+--with-pcre-regex \
+--with-sqlite3 \
+--with-zlib \
+--enable-bcmath \
+--with-iconv \
+--with-bz2 \
+--enable-calendar \
+--with-curl \
+--with-cdb \
+--enable-dom \
+--enable-exif \
+--enable-fileinfo \
+--enable-filter \
+--with-pcre-dir \
+--enable-ftp \
+--with-gd \
+--with-openssl-dir \
+--with-jpeg-dir \
+--with-png-dir \
+--with-zlib-dir  \
+--with-freetype-dir \
+--enable-gd-native-ttf \
+--enable-gd-jis-conv \
+--with-gettext \
+--with-gmp \
+--with-mhash \
+--enable-json \
+--enable-mbstring \
+--enable-mbregex \
+--enable-mbregex-backtrack \
+--with-libmbfl \
+--with-onig \
+--enable-pdo \
+--with-mysqli=mysqlnd \
+--with-pdo-mysql=mysqlnd \
+--with-zlib-dir \
+--with-pdo-sqlite \
+--with-readline \
+--enable-session \
+--enable-shmop \
+--enable-simplexml \
+--enable-sockets  \
+--enable-sysvmsg \
+--enable-sysvsem \
+--enable-sysvshm \
+--enable-wddx \
+--with-libxml-dir \
+--with-xsl \
+--enable-zip \
+--enable-mysqlnd-compression-support \
+--with-pear \
+--enable-opcache
+复制代码
+复制代码
+configure error:
+
+1.configure: error: xml2-config not found. Please check your libxml2 installation.
+
+解决：
+
+1
+<span style="color: #ff0000"># yum install libxml2 libxml2-devel</span>
+ 
+
+2.configure: error: Cannot find OpenSSL's <evp.h>
+
+解决：
+
+1
+<span style="color: #ff0000"># yum install openssl openssl-devel</span>
+ 
+
+3.configure: error: Please reinstall the BZip2 distribution
+
+解决：
+
+1
+<span style="color: #ff0000"># yum install bzip2 bzip2-devel</span>
+ 
+
+4.configure: error: Please reinstall the libcurl distribution - easy.h should be in <curl-dir>/include/curl/
+
+解决：
+
+1
+<span style="color: #ff0000"># yum install libcurl libcurl-devel</span>
+ 
+
+5.If configure fails try --with-webp-dir=<DIR> configure: error: jpeglib.h not found.
+
+ 
+
+解决：
+
+1
+<span style="color: #ff0000"># yum install libjpeg libjpeg-devel</span>
+6.If configure fails try --with-webp-dir=<DIR>
+
+checking for jpeg_read_header in -ljpeg... yes
+
+configure: error: png.h not found.
+
+解决：
+
+1
+<span style="color: #ff0000"># yum install libpng libpng-devel</span>
+ 
+
+7.If configure fails try --with-webp-dir=<DIR>
+
+checking for jpeg_read_header in -ljpeg... yes
+
+checking for png_write_image in -lpng... yes
+
+If configure fails try --with-xpm-dir=<DIR>
+
+configure: error: freetype-config not found.
+
+解决：
+
+1
+<span style="color: #ff0000"># yum install freetype freetype-devel</span>
+8.configure: error: Unable to locate gmp.h
+
+解决：
+
+1
+<span style="color: #ff0000"># yum install gmp gmp-devel</span>
+9.configure: error: mcrypt.h not found. Please reinstall libmcrypt.
+
+解决：
+
+  # yum install libmcrypt libmcrypt-devel
+
+10.configure: error: Please reinstall readline - I cannot find readline.h
+
+解决：
+
+1
+<span style="color: #ff0000"># yum install readline readline-devel</span>
+11.configure: error: xslt-config not found. Please reinstall the libxslt >= 1.1.0 distribution
+
+解决：
+
+1
+<span style="color: #ff0000"># yum install libxslt libxslt-devel</span>
+6.编译与安装
+
+# make && make install
+这里要make好久，要耐心一下
+
+ 7.添加 PHP 命令到环境变量
+
+# vim /etc/profile
+在末尾加入
+
+PATH=$PATH:/usr/local/php/bin
+
+export PATH
+
+要使改动立即生效执行
+
+# source /etc/profile
+查看环境变量
+
+# echo $PATH
+查看php版本
+
+# php -v
+8.配置php-fpm
+
+# cp php.ini-production /etc/php.ini
+# cp /usr/local/php/etc/php-fpm.conf.default /usr/local/php/etc/php-fpm.conf
+
+# cp /usr/local/php/etc/php-fpm.d/www.conf.default /usr/local/php/etc/php-fpm.d/www.conf
+# cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
+# chmod +x /etc/init.d/php-fpm
+9.启动php-fpm
+
+# /etc/init.d/php-fpm start
+五、配置nginx虚拟机,绑定域名
+
+# vim /etc/nginx/conf.d/php7.aaa.com.conf
+这里可以把php7.aaa.com.conf改成自己的域名
+把下面的内容复制到php7.aaa.com.conf里
+
+复制代码
+server{
+    listen 80;
+    server_name  php7.aaa.com;
+    root /var/www/html/php7.aaa.com; # 该项要修改为你准备存放相关网页的路径
+    location / {
+        index  index.php index.html index.htm;
+         #如果请求既不是一个文件，也不是一个目录，则执行一下重写规则
+         if (!-e $request_filename)
+         {
+            #地址作为将参数rewrite到index.php上。
+            rewrite ^/(.*)$ /index.php/$1;
+            #若是子目录则使用下面这句，将subdir改成目录名称即可。
+            #rewrite ^/subdir/(.*)$ /subdir/index.php/$1;
+         }
+    }
+    #proxy the php scripts to php-fpm
+    location ~ \.php {
+            include fastcgi_params;
+            ##pathinfo支持start
+            #定义变量 $path_info ，用于存放pathinfo信息
+            set $path_info "";
+            #定义变量 $real_script_name，用于存放真实地址
+            set $real_script_name $fastcgi_script_name;
+            #如果地址与引号内的正则表达式匹配
+            if ($fastcgi_script_name ~ "^(.+?\.php)(/.+)$") {
+                    #将文件地址赋值给变量 $real_script_name
+                    set $real_script_name $1;
+                    #将文件地址后的参数赋值给变量 $path_info
+                    set $path_info $2;
+            }
+            #配置fastcgi的一些参数
+            fastcgi_param SCRIPT_FILENAME $document_root$real_script_name;
+            fastcgi_param SCRIPT_NAME $real_script_name;
+            fastcgi_param PATH_INFO $path_info;
+            ###pathinfo支持end
+        fastcgi_intercept_errors on;
+        fastcgi_pass   127.0.0.1:9000;
+    }
+    
+    location ^~ /data/runtime {
+    return 404;
+    }
+    
+    location ^~ /application {
+    return 404;
+    }
+    
+    location ^~ /simplewind {
+    return 404;
+    }
+}
+复制代码
+2.重启nginx
+
+# service nginx reload
+3.
+
+# vim /var/www/html/php7.aaa.com/index.php
+把下面的代码复制到这个文件 里
+
+<?php
+
+phpinfo();
+
+4.查看访问http://php7.aaa.com
+
+ok!收工！
+================================================================================yum可能没有，或者损坏
+解决： 
+　　第一步：下载   wget  http://yum.baseurl.org/download/3.2/yum-3.2.28.tar.gz
+　　第二步：下载完成之后解压  tar -zxvf yum-3.2.28.tar.gz -C ./    （我解压在当前目录）
+　　第三步：进入到 yum目录   cd yum-3.2.28
+　　第四步：创建配置文件   touch /etc/yum.conf    （如果你是普通用户会提示权限不足，这时sudo 用管理员的身份执行）
+　　第五步：安装yum文件   ./yummain.py install yum
+　　第六步：一路yes
+　　第七步：安装成功会提示Complete!   这样就ok了
+================================================================================Loaded plugins: fastestmirror
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+ * epel: mirror01.idc.hinet.net
+解决办法：
+
+1.修改插件配置文件
+
+[root@localhost yum.repos.d]# vim  /etc/yum/pluginconf.d/fastestmirror.conf
+
+[main]
+enabled=0   //由 1 改成0 ，禁用该插件
+verbose=0
+always_print_best_host = true
+socket_timeout=3
+#  Relative paths are relative to the cachedir (and so works for users as well
+# as root).
+hostfilepath=timedhosts.txt
+maxhostfileage=10
+maxthreads=15
+#exclude=.gov, facebook
+#include_only=.nl,.de,.uk,.ie
+
+2.修改yum 配置文件
+
+[root@localhost yum.repos.d]# vim /etc/yum.conf
+
+9 plugins=0  //不使用插件
+
+3. 清除缓存并重新构建yum 源
+
+[root@localhost yum.repos.d]# yum clean all
+
+[root@localhost yum.repos.d]# yum makecache
+
+4. 使用yum 重新安装
+================================================================================执行yum update报错：
+Loaded plugins: fastestmirror, langpacks
+Loading mirror speeds from cached hostfile
+epel/x86_64/metalink                                                                | 4.3 kB  00:00:00     
+ * epel: fedora.cs.nctu.edu.tw
+base                                                                                | 3.6 kB  00:00:00     
+file:///opt/centos/repodata/repomd.xml: [Errno 14] curl#37 - "Couldn't open file /opt/centos/repodata/repomd.xml"
+Trying other mirror.
+
+
+ One of the configured repositories failed (centos),
+ and yum doesn't have enough cached data to continue. At this point the only
+ safe thing yum can do is fail. There are a few ways to work "fix" this:
+
+     1. Contact the upstream for the repository and get them to fix the problem.
+
+     2. Reconfigure the baseurl/etc. for the repository, to point to a working
+        upstream. This is most often useful if you are using a newer
+        distribution release than is supported by the repository (and the
+        packages for the previous distribution release still work).
+
+     3. Run the command with the repository temporarily disabled
+            yum --disablerepo=centos ...
+
+     4. Disable the repository permanently, so yum won't use it by default. Yum
+        will then just ignore the repository until you permanently enable it
+        again or use --enablerepo for temporary usage:
+
+            yum-config-manager --disable centos
+        or
+            subscription-manager repos --disable=centos
+
+     5. Configure the failing repository to be skipped, if it is unavailable.
+        Note that yum will try to contact the repo. when it runs most commands,
+        so will have to try and fail each time (and thus. yum will be be much
+        slower). If it is a very temporary problem though, this is often a nice
+        compromise:
+
+            yum-config-manager --save --setopt=centos.skip_if_unavailable=true
+
+failure: repodata/repomd.xml from centos: [Errno 256] No more mirrors to try.
+file:///opt/centos/repodata/repomd.xml: [Errno 14] curl#37 - "Couldn't open file /opt/centos/repodata/repomd.xml"
+You have mail in /var/spool/mail/root
+解决：
+
+这是因为使用的是虚拟机，本地源路径有问题，若没有本地源，可修改：
+cd /etc/yum.repos.d
+$ sudo vi CentOS-local.repo
+
+enabled=0 //禁用本地源
+
+$ sudo yum clean all
+
+$ sudo yum makecache
+-----------------------------------------------------------------------解决方式：
+第一步：vi /etc/resolv.conf，添加下面一行就可以了
+	nameserver 114.114.114.114（这是国内的dns服务器系统，还是比较好用的。谷歌的可以使用8.8.8.8）  
+	修改完后service network restart进行重启，试一下yum update命令，应该就可以了。如果还不可以，可以再进行下一步。
+第二步：进入 /etc/yum.repos.d ，编辑vi CentOS-Base.repo，修改下面黄色标识的部分（只需要注释掉第一行，取消注释第二行就可以了）
+
+# CentOS-Base.repo
+
+#
+# The mirror system uses the connecting IP address of the client and the
+# update status of each mirror to pick mirrors that are updated to and
+# geographically close to the client.  You should use this for CentOS updates
+# unless you are manually picking other mirrors.
+#
+# If the mirrorlist= does not work for you, as a fall back you can try the
+# remarked out baseurl= line instead.
+#
+#
+
+
+[base]
+name=CentOS-$releasever - Base
+#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os&infra=$infra
+baseurl=http://mirror.centos.org/centos/$releasever/os/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+
+#released updates
+[updates]
+name=CentOS-$releasever - Updates
+#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=updates&infra=$infra
+baseurl=http://mirror.centos.org/centos/$releasever/updates/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+
+#additional packages that may be useful
+[extras]
+name=CentOS-$releasever - Extras
+#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=extras&infra=$infra
+baseurl=http://mirror.centos.org/centos/$releasever/extras/$basearch/
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+
+#additional packages that extend functionality of existing packages
+[centosplus]
+name=CentOS-$releasever - Plus
+#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=centosplus&infra=$infra
+baseurl=http://mirror.centos.org/centos/$releasever/centosplus/$basearch/
+gpgcheck=1
+enabled=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7
+
+
+~                                                                                                                                                                      
+"CentOS-Base.repo" 44L, 1664C
+
+完成上面两步，再重新执行yum update等其它安装命令就可以正常运行了。
 ================================================================================
 ================================================================================
 ================================================================================

@@ -159,6 +159,7 @@ cd /usr/local/src/php-5.6.38/ext/pcntl
 /usr/local/php/bin/phpize
 3. 调用configure生成Makefile文件，然后调用make编译，make install安装
 ./configure -with-php-config=/usr/local/php/bin/php-config
+./configure --with-php-config=/root/php-7.0.1/scripts/php-config
 make && make install
 4. 修改php配置文件
 vim /etc/php.ini

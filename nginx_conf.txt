@@ -23,6 +23,33 @@ https证书：
 ==========================================================================================================================================
 server {
         listen       80;
+        server_name  193.112.14.227;
+        root /home/www/xcx/demo/public;
+        location / {
+                index  index.html index.htm index.php;
+        }
+        location ~* /(?:html|install|templates)/.*.php$ {
+                deny all;
+                access_log off;
+                log_not_found off;
+        }
+        location = /50x.html {
+                root   html;
+        }
+        location ~ \.php$ {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+        if (!-e $request_filename){
+                rewrite  ^/index.php(.*)$  /index.php?s=$1  last;
+                rewrite  ^(.*)$  /index.php?s=$1  last;
+                break;
+        }
+    }
+server {
+        listen       80;
         server_name  worldview.cn www.worldview.cn;
         root /home/www/web_weiya/thinkphp5.1/weiya/public;
         location / {
