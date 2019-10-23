@@ -8,13 +8,20 @@ DGSJZL密码：	HTGX123456
 ======================================================================================================
 IP:		
 	172.16.7.169 
-	172.16.7.74			root / htgx@123456 git/git123456
+	172.16.7.74			root / htgx@123456 git/git123456	启动：	/usr/local/apache2/bin/apachectl start
 	172.16.7.72			root / htgx@123456
 ======================================================================================================
 http://172.16.7.74/inc_chk/login.php
 
 测试账号：	root
 密码：		123456
+======================================================================================================
+http://172.16.7.119:8079/#/metadata/dataSource
+帐号密码：lqh/lqh
+wh/wh 
+======================================================================================================
+http://172.16.7.163:37799/webroot/decision#config
+htgx/123456789
 ======================================================================================================
 /usr/local/apache2/htdocs/inc_chk
 /usr/local/apache2/htdocs/inc_chk/audit_config/adt_rpt_index_2018vs.class.php
@@ -45,30 +52,7 @@ jdbc:oracle:thin:@172.16.7.95:1521:orcl
 	2、点击对应节点的运行记录，查看依赖的数据/任务。
 	3、分析依赖的源数据是否已准备好，一般可能有多种原因，如外部数据表未准备好，DBLINK失效等
 ======================================================================================================
-BEGIN
-*
-ERROR at line 1:
-ORA-20000: 发送工单失败！工单模板ID：17182120工单内容：355001096558001错误代码：;错误信息：
-调用栈：----- PL/SQL Call Stack -----
-object      line  object
-handle    number  name
-0x86a4c298      1192  package body UA_DBG.Q$ERR_MGR
-0x86a4c298      1582  package body UA_DBG.Q$ERR_MGR
-0x86bb7e38        86  UA_DBG.UC_LOG
-0x87a3e3c0      1580  package body UA_DBG.UC_WARN_ORDER
-0x7a7e0610         2  anonymous block
------ PL/SQL Call Stack -----
-object      line  object
-handle    number  name
-0x86a4c298      1192  package body UA_DBG.Q$ERR_MGR
-0x86a4c298      1582  package body UA_DBG.Q$ERR_MGR
-0x86bb7e38        86  UA_DBG.UC_LOG
-0x87a3e3c0      1580  package body UA_DBG.UC_WARN_ORDER
-0x7a7e0610         2  anonymous block
-ORA-06512: at UA_DBG.UC_WARN_ORDER, line 1602
-ORA-06512: at line 2
-
-Commit complete.
+PROC:wk_p_uif_create_ifc STEP:生成工单附件日志表 TEXT:PROC:etl_p_run_ins_sqlSTEP:运行指定的指令：I_WO_UPDATE_INTERFACETEXT:successfully completed.
 ======================================================================================================
 
 ======================================================================================================

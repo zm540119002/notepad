@@ -75,6 +75,19 @@ vue-resource发送了一个post请求，在后台$_POST都获取不到数据
 $request_body = file_get_contents('php://input');
 $data = json_decode($request_body, true);
 ==========================================================================================================================================
+function iconvKey($arr){
+    $res = array();
+    foreach ($arr as $value){
+        $temp = array();
+        foreach ($value as $k=>$v){
+            $k = iconv("GBK","UTF-8",$k);
+            $temp[$k] = $v;
+        }
+        $res[] = $temp;
+    }
+    return $res;
+}
+==========================================================================================================================================
 // 说明：获取完整URL
 function curPageURL() {
 	$pageURL = 'http';

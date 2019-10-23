@@ -1,0 +1,8 @@
+git clone https://github.com/zm540119002/incubator-echarts.git
+
+git config http.postBuffer 524288000
+
+第一步，克隆远程仓库时，用env命令设置GIT_SSL_NO_VERIFY环境变量为”ture”，并同时调用正常的git clone命令。完整的命令如下：
+	env GIT_SSL_NO_VERIFY=true git clone https://github.com/zm540119002/incubator-echarts.git
+第二步，在克隆完毕的仓库中将http.sslVerify设置为”false”。完整的命令如下：
+	git config http.sslVerify "false"

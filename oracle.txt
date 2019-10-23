@@ -29,8 +29,25 @@ user_tab_comments：table_name,table_type,comments
 select * from user_col_comments
 user_col_comments：table_name,column_name,comments
 相应的还有dba_col_comments，all_col_comments，这两个比user_col_comments多了ower列。
-===========================================================================================================================
-
+===========================================================================================================================分页
+1.无ORDER BY排序的写法。(效率最高)
+(经过测试，此方法成本最低，只嵌套一层，速度最快！即使查询的数据量再大，也几乎不受影响，速度依然！)
+SELECT *
+  FROM (SELECT ROWNUM AS rowno, t.*
+          FROM TB_UC_CFG_DS t
+         WHERE hire_date BETWEEN TO_DATE('20060501', 'yyyymmdd') AND TO_DATE('20060731', 'yyyymmdd')
+           AND ROWNUM <= 20) table_alias
+ WHERE table_alias.rowno >= 10
+2.有ORDER BY排序的写法。(效率较高)
+(经过测试，此方法随着查询范围的扩大，速度也会越来越慢哦！)
+SELECT *
+  FROM (SELECT tt.*, ROWNUM AS rowno
+          FROM (SELECT t.*
+                  FROM TB_UC_CFG_DS t
+				  WHERE hire_date BETWEEN TO_DATE('20060501', 'yyyymmdd') AND TO_DATE('20060731', 'yyyymmdd')
+                 ORDER BY indb_time DESC) tt
+         WHERE ROWNUM <= 20) table_alias
+ WHERE table_alias.rowno >= 10;
 ===========================================================================================================================
 
 ===========================================================================================================================

@@ -143,6 +143,20 @@ var temp=arr.map(function(val,index){
   return val*val           
 })
 console.log(temp);  
+遍历json对象
+myJson = {"name":"caibaojian", "password":"1111"};
+//遍历json对象的每个key/value对,p为key
+for(let p in myJson){ 
+	alert(p + " " + myJson[p]);
+}
+
+for(let key in _this.formData){
+	if(key=='status' || key=='rtype'){
+		_this.postData[key] = Number(_this.formData[key]);
+	}else{
+		_this.postData[key] = _this.formData[key];
+	}
+}
 ==========================================================================================================================
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
     // 在这里跳转到你的移动端项目首页
@@ -277,8 +291,70 @@ console.log(isObject([])); // true
 console.log(isObject(true)); // false
 console.log(isObject(1)); // false
 console.log(isObject('abc')); // false
-==========================================================================================================================
-
+==========================================================================================================================文件上传
+<div class="upload-picture-module box-flex f24">
+	<div>
+		<div class="picture-module">
+			<input type="file"  @change="importFile">
+			<img class="upload_img" src="" alt="">
+			<input type="hidden" name="logo" class="img" data-src="" value=""/>
+		</div>
+	</div>
+</div>
+const _this = this;
+const file = event.target.files[0];
+if(file.size>2*1024*1024){
+	_this.$message({
+		showClose: true,
+		message: '文件超出2M',
+		duration: 3000,
+		type: 'error',
+		center: true
+	});
+	return false;
+}
+const exp=/\.(?:xlsx|xls)$/;
+if(!file.type || file.type.indexOf('spreadsheetml')==-1 || !exp.test(file.name)){
+	_this.$message({
+		showClose: true,
+		message: '请上传excel文件',
+		duration: 3000,
+		type: 'error',
+		center: true
+	});
+	return false;
+}
+const reader = new FileReader();
+// reader.readAsDataURL(file); //转换成base64格式
+// reader.readAsText(file); //转换成字符串格式
+// reader.readAsArrayBuffer(file); //转换成ArrayBuffer格式
+reader.readAsBinaryString(file); //转换成原始二进制格式
+reader.onload = function(e){
+	// console.log(e);return;
+	const _this = this;
+	const url = 'http://172.16.7.71:8182/api/file/upload';
+	const postData = {uploadfile: e.target.result};
+	axios.defaults.timeout = 20000;
+	axios.post(url,postData).
+	then(function (response) {
+		if(response.data.retCode==0){
+			this.$message({
+				message: '成功',
+				type: 'success'
+			});
+		}else{
+			_this.$message({
+				showClose: true,
+				message: response.data.retMsg,
+				duration: 3000,
+				type: 'error',
+				center: true
+			});
+		}
+	}).catch(function (error) {
+		console.log(error);
+	});
+}
 ==========================================================================================================================
 
 ==========================================================================================================================

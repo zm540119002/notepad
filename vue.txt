@@ -1,34 +1,95 @@
-=====================================================================================安装 vue-cli 脚手架：
-vue2:
+=====================================================================================
+-------------------------------------------------------vue-cli2.0
 	vue init webpack demo
 	cd demo
 	npm install
 	npm run dev
--------------------------------------------------------
-vue3:
+-------------------------------------------------------vue-cli3.0
 	npm install -g @vue/cli
 	vue create weiya
 	cd weiya
 	vue run serve
--------------------------------------------------------打包：npm run build
+-------------------------------------------------------打包
+npm run build
+-------------------------------------------------------
+npm i @antv/g6-editor --save 
+=====================================================================================
 
-<<<<<<< HEAD
+axios.post(isurl,Qs.stringify(o),{'
+    header:{
+        'Content-Type': 'multipart/form-data'
+    }
+})
+=====================================================================================
+const _this = this;
+const url = 'data_clean.php';
+axios.defaults.timeout = 20000;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
+axios.post(url,Qs.stringify(_this.postData)).
+then(function (response) {
+	if(response.data.rows && response.data.rows.length){
+		_this.total = Number(response.data.total);
+		_this.tableData = response.data.rows;
+	}else{
+		_this.$message({
+			showClose: true,
+			message: response.data.retMsg,
+			duration: 3000,
+			type: 'error',
+			center: true
+		});
+	}
+}).catch(function (error) {
+	console.log(error);
+});
+--------------------------------------------------------------------
+const _this = this;
+const url = 'http://172.16.7.71:8182/api/rest/getRuleList';
+_this.postData = {
+	"status":0,
+	"pageSize":_this.pageSize,
+	"pageIndex":_this.currentPage
+};
+axios.defaults.timeout = 20000;
+axios.post(url,JSON.stringify(_this.postData)).
+then(function (response) {
+	// console.log(response);
+	if(response.data.retCode==0){
+		_this.total = Number(response.data.pageNum);
+		_this.tableData = response.data.data;
+	}else{
+		_this.$message({
+			showClose: true,
+			message: response.data.retMsg,
+			duration: 3000,
+			type: 'error',
+			center: true
+		});
+	}
+}).catch(function (error) {
+	console.log(error);
+});
+
+const url = 'action.php?act=workOrderCarousel';
+axios.defaults.timeout = 20000;
+axios.get(url).
+then(function (response) {
+	console.log(response);
+}).catch(function (error) {
+	console.log(error);
+});
+=====================================================================================
+//监听-回显-事件
+bus.$on('setTransfer', function(param){
+	console.log(param);
+});
+//触发-回显-事件
+bus.$emit('setTransfer',_this.fieldValue);
+//监听-获取穿梭框值-事件
+// bus.$on('get_transfer', function(param){
+//     console.log(param);
+// });
+//触发-获取穿梭框值-事件
+// bus.$emit('get_transfer',_this.fieldValue);
 =====================================================================================
 =====================================================================================
-=====================================================================================
-=====================================================================================
-=====================================================================================
-=====================================================================================
-=====================================================================================
-=====================================================================================
-=====================================================================================
-=====================================================================================
-=====================================================================================
-=====================================================================================
-=====================================================================================
-=====================================================================================
-=====================================================================================
-=====================================================================================
-=======
-vue create weiya
->>>>>>> 750efcef02e6353c185bfa04e4b47204b91172b5
