@@ -25,6 +25,7 @@ htgx/123456789
 ======================================================================================================
 /usr/local/apache2/htdocs/inc_chk
 /usr/local/apache2/htdocs/inc_chk/audit_config/adt_rpt_index_2018vs.class.php
+/usr/local/apache2/htdocs/inc_chk/new_index/svg
 ======================================================================================================
 oracle :
 	ltdba/ltdbarica

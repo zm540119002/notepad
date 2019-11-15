@@ -14,7 +14,6 @@ npm run build
 -------------------------------------------------------
 npm i @antv/g6-editor --save 
 =====================================================================================
-
 axios.post(isurl,Qs.stringify(o),{'
     header:{
         'Content-Type': 'multipart/form-data'
@@ -24,6 +23,7 @@ axios.post(isurl,Qs.stringify(o),{'
 const _this = this;
 const url = 'data_clean.php';
 axios.defaults.timeout = 20000;
+axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 axios.post(url,Qs.stringify(_this.postData)).
 then(function (response) {
@@ -70,7 +70,9 @@ then(function (response) {
 	console.log(error);
 });
 
-const url = 'action.php?act=workOrderCarousel';
+const url = 'action.php?act=dataQualityEvolve&sub_sys_type=1&data_date=20191013';
+const url = 'action.php?act=dataQualityEvolve&sub_sys_type=4';
+const url = 'action.php?act=dataMapWithArea&data_date=20191106&sub_sys_type=2&problem_type=2';
 axios.defaults.timeout = 20000;
 axios.get(url).
 then(function (response) {
@@ -78,6 +80,33 @@ then(function (response) {
 }).catch(function (error) {
 	console.log(error);
 });
+--------------------------------------------------------------------
+const url = 'http://172.16.7.71:8182/api/rest/file/upload';
+let fd = new FormData();
+fd.append('uploadfile',file,file.name);
+axios.post([url],fd,{
+	// 加这里
+	headers: {
+	}
+}).then(function (response) {
+	if(response.data.retCode==0){
+		_this.$message({
+			message: '成功',
+			type: 'success'
+		});
+	}else{
+		_this.$message({
+			showClose: true,
+			message: response.data.retMsg,
+			duration: 3000,
+			type: 'error',
+			center: true
+		});
+	}
+}).catch(function (error) {
+	console.log(error);
+});
+return false; //返回false不会自动上传
 =====================================================================================
 //监听-回显-事件
 bus.$on('setTransfer', function(param){
@@ -92,4 +121,55 @@ bus.$emit('setTransfer',_this.fieldValue);
 //触发-获取穿梭框值-事件
 // bus.$emit('get_transfer',_this.fieldValue);
 =====================================================================================
+<el-input v-focus></el-input>
+directives: {
+  // 注册一个局部的自定义指令 v-focus
+  focus: {
+    // 指令的定义
+    inserted: function (el) {
+      // 聚焦元素
+      el.querySelector('input').focus()
+    }
+  }
+},
+directives: {
+	focus: {
+		inserted: function (el, {value}) {
+			if (value) {
+				$(el).find("input").focus();//聚焦输入框
+			}
+		}
+	}
+},
+//自定义指令
+Vue.directive('focus', {
+	inserted: function(el, binding) {
+		//console.log(el)
+		el.focus()
+	}
+})
+=====================================================================================
+
+=====================================================================================
+
+=====================================================================================
+
+=====================================================================================
+
+=====================================================================================
+
+=====================================================================================
+
+=====================================================================================
+
+=====================================================================================
+
+=====================================================================================
+
+=====================================================================================
+
+=====================================================================================
+
+=====================================================================================
+
 =====================================================================================

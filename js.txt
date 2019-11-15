@@ -1,3 +1,9 @@
+==========================================================================================================================
+
+文件上传：
+:show-file-list="false"
+:auto-upload="false"
+:http-request="importFile"
 ==========================================================================================================================变量作用域
 var 声明的变量属于函数作用域，let 和 const 声明的变量属于块级作用域；
 var 存在变量提升现象，而 let 和 const 没有此类现象；
@@ -157,6 +163,8 @@ for(let key in _this.formData){
 		_this.postData[key] = _this.formData[key];
 	}
 }
+==========================================================================================================================
+
 ==========================================================================================================================
 if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
     // 在这里跳转到你的移动端项目首页
@@ -356,7 +364,25 @@ reader.onload = function(e){
 	});
 }
 ==========================================================================================================================
+网页可见区域宽： document.body.clientWidth
+网页可见区域高： document.body.clientHeight
+网页可见区域宽： document.body.offsetWidth (包括边线的宽)
+网页可见区域高： document.body.offsetHeight (包括边线的高)
+网页正文全文宽： document.body.scrollWidth
+网页正文全文高： document.body.scrollHeight
+网页被卷去的高： document.body.scrollTop
+网页被卷去的左： document.body.scrollLeft
+网页正文部分上： window.screenTop
+网页正文部分左： window.screenLeft
+屏幕物理分辨率的高： window.screen.height
+屏幕物理分辨率的宽： window.screen.width
+屏幕可用工作区高度： window.screen.availHeight
 
+屏幕可用工作区宽度： window.screen.availWidth
+
+屏幕缩放因子：window.devicePixelRatio
+
+屏幕逻辑分辨率：window.screen.width * window.devicePixelRatio (缩放因子与物理分辨率的乘积)
 ==========================================================================================================================
 
 ==========================================================================================================================
