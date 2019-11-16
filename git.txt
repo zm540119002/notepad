@@ -130,7 +130,7 @@ git reset --hard 版本
 首先要回退本地分支：
 
 git reflog
-git reset --hard f07e7ba
+git reset --hard 3f01cc4a59d537ca1fffd8f14639dbaada09688d
 
 紧接着强制推送到远程分支：
 
