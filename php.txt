@@ -1,4 +1,7 @@
 ==========================================================================================================================================
+Note: 处理 register_globals 
+如果已经弃用的 register_globals 指令被设置为 on 那么局部变量也将在脚本的全局作用域中可用。例如， $_POST['foo']   也将以 $foo  的形式存在。 
+==========================================================================================================================================
 header("Content-type: text/html; charset=utf-8");
 header("Content-type: text/html; charset=gb2312");
 //跨域
@@ -74,6 +77,19 @@ vue-resource发送了一个post请求，在后台$_POST都获取不到数据
 只有x-www-form-data multipart/form-data 这两种形式的payload才会填充$_POST, 而application/json则填充 php://input
 $request_body = file_get_contents('php://input');
 $data = json_decode($request_body, true);
+==========================================================================================================================================
+function iconvKey($arr){
+    $res = array();
+    foreach ($arr as $value){
+        $temp = array();
+        foreach ($value as $k=>$v){
+            $k = iconv("GBK","UTF-8",$k);
+            $temp[$k] = $v;
+        }
+        $res[] = $temp;
+    }
+    return $res;
+}
 ==========================================================================================================================================
 // 说明：获取完整URL
 function curPageURL() {

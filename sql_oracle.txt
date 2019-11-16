@@ -21,6 +21,23 @@ select * from tb_ua_sys_host;
 	create public synonym  RPT_CHART_CUSTOM for ltdba.RPT_CHART_CUSTOM;
 	grant select, insert, update, delete, references, alter, index on LTDBA.RPT_CHART_CUSTOM to UA_DBG;
 ===========================================================================================================================
+d.create_time >= to_date('$DATE_B','YYYYMMDD')
+  AND d.create_time <= (to_date('$DATE_E','YYYYMMDD')+1-1/24/60/60)
+  AND D.WORK_ORDER_CODE = CUR.WORK_ORDER_CODE
+  AND D.Draft_staff = S.staff_id
+  AND S.email= o.oa_mail(+)
+  AND D.state = 2
+  AND D.FEEDBACK_TIME >= '$DATETIME_B'
+  AND D.FEEDBACK_TIME <= '$DATETIME_E'
+  AND D.WORK_ORDER_CODE = '$USER_NO'
+  AND D.Work_order_type = '$SERV_CODE'
+  AND D.Work_order_title like '%$ORGAN_NAME%'
+  AND D.WORK_ORDER_CODE in (SELECT distinct WORK_ORDER_CODE FROM work_order_flow_log a
+         WHERE not exists (SELECT 1 FROM work_order_flow_log b 
+                           WHERE a.work_order_code = b.work_order_code
+                             AND b.Receive_staff = '$REC_ID'
+                             AND b.state in (0,2,4))
+          AND work_order_code in (SELECT WORK_ORDER_CODE FROM work_order_flow_log WHERE Deal_staff = '$REC_ID' or Receive_staff = '$REC_ID'))
 
 ===========================================================================================================================
 

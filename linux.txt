@@ -1,4 +1,26 @@
 =======================================================================================================
+df -hl 查看磁盘剩余空间
+ 
+df -h 查看每个根路径的分区大小
+ 
+du -sh [目录名] 返回该目录的大小
+ 
+du -sm [文件夹] 返回该文件夹总M数
+ 
+du -h [目录名] 查看指定文件夹下的所有文件大小（包含子文件夹）
+
+查看硬盘的分区 #sudo fdisk -l
+
+查看IDE硬盘信息 #sudo hdparm -i /dev/hda
+
+查看STAT硬盘信息 #sudo hdparm -I /dev/sda 或 #sudo apt-get install blktool #sudo blktool /dev/sda id
+
+查看硬盘剩余空间 #df -h #df -H
+
+查看目录占用空间 #du -hs 目录名
+
+优盘没法卸载 #sync fuser -km /media/usbdisk
+=======================================================================================================
 man
 tldr（命令手册）、tree（树形命令）、rlwrap（历史命令）、script（记录会话输出）、autojump（一键直达）
 =======================================================================================================
@@ -310,6 +332,38 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub git@127.0.0.1		//本地
 git config --global credential.helper store
 git config --global user.name = 'zm'
 git config --global user.email = 'zm@qq.com'
+--------------------------------------------------------------------------
+本地配置多个ssh key
+大多数时候，我们的机器上会有很多的git host,比如公司gitlab、github、oschina等，那我们就需要在本地配置多个ssh key，使得不同的host能使用不同的ssh key ,做法如下（以公司gitlab和github为例）：
+
+为公司生成一对秘钥ssh key
+
+ssh-keygen -t rsa -C 'yourEmail@xx.com' -f ~/.ssh/gitlab-rsa
+为github生成一对秘钥ssh key
+
+ssh-keygen -t rsa -C 'yourEmail2@xx.com' -f ~/.ssh/github-rsa
+在~/.ssh目录下新建名称为config的文件（无后缀名）。用于配置多个不同的host使用不同的ssh key，内容如下：
+
+# gitlab
+Host gitlab.com
+    HostName gitlab.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/gitlab_id-rsa
+# github
+Host github.com
+    HostName github.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/github_id-rsa
+  ​
+# 配置文件参数
+# Host : Host可以看作是一个你要识别的模式，对识别的模式，进行配置对应的的主机名和ssh文件
+# HostName : 要登录主机的主机名
+# User : 登录名
+# IdentityFile : 指明上面User对应的identityFile路径
+按照上面的步骤分别往gitlab和github上添加生成的公钥gitlab_id-rsa.pub和github_id-rsa.pub
+OK，大功告成，再次执行git命令验证是不是已经不需要再次验证权限了。
+
+再次查看~/..ssh目录下的文件,会有gitlab_id-rsa、gitlab_id-rsa.pub和github_id-rsa、github_id-rsa.pub四个文件
 =======================================================================================================
 禁止/允许ip访问linux 的ssh功能
 vim /etc/hosts.deny

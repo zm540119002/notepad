@@ -1,0 +1,179 @@
+=======================================================================================================502
+du -sh /var/log/gitlab
+cat /var/log/gitlab/gitlab-rails/production.log
+tail -100 /var/log/gitlab/gitlab-rails/production.log
+=======================================================================================================
+systemctl list-unit-files |grep sshd
+安装：	yum install -y curl policycoreutils-pythonopenssh-server
+systemctl enable sshd  
+systemctl start sshd
+=======================================================================================================
+systemctl list-unit-files |grep firewalld
+安装：	yum install firewalld systemd -y
+systemctl start firewalld
+=======================================================================================================
+systemctl list-unit-files |grep postfix
+安装：	yum install postfix
+=======================================================================================================
+wget -V
+yum -y install wget
+=======================================================================================================
+1.添加gitlab镜像
+	wget https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/gitlab-ce-10.0.0-ce.0.el7.x86_64.rpm
+2.安装gitlab 
+	安装命令：rpm -i gitlab-ce-10.0.0-ce.0.el7.x86_64.rpm
+	缺少依赖：policycoreutils-python is needed by gitlab-ce-10.0.0-ce.0.el7.x86_64
+	yum install policycoreutils-python
+	成功：https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md
+4.修改gitlab配置文件指定服务器ip和自定义端口：
+	vim  /etc/gitlab/gitlab.rb
+	external_url http://ip:port	
+	ps:注意这里设置的端口不能被占用，默认是8080端口，如果8080已经使用，请自定义其它端口，并在防火墙设置开放相对应得端口
+	未安装vim:	yum -y install vim*
+5.重置并启动GitLab
+	gitlab-ctl reconfigure
+	systemctl enable gitlab-runsvdir
+	systemctl status gitlab-runsvdir
+	gitlab-ctl restart
+6.访问 GitLab页面
+	如果没有域名，直接输入服务器ip和指定端口进行访问 http://ip:port	
+	初始账户: 	root 
+	更改密码:	huitone_gitlab_20191024
+=======================================================================================================
+出现访问不了情况，尝试：
+	vim /var/opt/gitlab/nginx/conf/gitlab-http.conf
+	firewall-cmd --add-port=9090/tcp --permanent
+	firewall-cmd --permanent --add-service=http	
+	systemctl reload firewalld
+	gitlab-ctl restart
+----------------------------------------------------------------------------------
+	systemctl enable sshd
+	systemctl start sshd
+	systemctl enable firewalld
+	systemctl start firewalld
+	systemctl enable postfix
+	systemctl start postfix
+	gitlab-ctl restart
+=======================================================================================================
+GitLab常用命令
+	gitlab-ctl start                    # 启动所有 gitlab 组件；
+	gitlab-ctl stop                    # 停止所有 gitlab 组件；
+	gitlab-ctl restart                # 重启所有 gitlab 组件；
+	gitlab-ctl status                 # 查看服务状态；
+	gitlab-ctl reconfigure         # 启动服务；
+	vim /etc/gitlab/gitlab.rb      # 修改默认的配置文件；
+	gitlab-rake gitlab:check SANITIZE=true --trace    # 检查gitlab；
+	gitlab-ctl tail                        # 查看日志；
+=======================================================================================================
+完全卸载GitLab
+一、停止gitlab
+		gitlab-ctl stop
+二、卸载gitlab（这块注意了，看看是gitlab-ce版本还是gitlab-ee版本，别写错误了）
+		rpm -e gitlab-ce
+三、查看gitlab进程
+	ps -ef|grep gitlab
+　    杀掉第一个守护进程(runsvdir -P /opt/gitlab/service log)
+　    kill -9 4473
+　    再次查看gitlab进程是否存在
+四、删除gitlab文件
+        find / -name *gitlab*|xargs rm -rf      删除所有包含gitlab的文件及目录
+        find / -name gitlab |xargs rm -rf 
+        删除gitlab-ctl uninstall时自动在root下备份的配置文件（ls /root/gitlab* 看看有没有，有也删除）
+通过以上几步就可以彻底卸载gitlab
+=======================================================================================================配置
+webhooks: https://www.jianshu.com/p/80d9a656d6c6?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
+在前端web服务器的网站根目录（/home/www/test/）下新建一个webhooks.php
+<?php
+//网站目录
+$www_file='/home/www/test/';
+
+//打开网站目录下的hooks.log文件,需要在服务器上创建,并给写权限
+$fs = fopen('/home/www/test/hooks.log', 'a');
+
+fwrite($fs, '================ Update Start ==============='.PHP_EOL.PHP_EOL);
+
+//自定义字串掩码 用于验证
+$access_token = 'QhNO8YHqym5PHQQsexapF7041xOhzm62DRH';
+
+//接受的ip数组，也就是允许哪些IP访问这个文件 这里是gitlab服务器IP
+$access_ip = array('192.168.1.15','14.xxx.xxx.19');
+
+//如果使用www.xxx.com/xxx.php?token=xxxxxxx 的方式来传送验证字符串，则用这个方法获取
+# $client_token = $_GET['token'];
+
+// 获取请求端的secret token
+$client_token = $_SERVER["HTTP_X_GITLAB_TOKEN"];
+
+//获取请求端的IP
+$client_ip = $_SERVER['REMOTE_ADDR'];
+
+//把请求的IP和时间写进log
+fwrite($fs, 'Request on ['.date("Y-m-d H:i:s").'] from ['.$client_ip.']'.PHP_EOL);
+
+//验证token 有错就写进日志并退出
+if ($client_token !== $access_token)
+{
+    echo "error 403";
+    fwrite($fs, "Invalid token [{$client_token}]".PHP_EOL);
+    exit(0);
+}
+
+//验证ip
+if ( !in_array($client_ip, $access_ip))
+{
+    echo "error 503";
+    fwrite($fs, "Invalid ip [{$client_ip}]".PHP_EOL);
+    exit(0);
+}
+
+//获取请求端发送来的信息，具体格式参见gitlab的文档
+$json = file_get_contents('php://input');
+$data = json_decode($json, true);
+
+//如果有需要 可以打开下面，把传送过来的信息写进log
+# fwrite($fs, 'Data: '.print_r($data, true).PHP_EOL);
+
+//执行shell命令并把返回信息写进日志
+$output=shell_exec("cd $www_file && git pull 2>&1");
+fwrite($fs, 'Info:'. $output.PHP_EOL);
+
+fwrite($fs,PHP_EOL. '================ Update End ==============='.PHP_EOL.PHP_EOL);
+
+$fs and fclose($fs);
+
+?>
+修改PHP配置
+因为webhooks用到的php代码中使用了 shell_exec 函数，一般配置php会禁止这个函数，需要打开 shell_exec 函数。
+修改前端web服务器上php.ini的 disable_functions 列表，去掉 shell_exec 。
+重启php-fpm服务。
+
+Secret Token中字符串的值，要跟webhooks.php中$access_token 的值相同。
+Enable SSL verification 不要勾。
+
+五、遇到的问题
+在部署webhooks中，遇到了个很诡异的问题。
+
+前提说明
+
+GitLab-CE 版本：9.2.6
+使用xhang项目对GitLab-CE进行汉化过
+
+问题描述：
+
+已成功部署webhooks，按 [Test] 按钮测试正常。
+但在实际使用中，开发者push代码后，webhooks.php没有被执行，前端web代码没有git pull 记录，日志也没有记录。GitLab没有检测到开发者的push事件。
+
+问题分析：
+
+通过另外部署一套同版本的、不打汉化补丁的GitLab-CE，发现不是汉化补丁的问题。
+回想起之前遇到的一个问题，在GitLab-CE上新创建test项目时，开发者push后，GitLab上仍然显示该项目是空项目，无法检测到push事件，后来还是通过修改项目名来使得其能识别push事件。
+问题解决：
+
+后来偶然发现，webhooks时GitLab没有及时检测到开发者的push事件，是因为对 /var/opt/gitlab/ 目录做了软链接的缘故。
+去掉软链接，改为正常的目录路径。
+
+=======================================================================================================
+
+=======================================================================================================
+
+=======================================================================================================

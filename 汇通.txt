@@ -9,11 +9,83 @@ http://mail.huitone.com/webmail7.5/webmail.php?r=site/index/domain/huitone.com
 登录账户：	zm@huitone.com
 登录密码：	HTGX100
 ===========================================================================================================================
-
+中标oracle环境：
+172.16.7.162 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST =172.16.7.162)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = orcl)
+    )
+  )
+ua_dbg  / ua_dbgrica
 ===========================================================================================================================
+sftp:172.16.6.34
+port:22
+username:	root
+password:	huitone2214
+username:	git
+password:	git20191023
 
+Bt-Panel:	 http://172.16.6.34:8888/144712be/
+username: 	oa4arqxc
+password: 	2d9f9cc4
+------------------------------------------------------------
+http://172.16.6.34:8099
+姓名：	zm
+账号：	zmin
+邮箱：	qq邮箱
+密码：	12345678
 ===========================================================================================================================
+gitlab重新部署到
+172.16.7.54
+username:	root
+password:	huitone2214
+http://172.16.7.54:9090
+===========================================================================================================================
+172.16.6.44
+username:	root
+password:	huitone2214
+vim /etc/apache/extra/httpd-vhosts.conf
+web根目录：	/usr/local/apache2/htdocs
+http://172.16.6.44/inc_chk/login.php
+/usr/local/apache2/bin/apachectl restart
 
+/usr/local/php2/bin/php -m 
+php -m 
+/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
+------------------------------------------------------------
+tns:
+44 =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST =172.16.6.44)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = orcl)
+    )
+  )
+===========================================================================================================================
+产品化全局替换：
+Copyright (C) 2002-2010,Guangzhou Huagong Information Software Co., LTD. All rights reserved.
+Copyright (C) 2013-2014,Guangzhou Huagong Information Software Co., LTD. All rights reserved.
+Copyright (C) 2002-2012,Guangzhou Huagong Information Software Co., LTD. All rights reserved.
+,Guangzhou Huagong Information Software Co., LTD. All rights reserved.
+hgeagle
+zhengjingyue
+yanzhiwei
+fengjianwen
+liumingtao
+zhangluwen
+fengwenqi
+changfen
+wangjinjie
+liuming
+zengchunqiang
+humingsan
+yangxueqin
+laikeke
+yuyuzhan
+liangyongde
 ===========================================================================================================================
 
 ===========================================================================================================================
