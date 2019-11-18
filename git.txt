@@ -149,9 +149,14 @@ git reset --hard 版本
 首先要回退本地分支：
 
 git reflog
+<<<<<<< HEAD
+git reset --hard 3f01cc4a59d537ca1fffd8f14639dbaada09688d
+
+=======
 git reset --hard b83c5031
 git reset --hard  5fdce671646df5e7a3156176cc18655ed7ac2deb 
 数据质量中心部署版本：	2345652e
+>>>>>>> 5c220b0025d8bed3c4c3326bb19eaf715afdf78f
 紧接着强制推送到远程分支：
 
 git push -f
