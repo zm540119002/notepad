@@ -39,6 +39,14 @@ yum -y install wget
 	如果没有域名，直接输入服务器ip和指定端口进行访问 http://ip:port	
 	初始账户: 	root 
 	更改密码:	huitone_gitlab_20191024
+=======================================================================================================	
+gitlab服务安装目录说明
+         /var/opt/gitlab/git-data/repositories/：库默认存储目录
+         /opt/gitlab：应用代码和相应的依赖程序
+        /var/opt/gitlab：”gitlab-ctl reconfigure”命令编译后的应用数据和配置文件，不需要人为修改配置
+        /etc/gitlab：配置文件目录
+        /var/log/gitlab：此目录下存放了gitlab各个组件产生的日志
+        /var/opt/gitlab/backups/：备份文件生成的目录
 =======================================================================================================
 出现访问不了情况，尝试：
 	vim /var/opt/gitlab/nginx/conf/gitlab-http.conf
@@ -54,6 +62,13 @@ yum -y install wget
 	systemctl enable postfix
 	systemctl start postfix
 	gitlab-ctl restart
+----------------------------------------------------------------------------------
+error: insufficient permission for adding an object to repository database .git/objects
+无权限访问.git
+执行git命令需要访问项目下的.git（隐藏目录，ls -la可以看到），但是由于我们的钩子是php文件，
+相当于用php-fpm所配置的用户（我的是www）去访问.git目录。而.git目录是由root生成的，所以会导致权限不足。
+于是用chown -R www:www .git修改.git属组
+=======================================================================================================
 =======================================================================================================
 GitLab常用命令
 	gitlab-ctl start                    # 启动所有 gitlab 组件；
@@ -81,7 +96,8 @@ GitLab常用命令
         删除gitlab-ctl uninstall时自动在root下备份的配置文件（ls /root/gitlab* 看看有没有，有也删除）
 通过以上几步就可以彻底卸载gitlab
 =======================================================================================================配置
-webhooks: https://www.jianshu.com/p/80d9a656d6c6?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
+webhooks:
+ https://www.jianshu.com/p/80d9a656d6c6?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
 在前端web服务器的网站根目录（/home/www/test/）下新建一个webhooks.php
 <?php
 //网站目录
