@@ -149,7 +149,33 @@ Vue.directive('focus', {
 	}
 })
 =====================================================================================
+[{…}]
+0:
+chapter_id: "1734292"
+chapter_title: "1"
+chapter_title_disabled: "true"
+paragraph_list: Array(1)
+0:
+paragraph_id: "1734293"
+paragraph_title: "11"
+paragraph_title_disabled: "true"
+paragraph_type: "TEXT"
 
+_this.postData.chapter_list = _this.postData.chapter_list(chapter => {
+	chapter = chapter.paragraph_list(paragraph => {
+		return !!paragraph.paragraph_title_disabled;
+	});
+	return !!chapter.chapter_title_disabled;
+});
+
+console.log(_this.postData.chapter_list);
+_this.postData.chapter_list = _this.postData.chapter_list(chapter => {
+	chapter = chapter.paragraph_list(paragraph => {
+		return !!paragraph.paragraph_title_disabled;
+	});
+	return !!chapter.chapter_title_disabled;
+});
+console.log(_this.postData.chapter_list);
 =====================================================================================
 
 =====================================================================================

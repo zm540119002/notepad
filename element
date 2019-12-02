@@ -63,11 +63,34 @@ then(function (response) {
 	console.log(error);
 });
 ===========================================================================================================================
-
+<el-table
+	:data="tableData"
+	:row-style="tableRowStyle"
+,tableRowStyle({row, rowIndex}) {
+	const _this = this;
+	return
+		`
+			padding: 0;
+		`;
+}
+===========================================================================================================================table新增一行回显
+if(!_this.dialogForm.ftpparm_id){
+	let addRow = _this.dialogForm;
+	addRow.ftpparm_id = response.data.ftpparm_id;
+	addRow.opt_time = response.data.opt_time;
+	addRow.opt_name = response.data.opt_name;
+	_this.tableData.unshift(addRow);
+}
 ===========================================================================================================================
-
-===========================================================================================================================
-
+<el-input
+		type="text"
+		size="small"
+		style="width: 85%"
+		@blur="chapterTitleBlur(scope.row,scope.$index);"
+		@keyup.enter.native = 'chapterTitleKeyUp(scope.row,scope.$index);'
+		:disabled="!!scope.row.chapter_title_disabled"
+		v-model="scope.row.chapter_title">
+</el-input>
 ===========================================================================================================================
 
 ===========================================================================================================================

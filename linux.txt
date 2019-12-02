@@ -1,8 +1,12 @@
 =======================================================================================================
 find . -type f -name *.svn*    | xargs rm -f
+find . -name \*52\* 
 cp -r svg/* /usr/local/apache2/htdocs/inc_chk/new_index/svg/
 服务器之间copy文件：
 scp -r git@120.79.201.125:/home/www/web/thinkphp5.1/msy/public/uploads/weiya_project .
+scp /usr/local/dm7client/drivers/php_pdo/libphp52_dm.so root@172.16.6.44:/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
+scp /usr/local/dm7client/drivers/php_pdo/*52* root@172.16.6.44:/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
+scp /usr/local/php/include/php/ext/pdo_oci.so root@172.16.6.44:/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
 =======================================================================================================
 df -hl 查看磁盘剩余空间
  
@@ -199,7 +203,7 @@ service nginx restart
 ##################php相关命令##################################
 vim ~/.bash_profile
 PATH 路径加上php安装路径（/usr/local/php）
-PATH=/usr/local/php/bin:$PATH:$HOME/bin
+PATH=/usr/local/php2/bin:$PATH:$HOME/bin
 source ~/.bash_profile
 php -v				#查看php版本
 php -m				#查看php模块
