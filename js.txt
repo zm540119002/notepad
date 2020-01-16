@@ -1,5 +1,35 @@
-==========================================================================================================================
+==========================================================================================================================变量类型判断
+var obj = Object(); // 返回原对象
+console.log(obj); //{}
+console.log('------------------');
+var value = {};
+obj = Object(value); // 返回原对象
+console.log(obj === value); //true
+console.log(obj); //{}
+console.log('------------------');
+obj = Object({});
+console.log(obj === {}); //false
+console.log(obj); //{}
+console.log('------------------');
+var obj2 = {};
+console.log(obj === obj2); //false
+console.log('------------------');
+利用这一点，可以写一个判断变量是否为对象的函数。
+function isObject(value) {
+	return value === Object(value);
+}
+console.log(isObject([])); // true
+console.log(isObject(true)); // false
+console.log(isObject(1)); // false
+console.log(isObject('abc')); // false
 
+function isArray(obj) {
+    return Object.prototype.toString.call(obj) == '[object Array]';
+}
+function isObject(obj) {
+    return Object.prototype.toString.call(obj) == '[object Object]';
+}
+==========================================================================================================================
 文件上传：
 :show-file-list="false"
 :auto-upload="false"
@@ -66,6 +96,8 @@ $.ajax({
 		}
 	}
 });
+==========================================================================================================================数组操作
+_this.currentIndexRow.detail_index_list.splice(index, 1);
 ==========================================================================================================================
 //数组转json字符串
 var arr = [1,2,3, { a : 1 } ];
@@ -139,7 +171,7 @@ for(let j = 0,len = arr.length; j < len; j++){
 arr.forEach(function(item,index){
 	console.log('forEach遍历:'+index+'--'+item);
 });
-forEach这种方法也有一个小缺陷：你不能使用break语句中断循环，也不能使用return语句返回到外层函
+forEach这种方法也有一个小缺陷：你不能使用break语句中断循环，也不能使用return语句返回到外层函 ,只能用于数组
 arr.map(function(value,index){
     console.log('map遍历:'+index+'--'+value);
 });
@@ -277,31 +309,6 @@ if(~arr.indexOf(ele)){...} //简洁
 
 parseInt(-2.99) //-2
 ~~(-2.99) //-2
-
-==========================================================================================================================
-var obj = Object(); // 返回原对象
-console.log(obj); //{}
-console.log('------------------');
-var value = {};
-obj = Object(value); // 返回原对象
-console.log(obj === value); //true
-console.log(obj); //{}
-console.log('------------------');
-obj = Object({});
-console.log(obj === {}); //false
-console.log(obj); //{}
-console.log('------------------');
-var obj2 = {};
-console.log(obj === obj2); //false
-console.log('------------------');
-利用这一点，可以写一个判断变量是否为对象的函数。
-function isObject(value) {
-	return value === Object(value);
-}
-console.log(isObject([])); // true
-console.log(isObject(true)); // false
-console.log(isObject(1)); // false
-console.log(isObject('abc')); // false
 ==========================================================================================================================文件上传
 <div class="upload-picture-module box-flex f24">
 	<div>

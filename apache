@@ -18,10 +18,14 @@
 		systemctl restart httpd.service #重启
 	设置开机自启动	systemctl enable httpd.service
 ===========================================================================================================================
-/usr/local/apache2/bin/apachectl	restart
+/usr/local/apache2/bin/apachectl restart
 /usr/local/php/sbin/php-fpm restart
-===========================================================================================================================
-
+===========================================================================================================================重启错误
+(98)Address already in use: make_sock: could not bind to address [::]:80
+(98)Address already in use: make_sock: could not bind to address 0.0.0.0:80
+ps -ef|grep httpd 或者 netstat -lnp|grep 80
+killall -9 httpd
+/usr/local/apache2/bin/apachectl start
 ===========================================================================================================================
 
 ===========================================================================================================================

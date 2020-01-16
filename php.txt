@@ -10,6 +10,15 @@ header("Content-type: text/html; charset=gb2312");
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Headers: token,Origin, X-Requested-With, Content-Type, Accept");
 header('Access-Control-Allow-Methods: POST,GET');
+==========================================================================================================================================php开启调试模式
+如果服务器关闭了php服务的错误提示，而又需要对某个php文件进行调试，可以在文件中加入如下代码：
+ini_set('display_errors', true);
+error_reporting(E_ALL);
+==========================================================================================================================================
+不论在什么平台、用什么web server，只要是用cgi/fastcgi方式运行PHP，都用非线性安全。
+
+这意味着nginx必然配合非线程安全的PHP，IIS则要用线性安全的PHP。Apache有两种运行模式：如果用fastcgi模式，则配合非线性安全PHP，
+如果用LoadModule模式，则要用线性安全PHP。后者应该是大多数Apache使用者的选择。
 ==========================================================================================================================================
 $_SERVER['REQUEST_METHOD']
 $_SERVER['REMOTE_ADDR']
@@ -108,4 +117,154 @@ function curPageURL() {
 	}
 	return $pageURL;
 }
+==========================================================================================================================================5.2.17
+	https://www.cnblogs.com/ahwu/p/4873654.html
+	wget http://museum.php.net/php5/php-5.2.17.tar.gz
+	tar zxf php-5.2.17.tar.gz
+./configure \
+  --prefix=/usr/share/php52 \
+  --datadir=/usr/share/php52 \
+  --mandir=/usr/share/man \
+  --bindir=/usr/bin/php52 \
+  --with-libdir=lib64 \
+  --includedir=/usr/include \
+  --sysconfdir=/etc/php52/apache2 \
+  --with-config-file-path=/etc/php52/cli \
+  --with-config-file-scan-dir=/etc/php52/conf.d \
+  --localstatedir=/var \
+  --disable-debug \
+  --with-regex=php \
+  --disable-rpath \
+  --disable-static \
+  --disable-posix \
+  --with-pic \
+  --with-layout=GNU \
+  --with-pear=/usr/share/php \
+  --enable-calendar \
+  --enable-sysvsem \
+  --enable-sysvshm \
+  --enable-sysvmsg \
+  --enable-bcmath \
+  --with-bz2 \
+  --enable-ctype \
+  --with-db4 \
+  --without-gdbm \
+  --with-iconv \
+  --enable-exif \
+  --enable-ftp \
+  --enable-cli \
+  --with-gettext \
+  --enable-mbstring \
+  --with-pcre-regex=/usr \
+  --enable-shmop \
+  --enable-sockets \
+  --enable-wddx \
+  --with-libxml-dir=/usr \
+  --with-zlib \
+  --with-kerberos=/usr \
+  --with-openssl=/usr \
+  --enable-soap \
+  --enable-zip \
+  --with-mhash \
+  --with-exec-dir=/usr/lib/php5/libexec \
+  --without-mm \
+  --with-curl=shared,/usr \
+  --with-zlib-dir=/usr \
+  --with-gd=shared,/usr \
+  --enable-gd-native-ttf \
+  --with-gmp=shared,/usr \
+  --with-jpeg-dir=shared,/usr \
+  --with-xpm-dir=shared,/usr/X11R6 \
+  --with-png-dir=shared,/usr \
+  --with-freetype-dir=shared,/usr \
+  --with-ttf=shared,/usr \
+  --with-t1lib=shared,/usr \
+  --with-ldap=shared,/usr \
+  --with-mysql=shared,/usr \
+  --with-mysqli=shared,/usr/bin/mysql_config \
+  --with-pgsql=shared,/usr \
+  --with-pspell=shared,/usr \
+  --with-unixODBC=shared,/usr \
+  --with-xsl=shared,/usr \
+  --with-snmp=shared,/usr \
+  --with-sqlite=shared,/usr \
+  --with-tidy=shared,/usr \
+  --with-xmlrpc=shared \
+  --enable-pdo=shared \
+  --without-pdo-dblib \
+  --with-pdo-mysql=shared,/usr \
+  --with-pdo-pgsql=shared,/usr \
+  --with-pdo-odbc=shared,unixODBC,/usr \
+  --with-pdo-dblib=shared,/usr \
+  --enable-force-cgi-redirect  --enable-fastcgi \
+  --with-libdir=/lib/x86_64-linux-gnu \
+  --with-pdo-sqlite=shared \
+  --with-sqlite=shared \
+  --enable-ipv6 \
+  --with-mcrypt \
+  --with-imap-ssl
+==========================================================================================================================================php7
+ yum install -y gcc gcc-c++  make zlib zlib-devel pcre pcre-devel  libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers -y
+ 
+ ./configure --prefix=/usr/local/php \
+ --with-config-file-path=/usr/local/php \
+ --with-apxs2=/usr/local/apache2/bin/apxs \
+ --enable-mbstring \
+ --with-openssl \
+ --enable-ftp \
+ --with-gd \
+ --with-jpeg-dir=/usr \
+ --with-png-dir=/usr \
+ --with-mysql=mysqlnd \
+ --with-mysqli=mysqlnd \
+ --with-pdo-mysql=mysqlnd \
+ --with-pear \
+ --enable-sockets \
+ --with-freetype-dir=/usr\
+ --with-libxml-dir=/usr \
+ --with-xmlrpc \
+ --enable-zip \
+ --enable-fpm \
+ --enable-xml \
+ --with-zlib \
+ --with-iconv \
+ --enable-soap \
+ --enable-pcntl \
+ --enable-cli \
+ --with-curl
+==========================================================================================================================================
+	wget http://hk1.php.net/get/php-7.2.3.tar.gz/from/this/mirror
+	tar -zxvf mirror
+cd php-7.1.31
+./configure 
+--prefix=/usr/local/php 
+--with-config-file-path=/usr/local/php/etc
+--enable-mbstring 
+--enable-ftp 
+--with-gd 
+--with-jpeg-dir=/usr 
+--with-png-dir=/usr 
+--with-mysql=mysqlnd 
+--with-mysqli=mysqlnd 
+--with-pdo-mysql=mysqlnd 
+--without-pear 
+--disable-phar 
+--enable-sockets 
+--with-freetype-dir=/usr 
+--with-zlib 
+--with-libxml-dir=/usr 
+--with-xmlrpc 
+--enable-zip 
+--enable-fpm 
+--enable-xml 
+--with-iconv 
+--enable-soap 
+--enable-pcntl 
+--enable-cli 
+--with-curl
+
+==========================================================================================================================================pdo_oci扩展
+./configure --with-php-config=/usr/local/php/bin/php-config --with-pdo-oci=instantclient,/root/instantclient_18_3,11.2.0
+==========================================================================================================================================oci8
+./configure --with-php-config=/usr/local/php/bin/php-config --with-oci8=shared,instantclient,/root/instantclient_18_3
 ==========================================================================================================================================

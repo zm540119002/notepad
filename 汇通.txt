@@ -37,11 +37,14 @@ http://172.16.6.34:8099
 邮箱：	qq邮箱
 密码：	12345678
 ===========================================================================================================================
+===========================================================================================================================
 gitlab重新部署到
 172.16.7.54
 username:	root
 password:	huitone2214
-http://172.16.7.54:9090
+	http://172.16.7.54:9090
+参考：
+	https://www.jianshu.com/p/80d9a656d6c6?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
 ===========================================================================================================================
 172.16.7.74
 vim /usr/local/php/lib/php.ini
@@ -58,29 +61,40 @@ cd /usr/local/php/include/php/ext
 ------------------------------------------------------------
 apache 启动：	/usr/local/apache2/bin/apachectl start
 ===========================================================================================================================
-172.16.6.45
-username:	root
-password:	huitone2214
-/usr/local/dm7client/drivers/php_pdo
-===========================================================================================================================
 172.16.6.44
 username:	root
 password:	huitone2214
 username:	oracle
 password:	huitone2214
-vim /etc/apache/httpd.conf
-vim /etc/apache/extra/httpd-vhosts.conf
-vim /usr/local/php2/etc/php.ini
-log_errors=On
-error_log=/usr/local/php2/php_error.log
-web根目录：	/usr/local/apache2/htdocs
+---------------------------------------------------------------apache
+vim /usr/local/apache/conf/httpd.conf
+LoadModule php5_module        modules/libphp5.so
+vim /usr/local/apache/conf/httpd.conf
+vim /usr/local/apache/conf/extra/httpd-vhosts.conf
+web根目录：	/usr/local/apache/htdocs
 /usr/local/apache2/logs
 http://172.16.6.44/inc_chk/login.php
-apache 启动：	/usr/local/apache2/bin/apachectl restart
-
+apache 启动：	/usr/local/apache/bin/apachectl restart
+---------------------------------------------------------------php
+vim /usr/local/php/etc/php.ini
+log_errors=On
+error_log=/usr/local/php/php_error.log
 /usr/local/php2/bin/php -m 
-php -m 
-cd /usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
+/usr/local/php2/bin/phpize
+php已安装扩展：
+cd /usr/local/php/lib/php/extensions/no-debug-non-zts-20060613
+----------------------------------------------------------pdo_odbc、odbc扩展
+yum install unixODBC unixODBC-devel -y 
+cd /usr/local/src/php-5.2.17/ext/pdo_odbc
+phpize
+./configure --with-php-config=/usr/local/php2/bin/php-config --with-pdo-odbc=unixODBC,/usr/
+make && make install
+cd /usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613/
+vim /etc/php.ini
+vim /etc/odbcinst.ini 
+vim /etc/odbc.ini
+
+./configure --with-php-config=/usr/local/php2/bin/php-config --with-pdo-odbc=unixODBC,/usr/
 ===========================================================================================================================
 产品化全局替换：
 Copyright (C) 2002-2010,Guangzhou Huagong Information Software Co., LTD. All rights reserved.
@@ -104,6 +118,8 @@ laikeke
 yuyuzhan
 liangyongde
 172.16.7.95 => 172.16.6.44
+	http://172.16.7.71
+	https://172.16.7.71
 ===========================================================================================================================
 
 ===========================================================================================================================
