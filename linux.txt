@@ -366,7 +366,7 @@ git config --global user.email = 'zm@qq.com'
 
 为公司生成一对秘钥ssh key
 
-ssh-keygen -t rsa -C 'yourEmail@xx.com' -f ~/.ssh/gitlab-rsa
+ssh-keygen -t rsa -C 'common@huitone.com' -f ~/.ssh/gitlab-rsa
 为github生成一对秘钥ssh key
 
 ssh-keygen -t rsa -C 'yourEmail2@xx.com' -f ~/.ssh/github-rsa
