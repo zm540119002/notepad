@@ -1,0 +1,18 @@
+location ^~ /ucenter/ {
+				proxy_pass http://193.112.14.227;
+        }
+		
+		
+1、3年以上大型 Web 系统研发经验；
+		
+2、对HTML5/CSS3/jQuery/vue等有深刻了解以及熟练应用；
+
+3、熟练掌握 PHP 语言，熟悉面向对象的分析及设计方法，熟练使用thinkphp框架进行PHP开发，精通MVC开发模式；
+
+4、熟练掌握MySQL数据库，MongoDB及Redis；
+
+5、熟练使用 Linux 系统，以及 Shell 脚本语言；
+
+6、熟悉 Apache、Nginx等Web服务器进行PHP应用部署；
+
+7、有微信公众号和小程序开发经验者优先。 

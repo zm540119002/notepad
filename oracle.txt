@@ -1,4 +1,39 @@
 ===========================================================================================================================
+plsql连接数据库：
+工具-首选项-连接-oci库
+E:\oracle\app\oracle\product\11.2.0\server\bin\oci.dll
+E:\oracle\app\oracle\product\11.2.0\server\network\ADMIN 下编辑：tnsnames.ora
+oracle :
+	ltdba/ltdbarica
+	ua_dbg/ua_dbgrica
+===========================================================================================================================重启
+su - oracle
+sqlplus /nolog
+conn /as sysdba
+停止：	shutdown immediate
+启动：	startup
+-------------------------------------------------------
+su - oracle
+关闭监听:  	lsnrctl stop
+启动监听:	lsnrctl start
+切换帐户一定要加 "-"
+否则会出现：   bash:lsnrctl:command not found.错误
+-------------------------------------------------------ora-00257
+show parameter db_recovery
+ （2）查看v$recovery_file_dest视图，可得知fast_recovery_area的空间限制、已使用的空间、文件数等。
+
+SQL> select * from v$recovery_file_dest;
+
+检查flash recovery area的使用情况,可以看见archivelog已经很大了，达到99.63%：
+select * from v$flash_recovery_area_usage;
+归档日志：	cd /home/oracle/flash_recovery_area
+rm -rf *
+recover database until time '2020-01-06 12:12:12';
+	DELETE ARCHIVELOG FROM TIME 'SYSDATE-7'; 
+ find /home/oracle/flash_recovery_area/ORCL/archivelog -xdev -mtime +7 -name "*.dbf" -exec rm -f {}  \;
+===========================================================================================================================
+查看字符集：select userenv('language') from dual;
+===========================================================================================================================
 oracle客户端：
 E:\app\Administrator\product\11.2.0\client_1\NETWORK\ADMIN
 NETWORK\ADMIN目录若没有，新建。
@@ -49,7 +84,7 @@ SELECT *
          WHERE ROWNUM <= 20) table_alias
  WHERE table_alias.rowno >= 10;
 ===========================================================================================================================
-
+to_char(a.opt_time,'YYYY/MM/DD hh24:mi:ss') opt_time,
 ===========================================================================================================================
 
 ===========================================================================================================================

@@ -36,6 +36,18 @@ _this.$confirm(info,title,{
 }).catch(function (error) {
 	console.log(error);
 });
+-----------------------------------------------------
+methods: {
+	message(message,type) {
+		const _this = this;
+		_this.$message({
+			message: message || '成功',
+			type: type || 'success',
+			duration: type=='success'?1000:3000,
+			center: true,
+			showClose: true,
+		});
+	},
 ===========================================================================================================================
 const url = 'quality_report_action.php?act=saveQualityReport';
 axios.defaults.timeout = 10000;
@@ -63,25 +75,180 @@ then(function (response) {
 	console.log(error);
 });
 ===========================================================================================================================
-
+<el-table
+	:data="tableData"
+	:row-style="tableRowStyle"
+,tableRowStyle({row, rowIndex}) {
+	const _this = this;
+	return
+		`
+			padding: 0;
+		`;
+}
+===========================================================================================================================table新增一行回显
+if(!_this.dialogForm.ftpparm_id){
+	let addRow = _this.dialogForm;
+	addRow.ftpparm_id = response.data.ftpparm_id;
+	addRow.opt_time = response.data.opt_time;
+	addRow.opt_name = response.data.opt_name;
+	_this.tableData.unshift(addRow);
+}
 ===========================================================================================================================
-
+<el-input
+		type="text"
+		size="small"
+		style="width: 85%"
+		@blur="chapterTitleBlur(scope.row,scope.$index);"
+		@keyup.enter.native = 'chapterTitleKeyUp(scope.row,scope.$index);'
+		:disabled="!!scope.row.chapter_title_disabled"
+		v-model="scope.row.chapter_title">
+</el-input>
 ===========================================================================================================================
+//归属系统
+$where=array();
+//$where["status"] = "'O'";
+$source_system_option = json_encode(getDataTable("TB_UC_CFG_SOURCE_SYSTEM",$where_arr,"SEQU ASC","name,src_system_id"));
+systemFormatter(row, column, cellValue){
+	const _this = this;
+	return getCNfromArray(cellValue,_this.source_system_option,'NAME');
+}
+<el-select v-model="selectedSubService" placeholder="请选择治理点"
+		   @change="subServiceChange" :disabled="!selectedService" clearable>
+	<el-option v-for="(val,key,index) in sub_service_option_filtered"
+			   :key="index"
+			   :value="val.SUB_SERVICE_ID"
+			   :label="val.SUB_SERVICE_NAME">
+	</el-option>
+</el-select>
+//统计属性
+$statics_property_option = json_encode(getSysCode('INDEX_STATICS_PROPERTY'));
+staticsFormatter(row, column, cellValue){
+	const _this = this;
+	return getCNfromArray(cellValue,_this.statics_property_option,'VALUE');
+}
+<el-select v-model="scope.row.paragraph_type" style="width: 85%" placeholder="请选择" size="small">
+	<el-option v-for="(val,key,index) in paragraph_type_option"
+			   :key="index"
+			   :value="val.KEY"
+			   :label="val.VALUE">
+	</el-option>
+</el-select>
+//自定义
+direction_option: [
+	{value: '1',label: 'FTP-获取'},
+	{value: '2',label: 'FTP-推送'},
+	{value: '3',label: 'SFTP-获取'},
+	{value: '4',label: 'SFTP-推送'},
+],
+delSrcFormatter(row, column, cellValue){
+	return getCNfromArray(cellValue,this.del_src_option,'label');
+}
+<el-select
+		v-model="dialogForm.direction"
+		placeholder="请选择"
+		size="small">
+	<el-option
+			v-for="item in direction_option"
+			:key="item.value"
+			:label="item.label"
+			:value="item.value">
+	</el-option>
+</el-select>
+===========================================================================================================================select赋值问题
+select 表单控件初始化后，选择下拉选项，值无法绑定。点击其他控件时，值才可以绑定。
 
+原因是：绑定的值在对象里面，赋值出项错误。
+
+<el-select v-model="form.status" placeholder="请选择">
+      <el-option
+        v-for="item in statusoptions"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
+data() {
+  return {
+    form: {
+      status:'' 
+    }
+}
+
+}
+
+解决方法：
+
+<el-select v-model="status" placeholder="请选择">
+      <el-option
+        v-for="item in statusoptions"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
+data() {
+  return {
+      status:'' }}
+
+-------------------------------------------------------解决方法二：
+加@change="$forceUpdate()"
+===========================================================================================================================向对象中增加属性，不能采用直接赋值的形式
+_this.data_source_list = Object.assign({}, _this.data_source_list, {
+	age: 27,
+	sex: 'male'
+});
+Array.prototype.concant()
 ===========================================================================================================================
+滚动到第一行：
+this.$refs.table.bodyWrapper.scrollTop =0;
 
+滚动到最后一行：
+this.$refs.table.bodyWrapper.scrollTop =this.$refs.table.bodyWrapper.scrollHeight;
+
+//滚动条定位
+if(_this.$refs.dataSourceTable.bodyWrapper.scrollHeight){
+	_this.$refs.dataSourceTable.bodyWrapper.scrollTop =
+		_this.$refs.dataSourceTable.bodyWrapper.scrollHeight*(index/response.data.length);
+}
+===========================================================================================================================绑定原生事件
+<el-table-column label="操作" width="64">
+	<template slot-scope="scope">
+		<el-button @click="groupStoreFieldsClick(scope.$index, scope.row)" type="text">选择存储字段</el-button>
+	</template>
+</el-table-column>
+<el-table-column
+			prop="COLUMN_NAME_CN"
+			label="存储字段"
+			min-width="60%">
+		<template slot-scope="scope">
+			<el-input
+					type="text"
+					size="small"
+					style="width:100%"
+					@click.native="groupStoreFieldsClick(scope.$index, scope.row)"
+					v-model="scope.row.COLUMN_NAME_CN">
+			</el-input>
+		</template>
+	</el-table-column>
 ===========================================================================================================================
-
+v-loading="loading"
+element-loading-text="拼命加载中..."
+loading = true,
+_this.loading = false;
 ===========================================================================================================================
-
-===========================================================================================================================
-
-===========================================================================================================================
-
-===========================================================================================================================
-
-===========================================================================================================================
-
+<el-table-column
+		label="章节名称">
+	<template slot-scope="scope">
+		<el-input
+				type="text"
+				size="small"
+				style="width: 85%"
+				@keyup.enter.native = 'chapterTitleKeyUp(scope.row,scope.$index);'
+				:disabled="!!scope.row.chapter_title_disabled"
+				v-model="scope.row.chapter_title">
+		</el-input>
+	</template>
+</el-table-column>
 ===========================================================================================================================
 
 ===========================================================================================================================

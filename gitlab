@@ -1,3 +1,63 @@
+=======================================================================================================分支管理规范，参考：			https://blog.csdn.net/weixin_33717117/article/details/91390610
+本规范用于描述日常研发流程中关于GitLab上代码分支使用的规则，大家共同严格遵守规范，避免出现分支管理混乱现象，保证日常的发版上线工作顺利进行。
+
+Workspace：工作区，平时我们写代码的地方。
+Index：暂存区，写完代码后让它变成的待提交的状态。
+Repository：本地仓库，提交暂存区的代码到这里，记录进入代码本地管理。
+Remote：远程仓库，将本地仓库的修改的代码提交到远程，可以供远程协作的人下载。
+分支管理规范主要遵循gitflow的分支管理流程，见下图：
+
+master分支
+只存线上的代码，只有确定可以上线时的才合并到master上，并且在master的基础上打Tag。
+
+develop分支
+
+初次创建develop时，需要从master分支拉取，保持开发时代码和线上最新的代码相同。develop分支是在开发时的最终分支，具有所有当前版本需要上线的所有功能。
+
+feature分支
+
+用于开发功能的分支，必须从最新的develop分支代码拉取。分支命名基本上是feature/xxxxx（和功能相关的名字）。
+不强制提交到远程仓库，可以本地创建。
+比如，我要开发登录功能，我从develop分支的最新代码创建新分支命名为feature/login，然后切换到这个新分支开始开发。开发完成后，测试差不多完成，合并到develop分支。
+release分支
+
+当develop分支已经有了本次上线的所有代码的时候，并且以通过全部测试的时候，可以从develop分支创建release分支了，release分支是为发布新的产品版本而设计的。
+通过在release分支上进行这些工作可以让develop分支空闲出来以接受新的feature分支上的代码提交，进入新的软件开发迭代周期。
+在这个分支上的代码允许做小的缺陷修正、准备发布版本所需的各项说明信息（版本号、发布时间、编译时间等等）。
+比如，此次1.0版本所有的功能版本都已经合并到了develop上，并且所有测试都已经通过了测试，那我就创建新的release分支release/v1.0。切换到新分支，修改最新的版本号等，不允许大的更改。
+hotfix分支
+
+当线上出现bug需要紧急修复时，从当前master分支派生hotfix分支。
+修改线上bug，修改完成后合并回develop和master分钟。
+比如，在线上v1.0登录功能出现问题，我从master拉取代码创建新的分支hotfix/v1.0_login，修改完成后合并到master和develop上。
+=======================================================================================================新建project
+Command line instructions
+
+Git global setup
+git config --global user.name "Administrator"
+git config --global user.email "admin@example.com"
+
+Create a new repository
+git clone git@172.16.7.54:php/sjzl.git
+cd sjzl
+touch README.md
+git add README.md
+git commit -m "add README"
+git push -u origin master
+
+Existing folder
+cd existing_folder
+git init
+git remote add origin git@172.16.7.54:php/sjzl.git
+git add .
+git commit -m "Initial commit"
+git push -u origin master
+
+Existing Git repository
+cd existing_repo
+git remote add origin git@172.16.7.54:php/sjzl.git
+git push -u origin --all
+git push -u origin --tags
 =======================================================================================================502
 du -sh /var/log/gitlab
 cat /var/log/gitlab/gitlab-rails/production.log
@@ -39,6 +99,14 @@ yum -y install wget
 	如果没有域名，直接输入服务器ip和指定端口进行访问 http://ip:port	
 	初始账户: 	root 
 	更改密码:	huitone_gitlab_20191024
+=======================================================================================================	
+gitlab服务安装目录说明
+         /var/opt/gitlab/git-data/repositories/：库默认存储目录
+         /opt/gitlab：应用代码和相应的依赖程序
+        /var/opt/gitlab：”gitlab-ctl reconfigure”命令编译后的应用数据和配置文件，不需要人为修改配置
+        /etc/gitlab：配置文件目录
+        /var/log/gitlab：此目录下存放了gitlab各个组件产生的日志
+        /var/opt/gitlab/backups/：备份文件生成的目录
 =======================================================================================================
 出现访问不了情况，尝试：
 	vim /var/opt/gitlab/nginx/conf/gitlab-http.conf
@@ -54,6 +122,12 @@ yum -y install wget
 	systemctl enable postfix
 	systemctl start postfix
 	gitlab-ctl restart
+----------------------------------------------------------------------------------
+error: insufficient permission for adding an object to repository database .git/objects
+无权限访问.git
+执行git命令需要访问项目下的.git（隐藏目录，ls -la可以看到），但是由于我们的钩子是php文件，
+相当于用php-fpm所配置的用户（我的是www）去访问.git目录。而.git目录是由root生成的，所以会导致权限不足。
+于是用chown -R www:www .git修改.git属组
 =======================================================================================================
 GitLab常用命令
 	gitlab-ctl start                    # 启动所有 gitlab 组件；
@@ -81,7 +155,8 @@ GitLab常用命令
         删除gitlab-ctl uninstall时自动在root下备份的配置文件（ls /root/gitlab* 看看有没有，有也删除）
 通过以上几步就可以彻底卸载gitlab
 =======================================================================================================配置
-webhooks: https://www.jianshu.com/p/80d9a656d6c6?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
+webhooks:
+ https://www.jianshu.com/p/80d9a656d6c6?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
 在前端web服务器的网站根目录（/home/www/test/）下新建一个webhooks.php
 <?php
 //网站目录

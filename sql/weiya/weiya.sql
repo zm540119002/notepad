@@ -1,7 +1,11 @@
 /*
  Navicat Premium Data Transfer
 
+<<<<<<< HEAD
  Source Server         : 维雅
+=======
+ Source Server         : weiya
+>>>>>>> 53ee699316ded04d15076083e5a8e6f354741027
  Source Server Type    : MySQL
  Source Server Version : 50624
  Source Host           : 47.106.79.38:3306
@@ -11,7 +15,11 @@
  Target Server Version : 50624
  File Encoding         : 65001
 
+<<<<<<< HEAD
  Date: 23/11/2019 15:55:36
+=======
+ Date: 19/11/2019 11:07:15
+>>>>>>> 53ee699316ded04d15076083e5a8e6f354741027
 */
 
 SET NAMES utf8mb4;

@@ -1,3 +1,30 @@
+=======================================================================================================设置PATH环境变量
+1、直接在命令行中设置PATH
+# PATH=$PATH:/usr/local/apache2/bin
+使用这种方法,只对当前会话有效，也就是说每当登出或注销系统以后，PATH设置就会失效。
+2、在profile中设置PATH
+# vim /etc/profile
+找到export行，在下面新增加一行，内容为：
+export PATH=$PATH:/usr/local/apache2/bin
+注：＝ 等号两边不能有任何空格。这种方法最好，除非手动强制修改PATH的值,否则将不会被改变。编辑/etc/profile后PATH的修改不会立马生效，如果需要立即生效的话，可以执行命令：
+# source profile
+3、在当前用户的profile中设置PATH
+# vim ~/.bash_profile
+修改PATH行，把/usr/local/apache2/bin添加进去，例如：
+PATH=$PATH:$HOME/bin:/usr/local/apache2/bin
+# source ~/.bash_profile
+让这次的修改生效。
+注：这种方法只对当前用户起作用的,其他用户该修改无效。
+=======================================================================================================
+find . -type f -name *.svn*    | xargs rm -f
+find . -name \*52\* 
+cp -r svg/* /usr/local/apache2/htdocs/inc_chk/new_index/svg/
+服务器之间copy文件：
+scp -r git@120.79.201.125:/home/www/web/thinkphp5.1/msy/public/uploads/weiya_project .
+scp /usr/local/dm7client/drivers/php_pdo/libphp52_dm.so root@172.16.6.44:/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
+scp /usr/local/dm7client/drivers/php_pdo/*52* root@172.16.6.44:/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
+scp /usr/local/php/include/php/ext/pdo_oci.so root@172.16.6.44:/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
+scp test.php root@172.16.6.44:/usr/local/apache2/htdocs/test.php
 =======================================================================================================
 df -hl 查看磁盘剩余空间
  
@@ -25,6 +52,9 @@ man
 tldr（命令手册）、tree（树形命令）、rlwrap（历史命令）、script（记录会话输出）、autojump（一键直达）
 =======================================================================================================
 find . -name *~HEAD*  | xargs -n 1000 rm -f
+=======================================================================================================
+查看内存占用前五的进程：	ps auxw | head -1;ps auxw|sort -rn -k4|head -5
+查看CPU占用前三的进程：		ps auxw | head -1;ps auxw|sort -rn -k3|head -3
 =======================================================================================================
 查看已安装的CentOS版本信息：
 	cat /proc/version
@@ -172,7 +202,7 @@ cd /usr/local/src/php-5.6.38/ext/gd
 /usr/local/php/bin/phpize
 ./configure --with-php-config=/usr/local/php/bin/php-config  --with-jpeg-dir=/usr/lib64  --with-png-dir=/usr/lib64   --with-freetype-dir=/usr/lib64
 make && make install
-##################安装gd扩展示例###############################
+##################安装gd扩展示例###############################ssh
 
 ##################安装pcntl扩展示例############################
 1. 进到 php pcntl 扩展目录：
@@ -194,7 +224,7 @@ service nginx restart
 ##################php相关命令##################################
 vim ~/.bash_profile
 PATH 路径加上php安装路径（/usr/local/php）
-PATH=/usr/local/php/bin:$PATH:$HOME/bin
+PATH=/usr/local/php2/bin:$PATH:$HOME/bin
 source ~/.bash_profile
 php -v				#查看php版本
 php -m				#查看php模块
@@ -304,8 +334,6 @@ MySQL database name: msy
 FTP account: www
 FTP password: v7y6LqemgzTp
 =======================================================================================================
-服务器之间copy文件：
-scp -r git@120.79.201.125:/home/www/web/thinkphp5.1/msy/public/uploads/weiya_project .
 =======================================================================================================
 
 ssh 登录免密码：
@@ -338,7 +366,7 @@ git config --global user.email = 'zm@qq.com'
 
 为公司生成一对秘钥ssh key
 
-ssh-keygen -t rsa -C 'yourEmail@xx.com' -f ~/.ssh/gitlab-rsa
+ssh-keygen -t rsa -C 'common@huitone.com' -f ~/.ssh/gitlab-rsa
 为github生成一对秘钥ssh key
 
 ssh-keygen -t rsa -C 'yourEmail2@xx.com' -f ~/.ssh/github-rsa
@@ -411,8 +439,8 @@ rm -rf /home/用户名
       原来linux下添加用户后,会在系统里自动加一个邮箱(系统邮箱),路径是:/var/spool/mail/用户名.
       可以直接用命令#rm -rf /var/spool/mail/用户名
       这样就可以再次添加同一名字的用户.
-=======================================================================================================
-
+=======================================================================================================/lib64和/usr/lib64和/usr/local/lib64的区别
+简单说,/lib64是内核级的,/usr/lib64是系统级的,/usr/local/lib64是用户级的.
 =======================================================================================================
 
 =======================================================================================================

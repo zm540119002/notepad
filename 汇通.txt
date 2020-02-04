@@ -19,9 +19,7 @@ http://mail.huitone.com/webmail7.5/webmail.php?r=site/index/domain/huitone.com
     )
   )
 ua_dbg  / ua_dbgrica
-===========================================================================================================================
-sftp:172.16.6.34
-port:22
+===========================================================================================================================172.16.6.34
 username:	root
 password:	huitone2214
 username:	git
@@ -30,62 +28,76 @@ password:	git20191023
 Bt-Panel:	 http://172.16.6.34:8888/144712be/
 username: 	oa4arqxc
 password: 	2d9f9cc4
-------------------------------------------------------------
+---------------------------------------------------------------gitlab
 http://172.16.6.34:8099
 姓名：	zm
 账号：	zmin
 邮箱：	qq邮箱
 密码：	12345678
-===========================================================================================================================
-gitlab重新部署到
-172.16.7.54
+===========================================================================================================================172.16.7.54
+---------------------------------------------------------------gitlab
+	http://172.16.7.54:9090
+	username:	root
+	password:	huitone2214
+参考：
+	https://www.jianshu.com/p/80d9a656d6c6?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
+---------------------------------------------------------------
+===========================================================================================================================172.16.7.56
+---------------------------------------------------------------apache
+配置文件：	vim /etc/apache2.4/httpd.conf
+web根目录：	cd /usr/local/apache2.4/htdocs
+git clone git@172.16.7.54:php/sjzl.git inc_chk
+---------------------------------------------------------------php
+===========================================================================================================================172.16.7.74
+---------------------------------------------------------------apache
+/usr/local/httpd-2.2.3/docs/conf/httpd.conf
+/usr/local/apache2/conf/original/httpd.conf
+/usr/local/apache2/conf/httpd.conf
+/usr/local/httpd-2.2.3/docs/conf/extra/httpd-vhosts.conf.in
+/usr/local/httpd-2.2.3/docs/conf/extra/httpd-vhosts.conf
+/usr/local/apache2/conf/extra/httpd-vhosts.conf
+/usr/local/apache2/conf/original/extra/httpd-vhosts.conf
+apache 启动：	/usr/local/apache2/bin/apachectl start
+---------------------------------------------------------------php
+vim /usr/local/php/lib/php.ini
+extension_dir = "/usr/local/php/include/php/ext"
+cd /usr/local/php/include/php/ext
+===========================================================================================================================172.16.6.44
 username:	root
 password:	huitone2214
-http://172.16.7.54:9090
-===========================================================================================================================
-172.16.6.44
-username:	root
+username:	oracle
 password:	huitone2214
-vim /etc/apache/extra/httpd-vhosts.conf
-web根目录：	/usr/local/apache2/htdocs
+---------------------------------------------------------------apache
+vim /usr/local/apache/conf/httpd.conf
+LoadModule php5_module        modules/libphp5.so
+vim /usr/local/apache/conf/httpd.conf
+vim /usr/local/apache/conf/extra/httpd-vhosts.conf
+web根目录：	/usr/local/apache/htdocs
+/usr/local/apache2/logs
 http://172.16.6.44/inc_chk/login.php
-/usr/local/apache2/bin/apachectl restart
+apache 启动：	/usr/local/apache/bin/apachectl restart
+---------------------------------------------------------------php
+vim /usr/local/php/etc/php.ini
+log_errors=On
+error_log=/usr/local/php/php_error.log
+/usr/local/php/bin/php -m 
+/usr/local/php/bin/phpize
+php已安装扩展：
+cd /usr/local/php/lib/php/extensions/no-debug-non-zts-20060613
+---------------------------------------------------------------pdo_odbc、odbc扩展
+yum install unixODBC unixODBC-devel -y 
+cd /usr/local/src/php-5.2.17/ext/pdo_odbc
+phpize
+./configure --with-php-config=/usr/local/php2/bin/php-config --with-pdo-odbc=unixODBC,/usr/
+make && make install
+cd /usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613/
+vim /etc/php.ini
+vim /etc/odbcinst.ini 
+vim /etc/odbc.ini
 
-/usr/local/php2/bin/php -m 
-php -m 
-/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
-------------------------------------------------------------
-tns:
-44 =
-  (DESCRIPTION =
-    (ADDRESS = (PROTOCOL = TCP)(HOST =172.16.6.44)(PORT = 1521))
-    (CONNECT_DATA =
-      (SERVER = DEDICATED)
-      (SERVICE_NAME = orcl)
-    )
-  )
+./configure --with-php-config=/usr/local/php2/bin/php-config --with-pdo-odbc=unixODBC,/usr/
 ===========================================================================================================================
-产品化全局替换：
-Copyright (C) 2002-2010,Guangzhou Huagong Information Software Co., LTD. All rights reserved.
-Copyright (C) 2013-2014,Guangzhou Huagong Information Software Co., LTD. All rights reserved.
-Copyright (C) 2002-2012,Guangzhou Huagong Information Software Co., LTD. All rights reserved.
-,Guangzhou Huagong Information Software Co., LTD. All rights reserved.
-hgeagle
-zhengjingyue
-yanzhiwei
-fengjianwen
-liumingtao
-zhangluwen
-fengwenqi
-changfen
-wangjinjie
-liuming
-zengchunqiang
-humingsan
-yangxueqin
-laikeke
-yuyuzhan
-liangyongde
+
 ===========================================================================================================================
 
 ===========================================================================================================================

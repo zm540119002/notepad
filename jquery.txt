@@ -3,7 +3,50 @@ if(typeof on_init_call_back === "function"){
 	on_init_call_back(init_client_id);
 }
 ==============================================================================================================================================
-
+function creTable() {
+	let Wwidth=$(window).width()-20;
+    let queryParams = $('#form').serializeObject();
+    queryParams.state = "<?php echo $_GET['state'] ?>";
+    let title = "";
+	$('#gridTableShow1').datagrid({
+        title:title,
+        queryParams:queryParams,
+        width:Wwidth,//如果为空,ie8缩放时不能根据窗口大小进行缩放
+        nowrap: false,
+        striped: true,
+        collapsible:true,
+        pageNumber:1,
+        url:'work_order_json.php',
+        pageList:[25],
+        columns:[[
+            {field:'WORK_ORDER_CODE',title:'工单号',rowspan:2,width:Wwidth*0.08,align:'left'},
+            {field:'WORK_ORDER_TITLE',title:'工单名称',rowspan:2,width:Wwidth*0.3,align:'left'},
+            {field:'WORK_ORDER_CONTENT',title:'工单内容',rowspan:2, width:Wwidth*0.3,align:'left'},
+            {field:'DRAFT_STAFF',title:'发起人',rowspan:2, width:Wwidth*0.07,align:'left'},
+            {field:'CREATE_TIME',title:'日期',rowspan:2, width:Wwidth*0.05,align:'left'},
+            {field:'EDIT',title:'操作',rowspan:2, width:Wwidth*0.1,align:'left',
+                formatter: function(value){
+                    let url='work_order_edit.php'+'?work_order_code='+value;
+                    let str = '<a href="'+url+'" onfocus="this.blur();">查看</a>';
+                    return str;
+                }
+            }
+        ]],
+        onLoadSuccess: function (data) {
+            const work_order_code = '<?php echo $_REQUEST["work_order_code"];?>';
+            if(work_order_code){
+                const trs = $('#table_div1 div.datagrid-body').find('tr');
+                $.each(trs,function(i,o){
+                    let firstTd = $(o).find('td').first();
+                    if(firstTd.find('div').text()==work_order_code){
+                        $(o).find('a').click();
+                    }
+                });
+            }
+        },
+        pagination:true
+	});
+};
 ==============================================================================================================================================
 
 ==============================================================================================================================================
