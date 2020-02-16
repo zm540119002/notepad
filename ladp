@@ -1,0 +1,253 @@
+===========================================================================================================================shutdown -r now --重启服务器
+172.16.7.56   root/oracle  huitone2214
+安装源文件：	/usr/local/src
+安装路径：		/usr/local
+ rpm -Uvh http://mirrors.sohu.com/fedora-epel/6/x86_64/epel-release-6-8.noarch.rpm
+ rpm -qa libtool-ltdl*
+ rpm -e httpd-tools-2.2.15-53.kb3.ky3.x86_64 --nodeps
+ yum install libtool*
+ yum remove libtool-ltdl*
+===========================================================================================================================rpm
+1. 安装rpm安装包
+   rpm -ivh  *.rpm
+2. 删除rpm安装包
+   rpm -evv *.rpm
+    export LD_LIBRARY_PATH=/usr/local/lib
+===========================================================================================================================apache 
+yum install gcc -y 
+yum install gcc-c++ -y 
+yum install openssl-devel -y 
+yum install perl -y 
+yum install pcre-devel -y 
+yum install libtool -y 
+yum install libxml2 -y 
+yum install libxml2-devel -y
+yum install curl -y 
+yum install curl-devel -y
+yum install libjpeg -y 
+yum install libjpeg-devel -y
+yum install libpng libpng-devel -y
+yum install freetype-devel -y
+yum install openldap -y
+yum install openldap-devel -y
+yum install mhash-devel -y
+yum install libtool-ltdl-devel -y 
+yum install python-devel -y
+yum install httpd-devel -y
+yum groupinstall "Development Tools" -y
+
+ln -s /usr/lib64/libjpeg.so /usr/lib/
+ln -s /usr/lib64/libpng.so /usr/lib/
+cp -frp /usr/lib64/libldap* /usr/lib/
+-----------------------------------------------------------------------先装apr
+wget http://archive.apache.org/dist/apr/apr-1.5.1.tar.gz
+wget http://archive.apache.org/dist/apr/apr-util-1.5.4.tar.gz
+wget http://archive.apache.org/dist/httpd/httpd-2.4.33.tar.gz
+tar -xvf apr-1.5.1.tar.gz
+tar -xvf apr-util-1.5.4.tar.gz
+tar -xvf httpd-2.4.33.tar.gz
+cd apr-1.5.1
+./configure --prefix=/usr/local/apr/
+rm: cannot remove `libtoolT': No such file or directory错误信息。网上查阅了一下资料，提示编辑configure这个文件，将 $RM “$cfgfile” 那行注释掉 ，然后重新编译即可。
+make && make install
+cd ../apr-util-1.5.4
+./configure --prefix=/usr/local/apr-util/ --with-apr=/usr/local/apr/
+make && make install
+-----------------------------------------------------------------------阿里版
+wget https://mirrors.aliyun.com/apache/httpd/httpd-2.4.38.tar.gz
+wget https://mirrors.aliyun.com/apache/apr/apr-1.6.5.tar.gz
+wget https://mirrors.aliyun.com/apache/apr/apr-util-1.6.1.tar.gz
+tar xvf httpd-2.4.38.tar.gz -C /usr/local/src
+tar xvf apr-1.6.5.tar.gz -C /usr/local/src
+tar xvf apr-util-1.6.1.tar.gz -C /usr/local/src
+cd /usr/local/src
+mv apr-1.6.5 httpd-2.4.38/srclib/apr
+mv apr-util-1.6.1 httpd-2.4.38/srclib/apr-util
+cd /usr/local/src/httpd-2.4.38
+./buildconf
+./configure --prefix=/usr/local/apache2 \
+--with-mpm=event \
+--with-included-apr \
+--enable-ssl \
+--enable-so \
+--enable-cgi \
+--enable-rewrite \
+--enable-mods-shared=most \
+--enable-mpms-shared=all
+make && make install
+设置PATH环境变量:
+echo "export PATH=$PATH:/usr/local/apache2/bin" > /etc/profile.d/httpd.sh
+source /etc/profile.d/httpd.sh
+httpd -v命令可查看Apache的版本号
+vim /usr/local/apache2/conf/httpd.conf
+配置：	ServerName  localhost:80
+/usr/local/apache2/bin/apachectl start
+-----------------------------------------------------------------------卸载apache 
+rpm -qa|grep httpd 
+rpm -e httpd-tools-2.2.15-53.kb3.ky3.x86_64 --nodeps
+yum remove httpd
+rm -rf /etc/httpd/
+-----------------------------------------------------------------------重装apache /usr/local/src/httpd-2.4.33
+./configure --prefix=/usr/local/apache2/ --sysconfdir=/etc/apache2/ \
+--with-apr=/usr/local/apr \
+--with-apr-util=/usr/local/apr-util \
+--with-unixODBC=shared,/usr \
+--with-zlib \
+--with-pcre \
+--enable-so  \
+--enable-ssl \
+--enable-cgi \
+--enable-rewrite \
+--enable-mods-shared=all 
+
+/configure --prefix=/usr/local/apache/ \
+--with-apr=/usr/local/apr \
+--with-apr-util=/usr/local/apr-util \
+--with-zlib \
+--with-pcre \
+--enable-so  \
+--enable-ssl \
+--enable-cgi \
+--enable-rewrite \
+ap_cv_void_ptr_lt_long=no \
+--enable-mods-shared=all
+
+make && make install
+配置文件：	/etc/apache 需配置ServerName  localhost:80
+服务目录：	cd /usr/local/apache2/htdocs
+启动脚本：	/usr/local/apache2/bin/apachectl start
+apache 启动了却不能访问，可能原因：防火墙忘记关了:	service iptables stop
+===========================================================================================================================php 
+-----------------------------------------------------------
+--with-libmcrypt=/usr/local/libmcrypt  \
+--with-libpng-dir=/usr/local/libpng/ \
+扩展路径：	cd /usr/local/src/php-5.2.17/ext
+
+./configure --prefix=/usr/local/php/  \
+--with-config-file-path=/usr/local/php/etc/ \
+--with-apxs2=/usr/local/apache2/bin/apxs \
+--with-libxml-dir=/usr/includebxml2bxml/ \
+--with-jpeg-dir=/usr/local/jpeg/ \
+--with-freetype-dir \
+--with-png-dir \
+--with-gnu-ld \
+--with-zlib \
+--with-gettext \
+--with-openssl \
+--with-mhash \
+--with-gd \
+--with-curl \
+--with-curlwrappers \
+--with-mcrypt \
+--enable-fastcgi \
+--enable-force-cgi-redirect \
+–-enable-maintainer-zts \
+--enable-shmop \
+--enable-mbstring \
+--enable-discard-path \
+--enable-pcntl \
+--enable-xml \
+--enable-magic-quotes \
+--enable-zip \
+--enable-libgcc \
+--enable-exif \
+--enable-gd-native-ttf \
+--enable-soap \
+--enable-shared \
+--enable-inline-optimization \
+--enable-mbregex  \
+--enable-bcmath \
+--enable-maintainer-zts
+
+make ZEND_EXTRA_LIBS='-liconv'
+make && make install
+-----------------------------------------------------------可能出错：
+问题：/usr/bin/ld: cannot find -lltdl
+collect2: ld returned 1 exit status
+make: *** [sapi/cli/php] 错误 1
+解决：
+yum install libtool-ltdl-devel -y 
+-----------------------------------------------------------libmcrypt
+yum install epel-release -y 
+yum install libmcrypt-devel -y
+由于版权的原因yum源没有libmcrypt包
+wget ftp://mcrypt.hellug.gr/pub/crypto/mcrypt/attic/libmcrypt/libmcrypt-2.5.7.tar.gz
+tar -zxvf libmcrypt-2.5.7.tar.gz
+cd libmcrypt-2.5.7
+./configure  --prefix=/usr/local/libmcrypt
+make && make install
+-----------------------------------------------------------未解决
+问题：Warning!  dlname not found in /usr/local/apache/modules/libphp5.la.
+Assuming installing a .so rather than a libtool archive.
+chmod 755 /usr/local/apache/modules/libphp5.so
+chmod: 无法访问"/usr/local/apache/modules/libphp5.so": 没有那个文件或目录
+apxs:Error: Command failed with rc=65536
+解决：libtool 版本不一致导致，默认会使用/usr/bin/libtool 
+-----------------------------------------------------------
+问题：configure: error: mcrypt.h not found. Please reinstall libmcrypt.
+  Libmcrypt(libmcrypt-2.5.8.tar.gz )：http://sourceforge.net/projects/mcrypt/files/Libmcrypt/2.5.8/
+   mcrypt(mcrypt-2.6.8.tar.gz ):http://sourceforge.net/project/showfiles.php?group_id=87941&package_id=91948&release_id=642101
+   mhash(mhash-0.9.9.9.tar.gz ):http://sourceforge.net/project/showfiles.php?group_id=4286&package_id=4300&release_id=645636
+2 .先安装Libmcrypt
+   tar -zxvf libmcrypt-2.5.8.tar.gz
+   cd libmcrypt-2.5.8
+   ./configure
+   说明：libmcrypt默认安装在/usr/local
+3.安装mhash
+   #tar -zxvf mhash-0.9.9.9.tar.gz
+   #cd mhash-0.9.9.9
+   #./configure
+4.安装mcrypt
+   tar -zxvf mcrypt-2.6.8.tar.gz
+   cd mcrypt-2.6.8
+   export LD_LIBRARY_PATH=/usr/local/lib
+   ./configure
+-----------------------------------------------------------jpeg
+2：安装jpeg
+mkdir /usr/local/jpeg
+mkdir /usr/local/jpeg/{bin,lib,include,man}
+mkdir /usr/local/jpeg/man/man1
+./configure --prefix=/usr/local/jpeg --enable-shared --enable-static
+	配置可能的出错：	make: ./libtool：命令未找到
+	cp /usr/share/libtool/config/config.sub .
+	cp /usr/share/libtool/config/config.guess .
+	也就是把 libtool里面的两个配置文件拿来覆盖掉jpeg-6b目录下的对应文件
+	make clean 再重新configure
+	没有权限的时候先建立对应的文件夹，再次make install就行了
+make && make install
+ln -sv /usr/local/jpeg/lib/* /usr/lib/
+-----------------------------------------------------------libpng
+./configure --prefix=/usr/local/libpng
+-----------------------------------------------------------
+===========================================================================================================================libtool安装
+-----------------------------------------------------------先装m4
+wget -O m4-1.4.9.tar.gz http://ftp.gnu.org/gnu/m4/m4-1.4.9.tar.gz
+tar -zvxf m4-1.4.9.tar.gz
+cd m4-1.4.9
+./configure
+make && make install
+-----------------------------------------------------------
+wget http://ftpmirror.gnu.org/libtool/libtool-2.4.6.tar.gz
+tar -zxf libtool-2.4.6.tar.gz
+cd libtool-2.4.6
+./configure --prefix=/usr/local/libtool
+make && make install
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
+
+===========================================================================================================================
