@@ -19,15 +19,25 @@
 	设置开机自启动	systemctl enable httpd.service
 ===========================================================================================================================
 /usr/local/apache2/bin/apachectl restart
+/usr/local/apache2.4/bin//apachectl restart
 /usr/local/php/sbin/php-fpm restart
 ===========================================================================================================================重启错误
 (98)Address already in use: make_sock: could not bind to address [::]:80
 (98)Address already in use: make_sock: could not bind to address 0.0.0.0:80
 ps -ef|grep httpd 或者 netstat -lnp|grep 80
 killall -9 httpd
+/usr/local/apache/bin/apachectl restart
 /usr/local/apache2/bin/apachectl start
-===========================================================================================================================
-
+/usr/local/apache2.4/bin/apachectl start
+===========================================================================================================================防火墙
+	iptables -nL
+	（1）通过vim /etc/sysconfig/iptables 
+		增添一条：-A INPUT -p tcp -m state --state NEW -m tcp --dport 80 -j ACCEPT
+	（2）执行 /etc/init.d/iptables restart 命令将iptables服务重启
+	（3）保存 /etc/rc.d/init.d/iptables save
+	
+注：如若不想修改iptables表，可以直接输入下面命令：
+# iptables -I INPUT -p tcp --dport 80 -j ACCEPT
 ===========================================================================================================================
 
 ===========================================================================================================================

@@ -1,0 +1,70 @@
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../app/styles/reset.css">
+    <link rel="stylesheet" href="../app/styles/reset-elementui.css">
+
+    <!-- 引入js -->
+    <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/qs/6.5.2/qs.min.js"></script>
+    <script type="text/javascript" src="https://gw.alipayobjects.com/os/antv/pkg/_antv.g6-3.1.0/build/g6.js"></script>
+    <script type="text/javascript" src="js/echarts-2.2.7/build/dist/echarts.js"></script>
+    <script type="text/javascript" src="js/common.js"></script>
+    <script type="text/javascript" src="js/service_report_flow_gis.js"></script>
+    <script type="text/javascript" src="js/service_report_flow_marketing.js"></script>
+    <script type="text/javascript" src="js/service_report_flow_metering.js"></script>
+    <script type="text/javascript" src="js/service_report_flow_ocs.js"></script>
+    <script type="text/javascript" src="js/service_report_echarts.js"></script>
+=====================================================================================
+linux服务器：
+vim /etc/hosts 
+示例：
+ 172.16.7.74 htgx74
+172.16.7.72 htgx72
+172.16.7.71 htgx71
+172.16.7.95 htgx95
+=====================================================================================
+东莞数据库：	192.168.100.30
+东莞web：		192.168.100.31
+东莞数据清洗：	192.168.100.32:8182
+=====================================================================================数据库
+172.16.7.95 => 172.16.6.44
+=====================================================================================需屏蔽的页面
+http://172.16.6.44/inc_chk/audit_config/audit_config_parameter_config_menu.php
+http://172.16.6.44/inc_chk/audit_config/audit_config_quality_report_menu.php
+=====================================================================================svg
+/usr/local/apache2/htdocs/inc_chk/new_index/svg
+=====================================================================================data_clean.php & data_clean_rule.php
+const baseUrl = 'http://192.168.100.32:8182';
+const baseUrl = 'http://172.16.7.71:8182';
+=====================================================================================指标定义-新版
+http://172.16.6.44/inc_chk/new_index/quota_define.php
+=====================================================================================生成动态类错误
+文件权限问题
+=====================================================================================
+产品化全局替换：
+Copyright (C) 2002-2010,Guangzhou Huagong Information Software Co., LTD. All rights reserved.
+Copyright (C) 2013-2014,Guangzhou Huagong Information Software Co., LTD. All rights reserved.
+Copyright (C) 2002-2012,Guangzhou Huagong Information Software Co., LTD. All rights reserved.
+,Guangzhou Huagong Information Software Co., LTD. All rights reserved.
+hgeagle
+zhengjingyue
+yanzhiwei
+fengjianwen
+liumingtao
+zhangluwen
+fengwenqi
+changfen
+wangjinjie
+liuming
+zengchunqiang
+humingsan
+yangxueqin
+laikeke
+yuyuzhan
+liangyongde
+172.16.7.95 => 172.16.6.44
+	http://172.16.7.71
+	https://172.16.7.71
+=====================================================================================

@@ -1,0 +1,15 @@
+post  http://172.16.7.71:8000
+
+请求JSON
+command:
+1 start
+2 stop
+3 restart
+4 check status
+
+{"command": 1, "path": "/root/gocode/src","name": "fileimport"}
+
+返回JSON
+0 成功
+-1 失败
+{"result": 0, "error_msg": "success"}
