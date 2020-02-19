@@ -52,6 +52,7 @@ web根目录：	cd /usr/local/apache2.4/htdocs
 git clone git@172.16.7.54:php/sjzl.git inc_chk
 /usr/local/apache2.4/bin//apachectl restart
 ---------------------------------------------------------------php
+vim /usr/local/php7/etc/php.ini
 ===========================================================================================================================172.16.7.74
 ---------------------------------------------------------------apache
 /usr/local/httpd-2.2.3/docs/conf/httpd.conf
