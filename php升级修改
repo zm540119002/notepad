@@ -46,6 +46,11 @@ foreach ($array as $key => $val) {
 }
 =================================================================================PHP Uncaught Error: Call to undefined function split() in
 原因：PHP 7 中已经放弃了这个函数，用 preg_split 代替
+与split的异同：
+split解析时，"."符号须在前面加"\\"
+preg_split需要加 '/'，例：
+$saSelectStmtToken =split(RptConstant::$RptSepaTag["_FieldSepa_"],$sSelectStmt);
+$saSelectStmtToken =preg_split('/'.RptConstant::$RptSepaTag["_FieldSepa_"].'/',$sSelectStmt);
 =================================================================================Notice: Only variable references should be returned by reference
 要求return的必须是一个变量
 LoggerAppender 73、77
