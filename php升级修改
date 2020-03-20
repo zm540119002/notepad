@@ -72,11 +72,29 @@ $_POST、$_GET、$_SESSION、$_SERVER、$_FILES等等这些PHP
 if (count($tombstones) > 0) :
 　　我们把它改成
 if (count((array)$tombstones) > 0) :
-=================================================================================
+=================================================================================接收参数问题
+由于高版本php无register_globals参数配置，因此不能直接使用url来的参数：
+例如：	
+${$sValueKeyWord} 改成	$_GET[$sValueKeyWord]
+$postId 改成：	$_GET['postId']
+见文件：RptShowControl.php
+=================================================================================Function name must be a string
+Fatal error: Uncaught Error: Function name must be a string in /usr/local/apache2.4/htdocs/inc_chk/RptCustom/RptCustAnalyzeChart.php:1307 Stack trace: #0 /usr/local/apache2.4/htdocs/inc_chk/audit_config/adt_rpt_func.php(1038): RptCustAnalyzeChart->doChart(NULL, NULL, Array, Array, Array) #1 /usr/local/apache2.4/htdocs/inc_chk/audit_config/adt_chart_show.php(15): showCftChart(NULL, '1724011', Array) #2 {main} thrown in /usr/local/apache2.4/htdocs/inc_chk/RptCustom/RptCustAnalyzeChart.php on line 1307
 
-=================================================================================
-
-=================================================================================
+D:\gitlab\inc_chk\RptCustom\RptCustAnalyzeChart.php 1299行
+if(strcasecmp($oFuncs[$i], "setData") ==0){
+	$sDynObj->$oFuncs[$i]($oDataSet);
+}
+改成：
+if(strcasecmp($oFuncs[$i], "setData") ==0){
+	$sDynObj->setData($oDataSet);
+}
+同上：
+inc_chk/RptCustom/RptChartUtil.php 77行及以下：
+$oObjectKey = $oParamInfo[$j][0];
+$oObject->$oParamInfo[$j][0]	改成：	$oObject->$oObjectKey
+---------------------------------------------------------------------------------动态实例化可变化类名称
+function __construct(){}
 
 =================================================================================
 

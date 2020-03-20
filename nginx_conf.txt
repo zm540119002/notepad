@@ -3,6 +3,9 @@ nginx 隐藏index.php		:
 if (!-e $request_filename){
 	rewrite ^/(.*)$ /index.php/$1 last;
 }
+location / {
+    try_files $uri $uri/ /index.php?$query_string;
+}
 ==========================================================================================================================================
 目录权限配置：
 chmod -R 744 /home/www/web_weiya/thinkphp5.1/weiya/runtime

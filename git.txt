@@ -3,8 +3,7 @@ git log
 git show d21522728254aee1ab083e
 --------------------------------------------------
 git reflog
-git reset --hard 52f0d4e1
-git reset --hard cc40c758270751d3a0fcbc09df4f8d7e91d4cc6a
+git reset --hard dbe42d926bad2df3b27578a25b6017de0cf23d2a
 git push -f
 
 11/1版本：	52f0d4e1
