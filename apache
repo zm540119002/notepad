@@ -39,9 +39,46 @@ killall -9 httpd
 注：如若不想修改iptables表，可以直接输入下面命令：
 # iptables -I INPUT -p tcp --dport 80 -j ACCEPT
 ===========================================================================================================================
+1 Apache虚拟主机的实现方式有3种。
 
-===========================================================================================================================
+基于IP的虚拟主机
+基于端口的虚拟主机
+基于域名的虚拟主机
+===========================================================================================================================apache如何设置http自动跳转到https
+1、先打开url重定向支持
+ 
+  1）打开Apache/conf/httpd.conf，找到 #LoadModule rewrite_module modules/mod_rewrite.so 去掉#号。   
+ 
+  2）找到你网站目录的<Directory>段，比如我的网站目录是c:/www，找到
+    <Directory “C:/www”>
+    …
+    </Directory>
+    修改其中的 AllowOverride None 为 AllowOverride All
+ 
+  3）重启apache服务
+ 
+2、设置重定向规则
+ 
+  1）在你网站目录下放一个.htaccess文件。windows环境下，不能把文件直接改名为.htaccess，会提示你必须输入文件名。
+	所以我们先新建一个“新建文本文档.txt”文档，记事本打开，选择另存为，保存类型选择“所有文件(*.*)”，文件名输入“.htaccess”，保存。
+	这样便生成了一个.htaccess文件。
+  2）编辑器打开.htaccess文件，写入如下规则：
+    RewriteEngine on
+    RewriteCond %{SERVER_PORT} !^443$
+    RewriteCond %{REQUEST_URI} !^/tz.php
+    RewriteRule (.*) https://%{SERVER_NAME}/$1 [R]
 
+    解释：
+    %{SERVER_PORT} —— 访问端口
+    %{REQUEST_URI} —— 比如如果url是 http://localhost/tz.php，则是指 /tz.php
+    %{SERVER_NAME} —— 比如如果url是 http://localhost/tz.php，则是指 localhost
+
+    以上规则的意思是，如果访问的url的端口不是443，且访问页面不是tz.php，则应用RewriteRule这条规则。
+	这样便实现了：访问了 http://localhost/index.php 或者 http://localhost/admin/index.php 
+	等页面的时候会自动跳转到 https://localhost/index.php 
+	或者 https://localhost/admin/index.php，
+	但是访问 http://localhost/tz.php 的时候就不会做任何跳转，
+	也就是说 http://localhost/tz.php 和 https://localhost/tz.php 两个地址都可以访问。
 ===========================================================================================================================
 
 ===========================================================================================================================

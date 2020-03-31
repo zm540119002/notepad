@@ -36,11 +36,9 @@ enter des-ede3-cbc decryption password:
 [root@localhost ~]# ls f1*
 
 f1.txt  f1.txt.enc
-==========================================================================================================================================
----------------------------------------------------------------------------------------------------------部署CA服务器172.16.7.54	
+=========================================================================================================部署CA服务器172.16.7.54	
 vim  /etc/pki/tls/openssl.cnf
 policy          = policy_match
-
 # For the CA policy
 [ policy_match ]
 countryName             = optional
@@ -50,7 +48,7 @@ organizationalUnitName  = optional
 commonName              = supplied
 emailAddress            = optional
 
-第一步：配置CA签署环境
+配置CA签署环境
 
 [root@CA ~]# ls /etc/pki/CA/		#工作目录
 certs  crl  newcerts  private
@@ -71,19 +69,19 @@ certs  crl  newcerts  private
 
 [root@CA CA]# cat serial 
 01
-
-第二步：CA自签证书
+=========================================================================================================172.16.7.54（给64签发证书）
+CA自签证书
 （1）在生成CA自签证书需要先生成私钥
 	cd /etc/pki/CA/
 	(umask 077; openssl genrsa -out /etc/pki/CA/private/cakey.pem 2048)  这个小括号是必须要有的
 （2）生成自签证书
-	openssl req -new -x509 -key /etc/pki/CA/private/cakey.pem -days 365 -out /etc/pki/CA/cacert.pem
+	openssl req -new -x509 -key /etc/pki/CA/private/cakey.pem -days 3650 -out /etc/pki/CA/cacert.pem
 Country Name (2 letter code) [XX]:CN
-State or Province Name (full name) []:gd
-Locality Name (eg, city) [Default City]:gz
-Organization Name (eg, company) [Default Company Ltd]:htgx
-Organizational Unit Name (eg, section) []:kfb
-Common Name (eg, your name or your server's hostname) []:172.16.7.54
+State or Province Name (full name) []:guangdong
+Locality Name (eg, city) [Default City]:guangzhou
+Organization Name (eg, company) [Default Company Ltd]:huitone.com
+Organizational Unit Name (eg, section) []:huitone
+Common Name (eg, your name or your server's hostname) []:172.16.6.44
 Email Address []:zm@huitone.com
 
 req表示申请证书；
@@ -104,14 +102,14 @@ Common Name (eg, your name or your server's hostname) []:172.16.6.44
 Email Address []:zm@huitone.com
 Please enter the following 'extra' attributes
  to be sent with your certificate request
- A challenge password []:123456
-An optional company name []:huitone
+ A challenge password []:
+An optional company name []:
 这里写时间是没有用，有效期是签署者给的，在生成了证书请求文件后要将这个文件传给CA所在虚拟机
+mkdir /etc/cert
 scp /etc/pki/tls/test.csr 172.16.7.54:/etc/pki/CA/certs/test.csr
 ---------------------------------------------------------------------------------------------------------172.16.7.54	CA在收到证书请求文件后就可以审核和签署证书；签署证书命令：
 openssl ca -in /etc/pki/CA/certs/test.csr -out /etc/pki/CA/certs/test.crt -days 365
 ---------------------------------------------------------------------------------------------------------172.16.6.44 apache 配置
-mkdir /etc/cert
 cp /etc/pki/tls/private/test.key /etc/cert/test.key
 scp 172.16.7.54:/etc/pki/CA/certs/test.crt /etc/cert/test.crt
 cp /etc/pki/CA/certs/test.crt /etc/cert/test.crt
@@ -126,41 +124,76 @@ SSLCertificateChainFile "/etc/cert/test.crt"
 最底部加上：	NameVirtualHost *:443
 	https://172.16.6.44/inc_chk/new_index/index.html
 	http://172.16.6.44/inc_chk/new_index/index.html
-=========================================================================================================用另一台虚拟机来模拟申请证172.16.7.71
-（1）在申请证书的虚拟机上生成自己的私钥；命令：(umask 077; openssl genrsa -out /etc/pki/tls/private/172.16.7.71.key 2048)  这个小括号是必须要有的
-（2）在申请证书的虚拟机上生成证书请求文件；命令：openssl req -new -key /etc/pki/tls/private/172.16.7.71.key -days 365 -out /etc/pki/tls/172.16.7.71.csr  
+=========================================================================================================172.16.7.54（给56签发证书）
+CA自签证书
+（1）在生成CA自签证书需要先生成私钥
+	cd /etc/pki/CA/
+	(umask 077; openssl genrsa -out /etc/pki/CA/private/cakey.pem 2048)  这个小括号是必须要有的
+（2）生成自签证书
+	openssl req -new -x509 -key /etc/pki/CA/private/cakey.pem -days 3650 -out /etc/pki/CA/cacert.pem
 Country Name (2 letter code) [XX]:CN
-State or Province Name (full name) []:gd
-Locality Name (eg, city) [Default City]:gz
+State or Province Name (full name) []:guangdong
+Locality Name (eg, city) [Default City]:guangzhou
 Organization Name (eg, company) [Default Company Ltd]:htgx
 Organizational Unit Name (eg, section) []:kfb
-Common Name (eg, your name or your server's hostname) []:172.16.7.54
+Common Name (eg, your name or your server's hostname) []:172.16.7.56
+Email Address []:zm@huitone.com
+---------------------------------------------------------------------------------------------------------用另一台虚拟机来模拟申请证172.16.7.56
+（1）在申请证书的虚拟机上生成自己的私钥；命令：(umask 077; openssl genrsa -out /etc/pki/tls/private/56.key 2048)  这个小括号是必须要有的
+（2）在申请证书的虚拟机上生成证书请求文件；命令：openssl req -new -key /etc/pki/tls/private/56.key -days 3650 -out /etc/pki/tls/56.csr  
+Country Name (2 letter code) [XX]:CN
+State or Province Name (full name) []:guangdong
+Locality Name (eg, city) [Default City]:guangzhou
+Organization Name (eg, company) [Default Company Ltd]:htgx
+Organizational Unit Name (eg, section) []:kfb
+Common Name (eg, your name or your server's hostname) []:172.16.7.56
 Email Address []:zm@huitone.com
 Please enter the following 'extra' attributes
  to be sent with your certificate request
  A challenge password []:
 An optional company name []:
 这里写时间是没有用，有效期是签署者给的，在生成了证书请求文件后要将这个文件传给CA所在虚拟机
-scp /etc/pki/tls/172.16.7.71.csr 172.16.7.54:/etc/pki/CA/certs/172.16.7.71.csr
+mkdir /etc/cert
+scp /etc/pki/tls/56.csr 172.16.7.54:/etc/pki/CA/certs/56.csr
 ---------------------------------------------------------------------------------------------------------172.16.7.54
-签署证书前：	echo 02 > serial
+签署证书前：	echo 04 > /etc/pki/CA/serial
 CA在收到证书请求文件后就可以审核和签署证书；签署证书命令：
-openssl ca -in /etc/pki/CA/certs/172.16.7.71.csr -out /etc/pki/CA/certs/172.16.7.71.crt -days 365
----------------------------------------------------------------------------------------------------------
-scp /etc/pki/CA/certs/172.16.7.71.crt 172.16.7.71:/etc/cert/172.16.7.71.crt
-==========================================================================================================================================
-==========================================================================================================================================
+openssl ca -in /etc/pki/CA/certs/56.csr -out /etc/pki/CA/certs/56.crt -days 3650
+---------------------------------------------------------------------------------------------------------172.16.7.56
+cp /etc/pki/tls/private/56.key /etc/cert/56.key
+scp 172.16.7.54:/etc/pki/CA/certs/56.crt /etc/cert/56.crt
+/etc/cert/56.key
+/etc/cert/56.crt
+---------------------------------------------------------------------------------------------------------配置apache172.16.7.56
+vim /etc/apache2.4/httpd.conf
+去掉注释：	Include conf/extra/httpd-ssl.conf
+vim /etc/apache2.4/extra/httpd-ssl.conf
+SSLCertificateFile "/etc/cert/56.crt"
+SSLCertificateKeyFile "/etc/cert/56.key"
+SSLCertificateChainFile "/etc/cert/56.crt"
 
-==========================================================================================================================================
+http自动转为https：
+<VirtualHost *:80>
+    RewriteEngine On
+    RewriteRule ^/(.*)$ https://172.16.7.56/$1 [R=301]
+</VirtualHost>
+/usr/local/apache2.4/bin/apachectl restart
+---------------------------------------------------------------------------------------------------------可能问题：
+netstat -aon | grep 443
+443端口防火墙允许：
+/sbin/iptables -A INPUT -p TCP --sport 443 -j ACCEPT
+service iptables save
+service iptables restart
+-----------------------
+vim /etc/hosts
+172.16.7.56 qilin6 localhost
+-----------------------
+service network start;
+=========================================================================================================
+=========================================================================================================
 
-==========================================================================================================================================
+=========================================================================================================
 
-==========================================================================================================================================
+=========================================================================================================
 
-==========================================================================================================================================
-
-==========================================================================================================================================
-
-==========================================================================================================================================
-
-==========================================================================================================================================
+=========================================================================================================

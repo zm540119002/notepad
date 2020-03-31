@@ -1,0 +1,59 @@
+====================================================================安装
+1.设置国内镜像：
+composer config -g repo.packagist composer https://packagist.phpcomposer.com
+
+2.在www目录下，安装指定laravel版本：
+composer create-project laravel/laravel=5.6.* laravel --prefer-dist
+
+3.成功后在www目录下就会有一个名为laravel的项目，cmd进入laravel项目，执行以下命令，重新生成APP_KEY。
+php artisan key:generate
+例如：	Application key [base64:11jR7Oa9n8Lp4PdQc6qVk2RHz7HWI7AQjbNhwB1d/g0=] set successfully.
+
+4.修改项目的.env配置，连接数据库。
+    DB_HOST=localhost  
+    DB_DATABASE=database  
+    DB_USERNAME=username  
+    DB_PASSWORD=password  
+	
+5.最后重启wamp服务器
+
+6.如果想在其他地方放laravel项目的话，直接把laravel整个文件复制过去，
+然后在cmd通过cd命令到项目内，重新执行一次php artisan key:generate生成APP_KEY即可
+====================================================================万能路由
+Route::group(['middleware'=>['web']],function (){
+    Route::any('/{$module}/{controller}/{action}',function ($module,$class,$action){
+        $class = 'App\\Http\\Controllers\\.$module.\\'.ucfirst(strtolower($class)).'Controller';
+        if(class_exists($class))
+        {
+            $ctrl = \App::make($class);
+                return \App::call([$ctrl, $action]);
+        }
+        return abort(404);
+ 
+    })->where([ 'module'=>'[0-9a-zA-Z]+',class' => '[0-9a-zA-Z]+', 'action' => '[0-9a-zA-Z]+']);
+});
+====================================================================
+Test Account: EMAIL: test@ribbbon.com PASSWORD: secret
+====================================================================
+
+====================================================================
+
+====================================================================
+
+====================================================================
+
+====================================================================
+
+====================================================================
+
+====================================================================
+
+====================================================================
+
+====================================================================
+
+====================================================================
+
+====================================================================
+
+====================================================================

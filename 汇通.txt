@@ -45,24 +45,26 @@ http://172.16.6.34:8099
 参考：
 	https://www.jianshu.com/p/80d9a656d6c6?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
 ---------------------------------------------------------------
+===========================================================================================================================172.16.7.55
+username:	root
+password:	huitone2214
+---------------------------------------------------------------oracle
 ===========================================================================================================================172.16.7.56
+username:	root
+password:	huitone2214
 ---------------------------------------------------------------apache
-配置文件：	vim /etc/apache2.4/httpd.conf
-web根目录：	cd /usr/local/apache2.4/htdocs
-git clone git@172.16.7.54:php/sjzl.git inc_chk
-启动：	/usr/local/apache2.4/bin/apachectl restart
+vim /etc/apache2.4/httpd.conf
+vim /etc/apache2.4/extra/httpd-vhosts.conf
+vim /etc/apache2.4/extra/httpd-ssl.conf
+cd /usr/local/apache2.4/htdocs
+/usr/local/apache2.4/bin/apachectl restart
 ---------------------------------------------------------------php
 vim /usr/local/php7/etc/php.ini
 ===========================================================================================================================172.16.7.74
 ---------------------------------------------------------------apache
-/usr/local/httpd-2.2.3/docs/conf/httpd.conf
-/usr/local/apache2/conf/original/httpd.conf
-/usr/local/apache2/conf/httpd.conf
-/usr/local/httpd-2.2.3/docs/conf/extra/httpd-vhosts.conf.in
-/usr/local/httpd-2.2.3/docs/conf/extra/httpd-vhosts.conf
-/usr/local/apache2/conf/extra/httpd-vhosts.conf
-/usr/local/apache2/conf/original/extra/httpd-vhosts.conf
-apache 启动：	/usr/local/apache2/bin/apachectl start
+vim /usr/local/apache2/conf/httpd.conf
+vim /usr/local/apache2/conf/extra/httpd-vhosts.conf
+/usr/local/apache2/bin/apachectl start
 ---------------------------------------------------------------php
 vim /usr/local/php/lib/php.ini
 extension_dir = "/usr/local/php/include/php/ext"
