@@ -33,7 +33,7 @@ Route::group(['middleware'=>['web']],function (){
     })->where([ 'module'=>'[0-9a-zA-Z]+',class' => '[0-9a-zA-Z]+', 'action' => '[0-9a-zA-Z]+']);
 });
 ====================================================================
-Test Account: EMAIL: test@ribbbon.com PASSWORD: secret
+Test Account: test@ribbbon.com PASSWORD: secret
 ====================================================================Laravel Class Socialite not found
 What I did:
 
@@ -47,11 +47,9 @@ After all this steps I created a new Controller Class which looks like that:
 <?php namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 
 class AuthController extends Controller {
-
     public function login()
     {                  
         return \Socialite::with('facebook')->redirect();
@@ -64,8 +62,8 @@ class AuthController extends Controller {
 重启服务器
 ====================================================================Laravel \ Socialite \ Two \ InvalidStateException
 \Socialite::with($account)->user(); 添加stateless禁用会话状态验证：	\Socialite::with($account)->stateless()->user();
-====================================================================
-
+====================================================================GuzzleHttp\Exception\ConnectException: cURL error 35
+时好时坏，无解
 ====================================================================
 
 ====================================================================

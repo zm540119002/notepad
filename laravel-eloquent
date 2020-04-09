@@ -1,0 +1,29 @@
+====================================================================模型是否被动过手脚
+$ user = User :: where('name','wuqinqiang')->first();
+$ user-> isDirty（）; // 还没被动过 返回 false
+$ user-> name ='curry';  
+$ user-> isDirty（）; //模型被动过了 返回true 
+$ user-> isDirty（'email'）; // 可以传入参数  验证某个参数是否被动过，这个我还没碰过 当然 false
+$ user-> isDirty（'name'）; // true 
+
+如果你还想具体了解到哪些是被动过了，可以使用:
+$user->getDirty();  你将得到一个数组 ["name" => "curry"]
+
+我想看原始数据
+既然上面提到是否被动过手脚，那动过手脚之后我又想看看之前的模样 (ps: 人就是这样麻烦)。强大的 Laravel Eloquent 也可以办到:
+
+$ user = User :: where('name','wuqinqiang')->first();
+$user->name = 'curry';
+$user->getOriginal(); // 返回数组 "name" => "wuqinqiang"
+$user->getOriginal('name'); //指定要看哪个属性的原值  "wuqinqiang"
+====================================================================
+$user = App\User::with('roles')->first();
+return $user->toArray();
+$user = App\User::find(1);
+return $user->toJson();
+return $user->toJson(JSON_PRETTY_PRINT);
+====================================================================
+
+====================================================================
+
+====================================================================
