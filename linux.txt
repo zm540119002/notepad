@@ -29,6 +29,7 @@ scp /usr/local/dm7client/drivers/php_pdo/*52* root@172.16.6.44:/usr/local/php2/l
 scp /usr/local/php/include/php/ext/pdo_oci.so root@172.16.6.44:/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
 scp test.php root@172.16.6.44:/usr/local/apache2/htdocs/test.php
 scp -r root@172.16.6.44:/usr/local/apache/htdocs/inc_chk/new_index/svg .
+scp -r root@172.16.7.71:/usr/local/nginx/conf/nginx_2c.conf .
 =======================================================================================================
 df -hl 查看磁盘剩余空间
  

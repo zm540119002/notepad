@@ -34,12 +34,36 @@ Route::group(['middleware'=>['web']],function (){
 });
 ====================================================================
 Test Account: EMAIL: test@ribbbon.com PASSWORD: secret
-====================================================================
+====================================================================Laravel Class Socialite not found
+What I did:
 
-====================================================================
+Added "laravel/socialite": "~2.0" to composer.json
+Run composer update
+Added provider 'Laravel\Socialite\SocialiteServiceProvider' to app.php
+Added alias 'Socialite' => 'Laravel\Socialite\Facades\Socialite' to app.php
 
-====================================================================
+After all this steps I created a new Controller Class which looks like that:
 
+<?php namespace App\Http\Controllers;
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
+
+class AuthController extends Controller {
+
+    public function login()
+    {                  
+        return \Socialite::with('facebook')->redirect();
+    }
+}
+====================================================================cURL error 60: SSL certificate problem: unable to get local issuer certificate 
+下载CA证书：	https://curl.haxx.se/ca/cacert.pem
+放到目录：	D:\phpstudy_pro\Extensions\php\php7.3.4nts\extras\ssl下
+配置php.ini：	curl.cainfo = D:\phpstudy_pro\Extensions\php\php7.3.4nts\extras\ssl\cacert.pem
+重启服务器
+====================================================================Laravel \ Socialite \ Two \ InvalidStateException
+\Socialite::with($account)->user(); 添加stateless禁用会话状态验证：	\Socialite::with($account)->stateless()->user();
 ====================================================================
 
 ====================================================================
