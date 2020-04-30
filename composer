@@ -1,0 +1,34 @@
+=============================================
+composer config -g repo.packagelist composer https://packagist.phpcomposer.com   /*国内镜像源*/
+composer config -g --unset repos.packagist		/*解除镜像并恢复到 packagist 官方源*/
+============================================
+安装完成，找到安装路径，例如：	C:\ProgramData\ComposerSetup\bin	加入环境变量
+=============================================
+1、关于composer.lock
+      	使用composer安装php组件时候你会发现创建了一个composer.lock文件，这是做什么的呢？
+      	composer.lock是记录当前所有安装的php组件的版本，如果多人协作开发需保持下载的php组件的版本一样减少不必要的麻烦，
+		那么需要把composer.lock加入版本控制当中，比如使用git或者svn那么你就需要把它加入把版本控制当中。反之则不用。
+需要注意的是，当composer install进行组件依赖时不会进行更新composer.lock文件除非引入了新的组件到composer.json中，
+如果想更新请使用composer update会把组件更新到最新稳定版本同时会更新最composer.lock文件。
+
+2、删除composer.lock试试
+    1、把需要引入的包写入composer.json中
+    （写入的话，就不需要composer require了，直接composer update 即可。）
+    2、删除composer.lock
+    3、composer clearcache   清除缓存
+    4、composer update  更新依赖（重新生成composer.lock）
+=============================================[Composer\Downloader\TransportException] 解决方案
+
+=============================================指定版本
+ composer require laravel/passport ~7.0
+=============================================composer require报错：Installation failed, reverting ./composer.json to its original content.
+https://blog.csdn.net/LJFPHP/article/details/82289555?depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-1&utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromBaidu-1
+=============================================
+
+=============================================
+
+=============================================
+
+=============================================
+
+=============================================

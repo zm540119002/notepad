@@ -32,7 +32,51 @@ Route::group(['middleware'=>['web']],function (){
  
     })->where([ 'module'=>'[0-9a-zA-Z]+',class' => '[0-9a-zA-Z]+', 'action' => '[0-9a-zA-Z]+']);
 });
-====================================================================
+====================================================================常用文件路径
+use Illuminate\Http\Request;
+use Illuminate\Auth\Events\Registered;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
+====================================================================php artisan make:migration
+一、命名规范
+
+创建表
+	php artisan make:migration create_tablename_table --create=tablename
+	示例：php artisan make:migration create_users_table --create=users
+修改表
+	php artisan make:migration alter_tablename_table --table=tablename
+修改表名
+	示例：php artisan make:migration rename_admin_user_to_admin_users --table=admin_user
+修改表字段
+	php artisan make:migration update_feildname_to_tablename_table --table=tablename
+	示例：
+添加表字段
+	php artisan make:migration add_feildname_table --table=tablename
+	示例：php artisan make:migration add_votes_to_users_table --table=users
+------------------------------------------------------
+// 回滚最后一次迁移
+php artisan migrate:rollback 
+
+// 回滚到最近5次迁移
+php artisan migrate:rollback --step=5
+
+// 回滚程序中的所有迁移
+php artisan migrate:reset
+
+// 回滚所有迁移并重新构建整个数据库
+php artisan migrate:refresh
+
+// 刷新数据库结构并执行数据填充
+php artisan migrate:refresh --seed
+
+// 回滚并重新执行最后五次迁移
+php artisan migrate:refresh --step=5
+
+// 删除数据库所有表格并执行migrate
+php artisan migrate:fresh 
+php artisan migrate:fresh --seed
+====================================================================ribbbon
 Test Account: test@ribbbon.com PASSWORD: secret
 ====================================================================Laravel Class Socialite not found
 What I did:
@@ -62,18 +106,64 @@ class AuthController extends Controller {
 重启服务器
 ====================================================================Laravel \ Socialite \ Two \ InvalidStateException
 \Socialite::with($account)->user(); 添加stateless禁用会话状态验证：	\Socialite::with($account)->stateless()->user();
-====================================================================GuzzleHttp\Exception\ConnectException: cURL error 35
+====================================================================cURL error 35
 时好时坏，无解
-====================================================================
+====================================================================Syntax error or access violation: 1071 Sp ecified key was too long; max key length is 1000 bytes
+修改文件：	AppServiceProvider.php
+namespace App\Providers;
 
-====================================================================
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
 
-====================================================================
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        //加入此行
+        Schema::defaultStringLength(191);
+    }
 
-====================================================================
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+}
+====================================================================Laravel的Warning: require..../vendor/autoload.php错误的解决办法
+1. cd 到该引用的根目录，先删除 composer.lock 文件；
 
-====================================================================
+2. 重新在根目录执行“composer install”，这样就能重新生成 composer.lock 文件了。
 
+3.如果出现php版本不匹配，可用“composer install --ignore-platform-reqs”（忽略版本匹配）。
+====================================================================
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+public function render($request, Exception $exception)
+    {
+        if ($exception instanceof ModelNotFoundException) {
+            return response()->json([
+                'error' => 'Resource not found.'
+            ],404);
+        }
+        return parent::render($request, $exception);
+    }
+====================================================================
+curl -X POST http://apidemo.test/api/register \
+    -H "Accept: application/json" \
+    -H "Content-Type: application/json" \
+    -d "{\"name\": \"学院君\", \"email\": \"admin@laravelacademy.org\", \"password\": \"test123\", \"password_confirmation\": \"test123\" }"
+curl -X POST http://apidemo.test/api/login \
+    -H "Accept: application/json" \
+    -H "Content-type: application/json" \
+    -d "{\"email\": \"admin@laravelacademy.org\", \"password\": \"test123\" }"
 ====================================================================
 
 ====================================================================

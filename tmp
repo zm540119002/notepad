@@ -1,25 +1,44 @@
-
-.navbot li:nth-child(1)
-
-<a target="_blank" href="http://172.16.7.74/inc_chk/adt_rpt_index.php?jumpType=work_order_wait">
-</a>
-
-http://172.16.7.74/inc_chk/adt_rpt_index.php?jumpType=work_order_wait
-
-http://172.16.7.74/inc_chk/operate_monitor/work_order.php?state=1&flag=new4
-
-http://172.16.7.74/inc_chk/adt_rpt_index.php?jumpType=service
-
-http://172.16.7.74/inc_chk/adt_rpt_index_left.php
-
-http://172.16.7.74/inc_chk/adt_rpt_index.php
-
-http://172.16.7.74/inc_chk/
-
-工单 http://172.16.7.74/inc_chk/adt_rpt_index.php?jumpType=work_order_wait
-
-导航 http://172.16.7.74/inc_chk/new_index/index.html
-
-系统运行情况 http://172.16.7.74/inc_chk/audit_config/audit_config_recent_profile.php
-
-治理专题 http://172.16.7.74/inc_chk/main_domain.php?conf_type=1
+function tbodyDelData(tmpId,row_id_name,action,call,iParamList,otherParamList,actionUrl){
+	var c_obj = $("#"+tmpId).find("input[class='ch_dms']:checked");
+	var ParamList = [];
+	if(typeof(iParamList)!="undefined" && iParamList!=""){
+		if(typeof(iParamList) == "string") ParamList[0] = iParamList;
+		if(typeof(iParamList) == "object") ParamList = iParamList;
+	}
+	if($(c_obj).length<1){
+		alert("请先选择数据！");
+		return false;
+	}
+	if(!confirm("确定删除？")) return false;
+	var data = {};
+	data.row_id_arr = [];
+	$(c_obj).each(function(){
+		var row_id = $(this).parent().parent().find("input[name='"+row_id_name+"']").val();
+		if(row_id==null || row_id==""){
+			$(this).parent().parent().remove();
+		}else {
+			data.row_id_arr.push(row_id);
+		}
+	});
+	$.ajax({
+		type: "POST",
+		url: actionUrl+"?act="+action,
+		data: data,
+		dataType:"json",
+		async:false,//等待执行完
+		beforeSend: function(XHR){
+			$("#loading_dialog").dialog("open");
+		},
+		error: function(XHR){
+			$("#loading_dialog").dialog("close");
+			alert("删除失败！");
+		},
+		success: function(gmsg){
+			$("#loading_dialog").dialog("close");
+			alert(gmsg.desc);
+			if(gmsg.rs = '1000'){
+				c_obj.parent().parent().remove();
+			}
+		}
+	});
+}

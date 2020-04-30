@@ -1,3 +1,19 @@
+==========================两个相等的数组，修改其中一个怎么做到不改变另外一个（数组深浅拷贝的问题）
+原因：js中array是引用类型，也就是arrA和arrB的原数据存储地址是一样的，arrA和arrB都是对原数据的引用，所以修改其中一个，另一个也会改变。
+解决方案有以下4种：
+方法一：concat()用于连接两个或多个数组。该方法不会改变现有的数组，而仅仅会返回被连接数组的一个副本。
+	let arrA = [1, 2, 3];
+	let arrB = [].concat(arrA);
+方法二：先JSON.stringify( ) 后 JSON.parse( )
+	let arrA = [1, 2, 3];
+	let arrB = JSON.parse(JSON.stringify(arrA));
+方法三：jQuery的extend方法
+	let a = [1,2,3];
+	let b = $.extend(true,[],a)
+方法四：Object.assign()方法 或者 [...arr]
+	let a = [1,2,3];
+	let b = Object.assign([],a) 
+但是需要注意的是，如果是对象数组，即使是用方法一的concat、方法四的Object.assign()或者[...arr]赋值也是会互相影响的
 ==========================================================================================================================变量类型判断
 var obj = Object(); // 返回原对象
 console.log(obj); //{}

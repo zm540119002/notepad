@@ -22,6 +22,12 @@ ua_dbg  / ua_dbgrica
 ===========================================================================================================================172.16.7.71
 username:	root
 password:	htgx@123456
+---------------------------------------------------------------nginx
+vi /usr/local/nginx/conf/nginx_2c.conf
+ps -ef|grep nginx
+启动： /usr/local/nginx/sbin]$ /usr/local/nginx/sbin/nginx -c conf/nginx_2c.conf
+重启： /usr/local/nginx/sbin/nginx -s reload  
+停止： /usr/local/nginx/sbin/nginx -s stop 
 ===========================================================================================================================172.16.6.34
 username:	root
 password:	huitone2214
@@ -92,21 +98,30 @@ error_log=/usr/local/php/php_error.log
 php已安装扩展：
 cd /usr/local/php/lib/php/extensions/no-debug-non-zts-20060613
 ---------------------------------------------------------------pdo_odbc、odbc扩展
-yum install unixODBC unixODBC-devel -y 
+yum install unixODBC unixODBC-devel -y
 cd /usr/local/src/php-5.2.17/ext/pdo_odbc
 phpize
 ./configure --with-php-config=/usr/local/php2/bin/php-config --with-pdo-odbc=unixODBC,/usr/
 make && make install
 cd /usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613/
 vim /etc/php.ini
-vim /etc/odbcinst.ini 
+vim /etc/odbcinst.ini
 vim /etc/odbc.ini
 
 ./configure --with-php-config=/usr/local/php2/bin/php-config --with-pdo-odbc=unixODBC,/usr/
+===========================================================================================================================172.16.6.45
+https://172.16.6.45/api/rest/ruleRels/getTables/50
 ===========================================================================================================================
+公司官方网站网址：http://www.huitone.com/
 
-===========================================================================================================================
+(1)公司官方网站后台管理入口:  http://www.faisco.cn/ 
+账号: iw13833136 
+员工号: xc 
+密码: ZGRiNDE0ZWYxODk5MTlk
 
+(2)域名:http://domain.cnolnic.com 
+账号: huitone.com 
+密码: OTEzZjgzNTBjMWFiNGQ0
 ===========================================================================================================================
 
 ===========================================================================================================================

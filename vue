@@ -18,23 +18,32 @@ npm install
 $ npm install vue -g
 # 最新稳定 CSP 兼容版本
 $ npm install vue@csp -g
+默认安装路径：
+C:\Users\Administrator\AppData\Roaming\npm
 -------------------------------------------------------安装vue-cli
-	npm install -g vue-cli  	--全局安装vue-cli2.0
+	npm install vue-cli -g  	--全局安装vue-cli2.0
 	vue init webpack demo		--初始化项目
 	cd demo
 	npm install
 	npm run dev
 -------------------------------------------------------
-	npm install -g @vue/cli		--全局安装vue-cli3.0
+	npm install @vue/cli -g		--全局安装vue-cli3.0
 	vue create demo
 	cd demo
 	vue run serve
 -------------------------------------------------------卸载vue-cli
-npm uninstall -g vue-cli 
+npm uninstall vue-cli -g
 -------------------------------------------------------打包
 npm run build
 -------------------------------------------------------
 npm i @antv/g6-editor --save 
+=====================================================================================vue create提示符不工作
+如果你在 Windows 上通过 minTTY 使用 Git Bash，交互提示符并不工作。你必须通过 winpty vue.cmd create hello-world 启动这个命令
+不过，如果你仍想使用 vue create hello-world，则可以通过在 ~/.bashrc 文件中添加以下行来为命令添加别名。 alias vue='winpty vue.cmd' 你需要重新启动 Git Bash 终端会话以使更新后的 bashrc 文件生效
+其中 .bashrc文件是位于git/etc文件夹下的  bash.bashrc  文件。在文件的最后一行写入
+alias vue='winpty vue.cmd'
+并重启Git Bash更改即可生效。
+bash.bashrc默认路径： C:\Program Files\Git\etc
 =====================================================================================Vue __ob__: Observer
 __ob__: Observer这些数据是vue这个框架对数据设置的监控器，一般都是不可枚举的。
 
