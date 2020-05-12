@@ -1,6 +1,18 @@
-
-===========================================================================================================================
-_this.$confirm("Are You Sure?","提示",{
+====================================================================el-date-picker 默认时间
+,computed: {
+	timeDefault() {
+		let date = new Date();
+		let rangeDate = [];
+		rangeDate[0] = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate()-3);
+		rangeDate[1] = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + (date.getDate());
+		return rangeDate;
+	}
+},created: function(){
+	this.formData.date = this.timeDefault;
+	this.getData();
+}
+详见：data_clean.php
+====================================================================
 	confirmButtonText: '确定',
 	cancelButtonText: '取消',
 	type:'info',

@@ -1,4 +1,11 @@
 ============================================
+
+============================================
+部门 无线SSID 密码
+商务部 HTGX-Business HTGX-Business-5G HTGXBusiness
+开发部 HTGX--Development HTGX-Development-5G HTGX4122Development
+技术部 HTGX-ICT HTGX-ICT-5G HTGXIXT2214
+============================================测网速
 iperf 分为两种版本，unix/linux版和windows版，unix/linux版更新比较快，版本最新。
 windows版更新慢。windows版的 iperf 叫 jperf，或者xjperf。jperf是在iperf基础上开发了更好的UI和新的功能。
 
@@ -25,13 +32,127 @@ UDP客户端和服务器
 	iperf -c 198.51.100.5 -u
 	
 参考：	https://www.jianshu.com/p/15f888309c72
-============================================
+--------------------------------------
 服务器：
 iperf -s -i 1 -w 1M
 客户端：
+E:\software\jperf\jperf_68547\bin
+cmd
 iperf.exe -c 172.16.7.56  -i 10 -t 30
-============================================
+--------------------------------------window版
+https://blog.csdn.net/tengxing007/article/details/80919798
 
-============================================
+abs -n 1000 https://172.16.7.56/inc_chk/new_index/images/wz.png
+--------------------------------------linux版
+yum install httpd-tools 
+安装好之后直接使用如下命令即可简单测试：
 
-============================================
+ab https://172.16.7.56/inc_chk/new_index/images/wz.png
+当然每个测试的场景不同，这些必要的参数还是需要设置的：
+
+-n参数用来设置模拟请求的总次数
+-c参数用来设置模拟请求的并发数
+-t参数用来设置模拟请求的时间
+简单举例，如果要模拟1个用户访问1000次：
+
+ab -n 1000 https://172.16.7.56/inc_chk/new_index/images/wz.png
+如果要模拟500个用户访问1000次（表示每个用户访问2次）
+
+ab -c 500 -n 1000 http://hi.ktsee.com/
+如果要模拟500个用户同时访问，并且每个用户访问停留时间10秒：
+
+ab -c 500 -t 10 http://hi.ktsee.com/
+以上是常用的参数，其他参数如下，可以根据实际测试场景使用：
+
+-A 采用base64编码向服务器提供身份验证信息，用法: -A 用户名:密码
+-C cookie信息，用法: -C key=value
+-d 不显示pecentiles served table
+-e 保存基准测试结果为csv格式的文件
+-g 保存基准测试结果为gunplot或TSV格式的文件
+-h 显示ab可选参数列表
+-H 采用字段值的方式发送头信息和请求
+-i 发送HEAD请求，默认发送GET请求
+-k 设置ab命令允许1个http会话响应多个请求
+-p 通过POST发送数据，用法： -p page=1&key=value
+-P 采用base64编码向服务器提供身份验证信息，用法: -A 用户名:密码
+-q 执行多余100个请求时隐藏掉进度输出
+-s 使用Https协议发送请求，默认使用Http
+-S 隐藏中位数和标准偏差值
+-v -v 2 及以上将打印警告和信息，-v 3 打印http响应码，-v 4 打印头信息
+-V 显示ab工具的版本号
+-w 采用HTML表格打印结果
+-x HTML标签属性，使用 -w 参数时，将放置在<table>标签中
+-X 设置代理服务器，用法 -X 192.168.1.1:80
+-y HTML标签属性，使用 -w 参数时，将放置在<tr>标签中
+-z HTML标签属性，使用 -w 参数时，将放置在<td>标签中
+测试用例与输出结果分析
+使用上面的第二个例子，得到的结果如下：
+
+This is ApacheBench, Version 2.3 <$Revision: 655654 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+Benchmarking hi.ktsee.com (be patient)
+Completed 100 requests
+Completed 200 requests
+Completed 300 requests
+Completed 400 requests
+Completed 500 requests
+Completed 600 requests
+Completed 700 requests
+Completed 800 requests
+Completed 900 requests
+Completed 1000 requests
+Finished 1000 requests
+Server Software:        
+Server Hostname:        hi.ktsee.com                        
+Server Port:            80                                    
+Document Path:          /
+Document Length:        2208 bytes
+// 以上是你测试的host, port等一部分的信息
+Concurrency Level:      500
+// 这个标志了这1000个请求完成了总共消耗了这些时间
+Time taken for tests:   10.117 seconds 
+Complete requests:      1000
+// 这1000个请求中失败的次数,如果又失败,它也有输出非2XX的失败
+// 如果测试中出现了错误,最好看下这些错误是不是你所期望的
+Failed requests:        320
+Write errors:           0
+// 这1000个请求总共传输了这些数据
+Total transferred:      587848 bytes
+HTML transferred:       435294 bytes
+// 每秒执行了334个请求,这个可以看到你服务器每秒能够处理多少个这样的url请求
+// 是一个很重要的性能指标
+Requests per second:    98.85 [#/sec] (mean)
+// 第一个时间是以你的并发数为一组,这里我是设置了并发100,那么
+// 就是这一组请求所能消耗的总时间
+Time per request:       5058.355 [ms] (mean)
+// 这个就是平均下来每个请求的消耗的时间了
+Time per request:       10.117 [ms] (mean, across all concurrent requests)
+// 测试的时候通过网络的传输的速率
+Transfer rate:          56.74 [Kbytes/sec] received
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:      132  613 1214.6    148    8311
+Processing:   132 1638 2024.0    704    8337
+Waiting:      132 1417 1927.7    558    6691
+Total:        264 2251 2314.2   1269    8472
+// 以上这段数据标志了一个请求从连接,发送数据,接收数据这个三个大致的时间,最小以及平均值
+Percentage of the requests served within a certain time (ms)
+  50%   1269
+  66%   2385
+  75%   3354
+  80%   4192
+  90%   6475
+  95%   7041
+  98%   7930
+  99%   8355
+ 100%   8472 (longest request)
+// 以上的数据标志了所有的api请求的消耗时间分布的区间
+// 可以看到, 50%的请求是在1269MS以下, 66%的请求实在2385MS以下
+// 这个数据其实可以看出很多问题来
+//       如果这个数据很平均,即第二列的数据的值几乎都差不多,其实可以说明,至少
+//       你的服务器在这个并发的情况下对于各个请求所能提供的能力是均衡的
+//       在面对这种压力的并发的情况下,对资源没有明显的使用短缺
+//       如果这个数据的差距非常大,这个情况就要结合自身的应用分析了
+//       就像现在这种情况,可以发现,明显有一部分请求在很久之后才得到响应
+//       说明,在并发的情况下,CPU或者IO或者其它资源没有被均衡的使用                             

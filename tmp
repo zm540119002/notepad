@@ -1,44 +1,17 @@
-function tbodyDelData(tmpId,row_id_name,action,call,iParamList,otherParamList,actionUrl){
-	var c_obj = $("#"+tmpId).find("input[class='ch_dms']:checked");
-	var ParamList = [];
-	if(typeof(iParamList)!="undefined" && iParamList!=""){
-		if(typeof(iParamList) == "string") ParamList[0] = iParamList;
-		if(typeof(iParamList) == "object") ParamList = iParamList;
-	}
-	if($(c_obj).length<1){
-		alert("请先选择数据！");
-		return false;
-	}
-	if(!confirm("确定删除？")) return false;
-	var data = {};
-	data.row_id_arr = [];
-	$(c_obj).each(function(){
-		var row_id = $(this).parent().parent().find("input[name='"+row_id_name+"']").val();
-		if(row_id==null || row_id==""){
-			$(this).parent().parent().remove();
-		}else {
-			data.row_id_arr.push(row_id);
-		}
-	});
-	$.ajax({
-		type: "POST",
-		url: actionUrl+"?act="+action,
-		data: data,
-		dataType:"json",
-		async:false,//等待执行完
-		beforeSend: function(XHR){
-			$("#loading_dialog").dialog("open");
-		},
-		error: function(XHR){
-			$("#loading_dialog").dialog("close");
-			alert("删除失败！");
-		},
-		success: function(gmsg){
-			$("#loading_dialog").dialog("close");
-			alert(gmsg.desc);
-			if(gmsg.rs = '1000'){
-				c_obj.parent().parent().remove();
-			}
-		}
-	});
-}
+5.7号开会内容以及需要提供的账号如下：
+1、采集管理方案1是使用中台采集管理做接口给结果做加工，方案2直接拿中台的采集管理进行更改
+结果：1、测试采集功能【治理】是否满足要求，提供中台账号地址；
+          2、如果满足提供通知采集结果的接口，数据更新时给通知；
+          3、 采集结束加工增加版本号。
+地址：http://172.16.7.119:8079/#/home
+账号：zx密码：zx
+账号：lqh密码：lqh
+账号：zsc密码：zsc
+2、鉴权使用公网资源
+结果：工号-账号代替，公网账号网址；
+地址：http://172.16.7.54/#/ledger/sim-card
+账号：zx密码：zx
+账号：zcs密码：zcs
+3、建兴给服务  崇森到公网资源系统管理鉴权
+结果：2台一台数据库一台应用
+4、	系统管理-日志功能记录页面操作【暂时推后】

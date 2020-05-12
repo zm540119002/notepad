@@ -1,0 +1,15 @@
+============================================curl
+curl -X POST http://apidemo.test/api/register \
+    -H "Accept: application/json" \
+    -H "Content-Type: application/json" \
+    -d "{\"name\": \"学院君\", \"email\": \"admin@laravelacademy.org\", \"password\": \"test123\", \"password_confirmation\": \"test123\" }"
+curl -X POST http://apidemo.test/api/login \
+    -H "Accept: application/json" \
+    -H "Content-type: application/json" \
+    -d "{\"email\": \"admin@laravelacademy.org\", \"password\": \"test123\" }"
+curl  https://192.168.100.32/api/rest/getCleanFieldList -k -X POST -d '{"pageSize":10,"pageIndex":1,"source":"","catagory":"1","status":"","beginTime":"2020-05-04","endTime":"2020-05-06"}'
+============================================
+
+============================================
+
+============================================
