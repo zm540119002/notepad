@@ -1,23 +1,36 @@
 =======================================================================================================内存
 free -m
 echo 3 > /proc/sys/vm/drop_caches 
-=======================================================================================================设置PATH环境变量
-1、直接在命令行中设置PATH
-# PATH=$PATH:/usr/local/apache2/bin
-使用这种方法,只对当前会话有效，也就是说每当登出或注销系统以后，PATH设置就会失效。
-2、在profile中设置PATH
-# vim /etc/profile
-找到export行，在下面新增加一行，内容为：
-export PATH=$PATH:/usr/local/apache2/bin
-注：＝ 等号两边不能有任何空格。这种方法最好，除非手动强制修改PATH的值,否则将不会被改变。编辑/etc/profile后PATH的修改不会立马生效，如果需要立即生效的话，可以执行命令：
-# source profile
-3、在当前用户的profile中设置PATH
-# vim ~/.bash_profile
-修改PATH行，把/usr/local/apache2/bin添加进去，例如：
-PATH=$PATH:$HOME/bin:/usr/local/apache2/bin
-# source ~/.bash_profile
-让这次的修改生效。
-注：这种方法只对当前用户起作用的,其他用户该修改无效。
+=======================================================================================================环境变量
+-------------------------------------
+1、查看某一个环境变量（PATH）
+     echo $PATH
+	 env|grep PATH
+2、查看所有的环境变量
+    env
+-------------------------------------
+1、当前shell有效，临时设置
+	# PATH=$PATH:/usr/local/php7/bin
+	使用这种方法,只对当前会话有效，也就是说每当登出或注销系统以后，PATH设置就会失效。
+2、所有用户有效
+	# vim /etc/profile
+	export PATH="$PATH:/usr/local/php7/bin"
+	使环境变量生效：
+	# source /etc/profile
+	注：＝ 等号两边不能有任何空格。这种方法最好，除非手动强制修改PATH的值,否则将不会被改变。
+3、当前用户有效
+	# vim ~/.bash_profile
+	export PATH="$PATH:/usr/local/php7/bin"
+	使环境变量生效：
+	# source ~/.bash_profile
+-------------------------------------
+ ~/.bashrc			当前用户有效
+/etc/bashrc			所有用户有效
+/etc/environment	所有用户有效
+-------------------------------------LD_LIBRARY_PATH
+env|grep LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/dm7client/bin/:/usr/local/dm7client/drivers/odbc/
+-------------------------------------PATH
 =======================================================================================================
 find . -type f -name *.svn*    | xargs rm -f
 find . -name \*52\* 
@@ -30,6 +43,15 @@ scp /usr/local/php/include/php/ext/pdo_oci.so root@172.16.6.44:/usr/local/php2/l
 scp test.php root@172.16.6.44:/usr/local/apache2/htdocs/test.php
 scp -r root@172.16.6.44:/usr/local/apache/htdocs/inc_chk/new_index/svg .
 scp -r root@172.16.7.71:/usr/local/nginx/conf/nginx_2c.conf .
+scp -r root@172.16.6.45:/usr/local/nginx/conf/nginx_2c.conf .
+=======================================================================================================tar
+解压：tar zxvf FileName.tar.gz
+压缩：tar zcvf FileName.tar.gz DirName
+
+-----------------------------------------文件压缩包太大，切分再合并，解压
+split -d -b 20m dmdbms.tgz dmdbms.tgz_new_
+cat dmdbms.tgz_new_* > dmdbms_new.tgz
+tar -zxf dmdbms_new.tgz
 =======================================================================================================
 df -hl 查看磁盘剩余空间
  
@@ -66,6 +88,7 @@ find . -name *~HEAD*  | xargs -n 1000 rm -f
 	uname -a
 	cat /etc/issue
 	cat /etc/redhat-release
+	cat  /etc/*release*
 查看系统是64位还是32位:
 	getconf LONG_BIT
 查看cpu相关信息，包括型号、主频、内核信息等
@@ -172,7 +195,7 @@ php 源码路径
 2. 调用phpize程序生成编译配置文件
 /usr/local/php/bin/phpize
 3. 调用configure生成Makefile文件，然后调用make编译，make install安装
-	./configure -with-php-config=/usr/local/php/bin/php-config -with-curl=/usr/local/curl 			（配置:错误:请重新安装libcurl：yum install curl curl-devel）
+	./configure -with-php-config=/usr/local/php/bin/php-config -with-curl=/usr/local/curl
 4.编译安装
 	make && make install
 5. 修改php配置文件
@@ -226,86 +249,6 @@ service php-fpm restart
 service nginx restart
 ##################安装pcntl扩展示例############################
 
-##################php相关命令##################################
-vim ~/.bash_profile
-PATH 路径加上php安装路径（/usr/local/php）
-PATH=/usr/local/php2/bin:$PATH:$HOME/bin
-source ~/.bash_profile
-php -v				#查看php版本
-php -m				#查看php模块
-##################php相关命令##################################
-
-##################卸载php############################
-yum list installed | grep php	#列出需要卸载的软件包
-rpm -qa|grep php	#列出需要卸载的软件包
-rpm -e php-devel-5.4.16-45.el7.x86_64 | yum remove php-devel-5.4.16-45.el7.x86_64
-php-devel-5.4.16-45.el7.x86_64
-php-pear-1.9.4-21.el7.noarch
-php-process-5.4.16-45.el7.x86_64
-php-xml-5.4.16-45.el7.x86_64
-php-common-5.4.16-45.el7.x86_64
-php-cli-5.4.16-45.el7.x86_64
-##################卸载php######################################
-
-##################安装php######################################
-wget -c http://cn2.php.net/distributions/php-7.1.3.tar.gz
-https://segmentfault.com/a/1190000002717262 #编译说明
-./configure \
--prefix=/usr/local/php \
---with-config-file-path=/usr/local/php/etc \
---enable-inline-optimization \
---disable-debug \
---disable-rpath \
---enable-shared \
---enable-opcache \
---enable-fpm \
---with-mysql=/usr/local/mysql \
---with-mysqli=/usr/local/mysql/bin/mysql_config \
---with-pdo-mysql=/usr/local/mysql \
---with-gettext \
---enable-mbstring \
---with-iconv \
---with-mcrypt \
---with-mhash \
---with-openssl \
---enable-bcmath \
---enable-soap \
---with-libxml-dir \
---enable-pcntl \
---enable-posix \
---enable-shmop \
---enable-sysvmsg \
---enable-sysvsem \
---enable-sysvshm \
---enable-sockets \
---with-curl \
---with-zlib \
---enable-zip \
---with-bz2 \
---with-gd \
---with-freetype-dir \
---with-jpeg-dir \
---with-png-dir
-##################安装php######################################
-
-一、修改环境变量有以下方法（以增加jdk环境变量为例）
-1、只对当前登录用户有作用
-vim ~/.bash_profile
-export JAVA_HOME=/home/java/jdk1.8
-export JAVA_BIN=$JAVA_HOME/bin
-export PATH=$JAVA_BIN:$PATH
-2、对所有用户有效
-vi /etc/profile
-export JAVA_HOME=/home/java/jdk1.8
-export JAVA_BIN=$JAVA_HOME/bin
-export PATH=$JAVA_BIN:$PATH
-
-使环境变量生效 source /etc/profile
-二、查看环境变量
-1、查看某一个环境变量（PATH）
-     echo $PATH
-2、查看所有的环境变量
-    env
 =======================================================================================================
 MYSQL
 # 修改root密码

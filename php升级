@@ -1,5 +1,26 @@
+=================================================================================调试
+	https://blog.csdn.net/greatchina01/article/details/12832717
 =================================================================================
 $act = $_REQUEST['act'];
+=================================================================================
+encodeChar("utf-8","gbk",$val);
+encodeChar("gbk","utf-8",$val);
+=================================================================================乱码&加载时常失败问题
+1、添加环境变量：
+	vim ~/.bash_profile
+	export NLS_LANG='SIMPLIFIED CHINESE_CHINA.ZHS16GBK'
+	source ~/.bash_profile
+	unset  NLS_LANG
+	然后重启apache：
+	/usr/local/apache2.4/bin/apachectl stop
+	/usr/local/apache2.4/bin/apachectl start
+	加了环境变量后最好检查一下有没有生效：
+	ps -ef|grep httpd
+	strings /proc/apache进程id/environ | grep NLS_LANG
+	例如：	strings /proc/1940/environ | grep NLS_LANG
+2、php.ini文件禁用putenv函数
+	vim /usr/local/php7/etc/php.ini
+SIMPLIFIED CHINESE_CHINA.ZHS16GBK与AMERICAN_AMERICA.ZHS16GBK区别：
 =================================================================================解决php7.2后报错Warning: Use of undefined constant PRE - assumed问题
 解决此种问题其实也不是很难，只是报了”Warning警告“，我们只需要关闭”PHP错误提示“就行了。具体步骤如下：
 
@@ -28,7 +49,14 @@ $act = $_REQUEST['act'];
 
  // 报告所有 PHP 错误
  error_reporting (- 1 );
-
+ =================================================================================Uncaught Error: Cannot use string offset as an array
+把变量赋值成了 ''，却当数组方式来访问
+=================================================================================Uncaught Error: [] operator not supported for strings
+原因：在对某一个变量进行第二次赋值的时候，也就是在同一页面内对同一变量第二次赋值，
+但值的类型前后不一致会导致这个错误，可以在第二次赋值前重新进行一次声明变量类型.
+$a="abc";
+unset($a);
+$a[] = "def";
 =================================================================================调用父类构造函数
 parent::__construct();    
 __destruct
@@ -64,7 +92,7 @@ $_POST、$_GET、$_SESSION、$_SERVER、$_FILES等等这些PHP
 }
 只要删掉参数里那个全局变量就可以了。
 =================================================================================Notice: Undefined index: 
-变量还未定义、赋值就使用”的错误，这个不是致命错误，不会让你的php代码运行强行中止
+变量还未定义、赋值就使用的错误，这个不是致命错误，不会让你的php代码运行强行中止
 =================================================================================Warning: Use of undefined constant
 =================================================================================Warning: count(): Parameter must be an array or an object that implements Countable 
 警告:count():参数必须是实现Countable的数组或对象

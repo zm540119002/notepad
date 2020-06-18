@@ -1,18 +1,108 @@
-===========================================================================================================================
+============================================插入默认系统时间sysdate不正确的问题
+实际插入的日期时间值，比正确的系统时间要晚8个小时。检查客户端程序所在服务器的操作系统时区，为正确时区“+08:00”，检查数据库的系统时区也是“+08:00”。
+select para_value as time_zone from v$dm_ini where para_name = 'TIME_ZONE'
+set time zone '+08:00';  
+============================================
+$response = false;
+        if($result){
+            $sql = "SELECT @@IDENTITY as insert_id";
+            $result = dm_exec($this->link,$sql);
+            if($result){
+                $response = dm_fetch_array($result);
+            }
+        }
+        return $response;
+============================================通过odbc连接达梦数据库需要安装： 达梦客户端 和 unixODBC
+function dMQuery($sql,$linkStr,$user,$passwd){
+//    $linkStr = $linkStr?$linkStr:"odbc:DRIVER={dm7};Server=172.16.7.55;Database=dameng";
+    $linkStr = $linkStr?$linkStr:"odbc:dsn=dm";
+    $user = $user?$user:'sysdba';
+    $passwd = $passwd?$passwd:'huitone2214';
+    try {
+        $pdo = new PDO($linkStr,$user,$passwd);
+        $rows = $pdo->query($sql);
+        $result = $rows->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        print "Error: " . $e->getMessage() . "<br/>";
+        die();
+    }
+    $pdo = null;
+    return $result;
+}
 ===========================================================================================================================客户端 win版
 https://pan.baidu.com/s/1JX_VlngjxlX9hNrFnHRMEQ 提取码: jnru
-===========================================================================================================================
-172.16.6.45
+===========================================================================================================================172.16.6.45客户端
 username:	root
 password:	huitone2214
 /usr/local/dm7client/drivers/php_pdo
-===========================================================================================================================
-extension=php52ts_pdo_dm.so
-extension=libphp52ts_dm.so
-===========================================================================================================================
-===========================================================================================================================
-===========================================================================================================================
-===========================================================================================================================
-===========================================================================================================================
-===========================================================================================================================
-===========================================================================================================================
+============================================从172.16.6.45拷贝达梦客户端
+scp -r root@172.16.6.45:/usr/local/dm7client .
+============================================unixODBC
+odbcinst --version
+	wget http://www.unixodbc.org/unixODBC-2.3.1.tar.gz
+	tar -zxvf unixODBC-2.3.1.tar.gz 
+	cd unixODBC-2.3.1
+	./configure --prefix=/usr/local/unixODBC-2.3.1 --includedir=/usr/include --libdir=/usr/lib -bindir=/usr/bin --sysconfdir=/usr/local/unixODBC-2.3.1/etc
+--------------------------------------------
+安装完成后，查看unixODBC安装情况，可能会报如下错误：
+	#odbcinst -j
+	odbcinst: error while loading shared libraries: libodbcinst.so.2: cannot open shared object file: No such file or directory
+解决办法：安装共享库后要注意共享库路径设置问题, 如下:
+A、如果共享库文件安装到了/lib或/usr/lib目录下, 那么需执行一下ldconfig命令
+	ldconfig命令的用途, 主要是在默认搜寻目录(/lib和/usr/lib)以及动态库配置文件/etc/ld.so.conf内所列的目录下, 搜索出可共享的动态链接库(格式如lib*.so*), 进而创建出动态装入程序(ld.so)所需的连接和缓存文件. 
+	缓存文件默认为/etc/ld.so.cache, 此文件保存已排好序的动态链接库名字列表. 
+B、如果共享库文件安装到了/usr/local/lib(很多开源的共享库都会安装到该目录下)或其它"非/lib或/usr/lib"目录下, 那么在执行ldconfig命令前, 还要把新共享库目录加入到共享库配置文件/etc/ld.so.conf中, 如下:
+	# cat /etc/ld.so.conf
+	include ld.so.conf.d/*.conf
+	# echo "/usr/local/lib" >> /etc/ld.so.conf
+	# cat /etc/ld.so.conf
+	include ld.so.conf.d/*.conf
+	/usr/local/lib
+	# ldconfig
+C、如果共享库文件安装到了其它"非/lib或/usr/lib" 目录下,  但是又不想在/etc/ld.so.conf中加路径(或者是没有权限加路径). 那可以
+	export一个全局变量LD_LIBRARY_PATH,然后运行程序的时候就会去这个目录中找共享库. 
+	LD_LIBRARY_PATH的意思是告诉loader在哪些目录中可以找到共享库. 可以设置多个搜索目录, 这些目录之间用冒号分隔开. 比如安装了一个mysql到/usr/local/mysql目录下, 其中有一大堆库文件在/usr/local/mysql/lib下面, 
+	则可以在.bashrc或.bash_profile或shell里加入以下语句即可:
+	export LD_LIBRARY_PATH=/usr/local/mysql/lib:$LD_LIBRARY_PATH    
+	一般来讲这只是一种临时的解决方案, 在没有权限或临时需要的时候使用﻿﻿
+--------------------------------------------
+odbcinst -j
+	unixODBC 2.3.1
+	DRIVERS............: /usr/local/unixODBC-2.3.1/etc/odbcinst.ini
+	SYSTEM DATA SOURCES: /usr/local/unixODBC-2.3.1/etc/odbc.ini
+	FILE DATA SOURCES..: /usr/local/unixODBC-2.3.1/etc/ODBCDataSources
+	USER DATA SOURCES..: /root/.odbc.ini
+	SQLULEN Size.......: 8
+	SQLLEN Size........: 8
+	SQLSETPOSIROW Size.: 8
+find / -name *libdodbc.so*
+	/usr/local/dm7client/drivers/odbc/libdodbc.so
+	/usr/local/dm7client/bin/libdodbc.so
+
+vim /usr/local/unixODBC-2.3.1/etc/odbcinst.ini
+	配置 odbcinst.ini，作用就是注册DM7的ODBC驱动,该驱动名称为DM7，内容如下：
+
+[DM7]
+Description = dm_odbc
+Driver = /usr/local/dm7client/drivers/odbc/libdodbc.so
+
+vim /usr/local/unixODBC-2.3.1/etc/odbc.ini
+	配置 odbc.ini，作用就是创建系统DSN，名称为dm，调用名为DM7的ODBC驱动，内容如下：
+[dm]
+Description = dm7_dsn
+Driver = DM7
+SERVER = 172.16.7.55
+UID = sysdba
+PWD = huitone2214
+TCP_PORT = 5236
+
+配置完成之后，直接在终端运行： isql -v dm
+可能报错：[01000][unixODBC][Driver Manager]Can't open lib '/usr/local/dm7client/drivers/odbc/libdodbc.so' : file not found
+查看： ldd /usr/local/dm7client/drivers/odbc/libdodbc.so 发现没找到相关库文件
+解决办法： 设置 LD_LIBRARY_PATH
+vim ~/.bash_profile
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/dm7client/bin/:/usr/local/dm7client/drivers/odbc/
+保存后： source ~/.bash_profile
+
+再来测试，如果返回以下信息，测说明配置成功：Connected! 。。。
+============================================

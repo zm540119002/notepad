@@ -88,14 +88,109 @@ iptables -nL
 	或者 https://localhost/admin/index.php，
 	但是访问 http://localhost/tz.php 的时候就不会做任何跳转，
 	也就是说 http://localhost/tz.php 和 https://localhost/tz.php 两个地址都可以访问。
-===========================================================================================================================
+===========================================================================================================================2.4.43
+cd /usr/local/src
+	wget https://mirrors.aliyun.com/apache/httpd/httpd-2.4.43.tar.gz
+	tar xvf httpd-2.4.43.tar.gz -C /usr/local/src
+	wget https://mirrors.aliyun.com/apache/apr/apr-1.6.5.tar.gz
+	tar xvf apr-1.6.5.tar.gz -C /usr/local/src
+	wget https://mirrors.aliyun.com/apache/apr/apr-util-1.6.1.tar.gz
+	tar xvf apr-util-1.6.1.tar.gz -C /usr/local/src
+	mv apr-1.6.5 httpd-2.4.43/srclib/apr
+	mv apr-util-1.6.1 httpd-2.4.43/srclib/apr-util
+cd /usr/local/src/httpd-2.4.43
+	./buildconf
+	./configure --prefix=/usr/local/apache2 \
+	--enable-ssl \
+	--enable-so \
+	--with-mpm=event \
+	--with-included-apr \
+	--enable-cgi \
+	--enable-rewrite \
+	--enable-mods-shared=most \
+	--enable-mpms-shared=all
+make && make install
 
-===========================================================================================================================
+设置PATH环境变量：
+	echo "export PATH=$PATH:/usr/local/apache2/bin" > /etc/profile.d/httpd.sh
+	source /etc/profile.d/httpd.sh
+运行httpd -v命令可查看Apache的版本号
 
-===========================================================================================================================
+添加Apache的启动配置文件。
+	vim /usr/lib/systemd/system/httpd.service
+	[Unit] 
+Description=The Apache HTTP Server 
+After=network.target 
 
-===========================================================================================================================
+[Service] 
+Type=forking 
+ExecStart=/usr/local/apache2/bin/apachectl -k start 
+ExecReload=/usr/local/apache2/bin/apachectl -k graceful 
+ExecStop=/usr/local/apache2/bin/apachectl -k graceful-stop 
+PIDFile=/usr/local/apache2/logs/httpd.pid 
+PrivateTmp=false
 
+[Install] 
+WantedBy=multi-user.target
+--------------------------------
+systemctl start httpd
+systemctl enable httpd
+===========================================================================================================================centos7.6 && php-7.2.31
+cd /usr/local/src
+	wget https://cn2.php.net/get/php-7.2.31.tar.bz2/from/this/mirror
+	cp mirror php-7.2.31.tar.bz2
+	tar xvf php-7.2.31.tar.bz2 -C /usr/local/src
+cd /usr/local/src/php-7.2.31
+	./configure --prefix=/usr/local/php7.2.31 \
+	--with-config-file-scan-dir=/usr/local/php7.2.31/etc/php.d \
+	--with-apxs2=/usr/local/apache2/bin/apxs \
+	--with-config-file-path=/usr/local/php7.2.31/etc \
+	--enable-mbstring \
+	--with-freetype-dir \
+	--with-jpeg-dir \
+	--with-png-dir \
+	--with-zlib \
+	--with-libxml-dir=/usr \
+	--with-openssl \
+	--enable-xml \
+	--enable-sockets \
+	--enable-fpm \
+	--with-bz2
+------------------------------libtool版本不一致的话
+cp /usr/local/apache2/build/libtool /usr/local/src/php-7.2.31/
+------------------------------
+cp /usr/local/src/php-7.2.31/php.ini-production /usr/local/php7.2.31/etc/php.ini
+vim /usr/local/apache2/conf/httpd.conf
+	添加：	ServerName:80
+	找到：	Directory 在Require all denied前面添加#，然后添加Require all granted
+	DirectoryIndex index.html，将它替换为DirectoryIndex index.php index.html
+	AddType application/x-httpd-php .php
+	AddType application/x-httpd-php-source .phps
+vim /usr/local/apache2/htdocs/index.php
+<?php
+phpinfo();
+?>
+systemctl restart httpd
+===========================================================================================================================
+	wget https://cn2.php.net/distributions/php-7.3.3.tar.gz
+	wget https://www.php.net/distributions/php-7.3.13.tar.gz
+	wget https://www.php.net/distributions/php-7.4.6.tar.gz
+===========================================================================================================================configure: error: cannot find install-sh, install.sh, or
+autoconf --version
+automake --version
+继续升级autoconf和automake！！！
+1、autoconf-2.69
+	wget ftp://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
+	tar xf autoconf-2.69.tar.xz
+	cd autoconf-2.69
+	./configure --prefix=/usr/local/autoconf-2.69
+	make & make install
+2、automake-1.15
+	wget ftp://ftp.gnu.org/gnu/automake/automake-1.15.tar.xz
+	tar xf automake-1.15.tar.xz
+	cd automake-1.15
+	./configure --prefix=/usr/local/automake-1.15
+	make & make install
 ===========================================================================================================================
 
 ===========================================================================================================================

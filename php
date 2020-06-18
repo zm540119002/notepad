@@ -49,6 +49,13 @@ function test() {
 $a = 1; 
 test(); 
 echo $a;
+=======================================================单例模式
+PHP单例模式的缺点
+ 众所周知，PHP语言是一种解释型的脚本语言，这种运行机制使得每个PHP页面被解释执行后，所有的相关资源都会被回收。也就是说，PHP在语言级别上没有办法让某个对象常驻内存，这和asp.net、Java等编译型是不同的，比如在Java中单例会一直存在于整个应用程序的生命周期里，变量是跨页面级
+
+的，真正可以做到这个实例在应用程序生命周期中的唯一性。然而在PHP中，所有的变量无论是全局变量还是类的静态成员，都是页面级的，每次页面被执行时，都会重新建立新的对象，都会在页面执行完毕后被清空，这样似乎PHP单例模式就没有什么意义了，所以PHP单例模式我觉得只是针对单次页面
+
+级请求时出现多个应用场景并需要共享同一对象资源时是非常有意义的。
 =======================================================
 Note: 处理 register_globals 
 如果已经弃用的 register_globals 指令被设置为 on 那么局部变量也将在脚本的全局作用域中可用。例如， $_POST['foo']   也将以 $foo  的形式存在。 
@@ -170,154 +177,277 @@ function curPageURL() {
 	}
 	return $pageURL;
 }
-==========================================================================================================================================5.2.17
-	https://www.cnblogs.com/ahwu/p/4873654.html
-	wget http://museum.php.net/php5/php-5.2.17.tar.gz
-	tar zxf php-5.2.17.tar.gz
-./configure \
-  --prefix=/usr/share/php52 \
-  --datadir=/usr/share/php52 \
-  --mandir=/usr/share/man \
-  --bindir=/usr/bin/php52 \
-  --with-libdir=lib64 \
-  --includedir=/usr/include \
-  --sysconfdir=/etc/php52/apache2 \
-  --with-config-file-path=/etc/php52/cli \
-  --with-config-file-scan-dir=/etc/php52/conf.d \
-  --localstatedir=/var \
-  --disable-debug \
-  --with-regex=php \
-  --disable-rpath \
-  --disable-static \
-  --disable-posix \
-  --with-pic \
-  --with-layout=GNU \
-  --with-pear=/usr/share/php \
-  --enable-calendar \
-  --enable-sysvsem \
-  --enable-sysvshm \
-  --enable-sysvmsg \
-  --enable-bcmath \
-  --with-bz2 \
-  --enable-ctype \
-  --with-db4 \
-  --without-gdbm \
-  --with-iconv \
-  --enable-exif \
-  --enable-ftp \
-  --enable-cli \
-  --with-gettext \
-  --enable-mbstring \
-  --with-pcre-regex=/usr \
-  --enable-shmop \
-  --enable-sockets \
-  --enable-wddx \
-  --with-libxml-dir=/usr \
-  --with-zlib \
-  --with-kerberos=/usr \
-  --with-openssl=/usr \
-  --enable-soap \
-  --enable-zip \
-  --with-mhash \
-  --with-exec-dir=/usr/lib/php5/libexec \
-  --without-mm \
-  --with-curl=shared,/usr \
-  --with-zlib-dir=/usr \
-  --with-gd=shared,/usr \
-  --enable-gd-native-ttf \
-  --with-gmp=shared,/usr \
-  --with-jpeg-dir=shared,/usr \
-  --with-xpm-dir=shared,/usr/X11R6 \
-  --with-png-dir=shared,/usr \
-  --with-freetype-dir=shared,/usr \
-  --with-ttf=shared,/usr \
-  --with-t1lib=shared,/usr \
-  --with-ldap=shared,/usr \
-  --with-mysql=shared,/usr \
-  --with-mysqli=shared,/usr/bin/mysql_config \
-  --with-pgsql=shared,/usr \
-  --with-pspell=shared,/usr \
-  --with-unixODBC=shared,/usr \
-  --with-xsl=shared,/usr \
-  --with-snmp=shared,/usr \
-  --with-sqlite=shared,/usr \
-  --with-tidy=shared,/usr \
-  --with-xmlrpc=shared \
-  --enable-pdo=shared \
-  --without-pdo-dblib \
-  --with-pdo-mysql=shared,/usr \
-  --with-pdo-pgsql=shared,/usr \
-  --with-pdo-odbc=shared,unixODBC,/usr \
-  --with-pdo-dblib=shared,/usr \
-  --enable-force-cgi-redirect  --enable-fastcgi \
-  --with-libdir=/lib/x86_64-linux-gnu \
-  --with-pdo-sqlite=shared \
-  --with-sqlite=shared \
-  --enable-ipv6 \
-  --with-mcrypt \
-  --with-imap-ssl
-==========================================================================================================================================php7
- yum install -y gcc gcc-c++  make zlib zlib-devel pcre pcre-devel  libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers -y
- 
- ./configure --prefix=/usr/local/php \
- --with-config-file-path=/usr/local/php \
- --with-apxs2=/usr/local/apache2/bin/apxs \
- --enable-mbstring \
- --with-openssl \
- --enable-ftp \
- --with-gd \
- --with-jpeg-dir=/usr \
- --with-png-dir=/usr \
- --with-mysql=mysqlnd \
- --with-mysqli=mysqlnd \
- --with-pdo-mysql=mysqlnd \
- --with-pear \
- --enable-sockets \
- --with-freetype-dir=/usr\
- --with-libxml-dir=/usr \
- --with-xmlrpc \
- --enable-zip \
- --enable-fpm \
- --enable-xml \
- --with-zlib \
- --with-iconv \
- --enable-soap \
- --enable-pcntl \
- --enable-cli \
- --with-curl
-==========================================================================================================================================
-	wget http://hk1.php.net/get/php-7.2.3.tar.gz/from/this/mirror
-	tar -zxvf mirror
-cd php-7.1.31
-./configure 
---prefix=/usr/local/php 
---with-config-file-path=/usr/local/php/etc
---enable-mbstring 
---enable-ftp 
---with-gd 
---with-jpeg-dir=/usr 
---with-png-dir=/usr 
---with-mysql=mysqlnd 
---with-mysqli=mysqlnd 
---with-pdo-mysql=mysqlnd 
---without-pear 
+=======================================================pdo_oci
+cd /usr/local/src/php-7.2.26/ext/pdo_oci
+/usr/local/webserver/php/bin/phpize
+./configure --with-php-config=/usr/local/php7/bin/php-config --with-pdo-oci=instantclient,/usr/lib/oracle/11.2/client64/lib
+=======================================================PDO_ODBC
+yum -y install unixODBC-*
+-------------------------------第一种：源码安装
+wget http://pecl.php.net/get/PDO_ODBC-1.0.1.tgz
+tar -zxvf PDO_ODBC-1.0.1.tgz
+cd PDO_ODBC-1.0.1
+/usr/local/php7.2.31/bin/phpize
+./configure --prefix=/usr/local/PDO_ODBC-1.0.1 --with-php-config=/usr/local/php7.2.31/bin/php-config --with-pdo-odbc=unixODBC,/usr
+make && make install
+-------------------------------第二种：扩展安装
+1. 进到扩展目录：
+	cd /usr/local/src/php-7.2.31/ext/pdo_odbc
+2. 调用phpize程序生成编译配置文件
+	/usr/local/php7.2.31/bin/phpize
+3. 调用configure生成Makefile文件，然后调用make编译，make install安装
+	./configure -with-php-config=/usr/local/php7.2.31/bin/php-config --with-pdo-odbc=unixODBC,/usr
+4.编译安装
+	make && make install
+	ll /usr/local/php7.2.31/lib/php/extensions/no-debug-zts-20170718/
+5. 修改php配置文件
+	vim /usr/local/php7.2.31/etc/php.ini
+	extension=pdo_odbc.so
+6.重启apache
+	/usr/local/apache2/bin/apachectl stop
+	/usr/local/apache2/bin/apachectl start
+=======================================================curl
+yum install curl curl-devel
+1. 进到扩展目录：
+	cd /usr/local/src/php-7.2.26/ext/curl
+2. 调用phpize程序生成编译配置文件
+	/usr/local/php7/bin/phpize
+3. 调用configure生成Makefile文件，然后调用make编译，make install安装
+	./configure -with-php-config=/usr/local/php7/bin/php-config
+4.编译安装
+	make && make install
+	成功：/usr/local/php7/lib/php/extensions/no-debug-zts-20170718/
+5. 修改php配置文件
+	vim /usr/local/php7/etc/php.ini
+	extension=curl.so
+6.重启apache
+	/usr/local/apache2/bin/apachectl stop
+	/usr/local/apache2/bin/apachectl start
+=======================================================php7.2.31
+	wget https://www.php.net/distributions/php-7.2.31.tar.gz
+	tar -zvxf php-7.2.31.tar.gz
+	cd /usr/local/src/php-7.2.31
+--------------------------先装依赖以及扩展库：
+yum install gcc gcc-c++ libxml2 libxml2-devel autoconf libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel
+--------------------------libiconv
+cd /usr/local/src
+wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.13.1.tar.gz
+tar -zxvf libiconv-1.13.1.tar.gz
+cd libiconv-1.13.1
+./configure --prefix=/usr/local/libiconv
+make && make install
+---------------------------柏维
+./configure  --prefix=/usr/local/php7.2.31 \
+--exec-prefix=/usr/local/php7.2.31 \
+--with-config-file-path=/usr/local/php7.2.31/etc \
+--with-apxs2=/usr/local/apache2.4/bin/apxs \
+--enable-bcmath \
+--enable-mbstring \
+--with-gettext \
+--enable-fpm \
+--enable-shmop \
+--enable-soap \
+--enable-opcache \
+--with-curl \
+--disable-debug \
+--disable-rpath \
+--enable-inline-optimization \
+--with-bz2 \
+--with-zlib \
+--enable-sockets \
+--enable-sysvsem \
+--enable-sysvshm \
+--enable-pcntl \
+--enable-mbregex \
+--with-mhash \
+--with-pcre-regex \
+--with-gd \
+--with-jpeg-dir \
+--with-freetype-dir \
+--with-iconv=/usr/local/libiconv \
+--enable-calendar  \
+--without-pear \
 --disable-phar 
---enable-sockets 
---with-freetype-dir=/usr 
---with-zlib 
---with-libxml-dir=/usr 
---with-xmlrpc 
---enable-zip 
---enable-fpm 
---enable-xml 
---with-iconv 
---enable-soap 
---enable-pcntl 
---enable-cli 
---with-curl
+--------------------------Please reinstall the libzip distribution:
+yum install -y cmake 
+wget https://libzip.org/download/libzip-1.5.2.tar.gz
+tar -zxf libzip-1.5.2.tar.gz
+cd libzip-1.5.2
+mkdir build
+cd build 
+cmake ..
+make -j4
+make install
 
-==========================================================================================================================================pdo_oci扩展
-./configure --with-php-config=/usr/local/php/bin/php-config --with-pdo-oci=instantclient,/root/instantclient_18_3,11.2.0
-==========================================================================================================================================oci8
+提示CMake版本低，需要更高版本。
+解决方法：
+（1）移除旧版本：
+　　yum remove cmake
+（2）下载新版本
+　　1、下载：curl -O https://cmake.org/files/v3.6/cmake-3.6.0-Linux-x86_64.tar.gz
+　　2、解压：tar -zxvf cmake-3.6.0-Linux-x86_64.tar.gz
+　　　　注意：这个压缩包不是源码包，解压后直接用。
+　　3、增加环境变量，使其成为全局变量：
+　　　　vim /etc/profile
+　　　　在文件末尾处增加以下代码
+　　　　export PATH=$PATH:/usr/local/src/cmake-3.6.0-Linux-x86_64/bin
+　　　　注意：写自己刚安装cmake的bin的路径
+　　　　使修改的文件生效
+　　　　source /etc/profile
+　　4、查看环境变量：
+　　　　echo $PATH
+　　5、检查cmake版本：
+　　　　cmake --version
+装不了，装个低版本的： wget https://nih.at/libzip/libzip-1.2.0.tar.gz
+	tar -zxvf libzip-1.2.0.tar.gz
+　　cd libzip-1.2.0
+　　./configure  --prefix=/usr/local/libzip-1.2.0/
+　　make && make install
+--------------------------
+cd /usr/local/src
+wget  http://pear.php.net/go-pear.phar 
+/usr/local/bin/php go-pear.phar
+--------------------------
+./configure --prefix=/usr/local/php-7.2.31/ \
+--with-config-file-path=/usr/local/php-7.2.31/etc/ \
+--with-apxs2=/usr/local/apache2/bin/apxs/ \
+--enable-mbstring \
+--without-pear \
+--disable-phar \
+--------------------------gd库
+cd /usr/local/src/php-7.2.31/ext/gd
+/usr/local/php/bin/phpize
+./configure --with-php-config=/usr/local/php/bin/php-config  --with-jpeg-dir=/usr/lib64  --with-png-dir=/usr/lib64   --with-freetype-dir=/usr/lib64
+=======================================================php7.4.6
+参考：	https://www.ziruchu.com/art/61
+cd /usr/local/src
+	wget https://cn2.php.net/get/php-7.4.6.tar.bz2/from/this/mirror
+1、首先安装依赖
+	yum -y install libxml2 libxml2-devel openssl openssl-devel curl-devel libjpeg-devel libpng-devel freetype-devel libmcrypt-devel libzip-devel pcre-devel
+2、解压
+	tar -zxvf php-7.4.6.tar.gz
+3、./configure配置参数 （参考： https://www.cnblogs.com/HKUI/p/5137115.html ）
+	./configure --prefix=/usr/local/php-7.4.6 \
+	--with-config-file-path=/usr/local/php-7.4.6 \
+	--with-apxs2=/usr/local/apache2/bin/apxs \
+	--enable-mbstring \
+	--with-openssl \
+	--enable-ftp \
+	--with-gd \
+	--with-jpeg-dir=/usr \
+	--with-png-dir=/usr \
+	--with-mysql=mysqlnd \
+	--with-mysqli=mysqlnd \
+	--with-pdo-mysql=mysqlnd \
+	--with-pear \
+	--enable-sockets \
+	--with-freetype-dir=/usr\
+	--with-libxml-dir=/usr \
+	--with-xmlrpc \
+	--enable-zip \
+	--enable-fpm \
+	--enable-xml \
+	--with-zlib \
+	--with-iconv \
+	--enable-soap \
+	--enable-pcntl \
+	--enable-cli \
+	--with-curl
+------------------------------Requested 'sqlite3 > 3.7.4' but version of SQLite is 3.6.20
+sqlite3 --version	查看版本为3.6.30，需升级
+wget https://www.sqlite.org/2019/sqlite-autoconf-3270200.tar.gz
+tar -zxvf sqlite-autoconf-3270200.tar.gz
+cd sqlite-autoconf-3270200
+./configure --prefix=/usr/local
+make && make install
+
+＃检查版本
+## 最新安装的sqlite3版本
+[root@localhost /]## /usr/local/bin/sqlite3 --version
+3.27.2 2019-02-25 16:06:06 bd49a8271d650fa89e446b42e513b595a717b9212c91dd384aab871fc1d0f6d7
+ 
+## Centos7自带的sqlite3版本
+[root@localhost /]# /usr/bin/sqlite3 --version
+3.7.17 2013-05-20 00:56:22 118a3b35693b134d56ebd780123b7fd6f1497668
+ 
+## 可以看到sqlite3的版本还是旧版本，那么需要更新一下。
+[root@localhost /]# sqlite3 --version
+3.7.17 2013-05-20 00:56:22 118a3b35693b134d56ebd780123b7fd6f1497668
+ 
+## 更改旧的sqlite3
+[root@localhost /]# mv /usr/bin/sqlite3  /usr/bin/sqlite3_old
+ 
+## 软链接将新的sqlite3设置到/usr/bin目录下
+[root@localhost /]# ln -s /usr/local/bin/sqlite3   /usr/bin/sqlite3
+ 
+## 查看当前全局sqlite3的版本
+[root@localhost /]# sqlite3 --version
+3.27.2 2019-02-25 16:06:06 bd49a8271d650fa89e446b42e513b595a717b9212c91dd384aab871fc1d0f6d7
+ 
+＃将路径传递给共享库
+# 设置开机自启动执行，可以将下面的export语句写入 ~/.bashrc 文件中，如果如果你想立即生效，可以执行source ~/.bashrc 将在每次启动终端时执行
+[root@localhost /]# export LD_LIBRARY_PATH="/usr/local/lib"
+查看：	echo $PKG_CONFIG_PATH 为空
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig
+若不为空：
+export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig/:$PKG_CONFIG_PATH
+------------------------------configure: error: Package requirements (oniguruma) were not met:No package 'oniguruma' found
+1、
+yum -y install https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/o/oniguruma-5.9.5-3.el7.x86_64.rpm
+yum -y install https://dl.fedoraproject.org/pub/epel/7/x86_64/Packages/o/oniguruma-devel-5.9.5-3.el7.x86_64.rpm
+2、使用源代码安装。
+git clone https://github.com/kkos/oniguruma
+./configure --prefix=/usr/local --libdir=/lib64
+make && make install
+简单说明：需要有“--libdir=/lib64”参数。如果不使用这个参数，编译PHP仍将报错，编辑ldconfig配置无法解决问题。目前还不清楚问题的缘由。
+------------------------------Requires: libc.so.6(GLIBC_2.14)(64bit)
+strings /lib64/libc.so.6 | grep GLIBC
+wget http://ftp.gnu.org/gnu/glibc/glibc-2.14.tar.gz
+tar xf glibc-2.14.tar.gz
+cd glibc-2.14
+mkdir build
+cd build
+../configure --prefix=/usr/local/glibc-2.14 --disable-profile --enable-add-ons --with-headers=/usr/include --with-binutils=/usr/bin
+make && make install
+
+报错：	
+	/usr/local/src/glibc-2.14/build/elf/ldconfig: Can't open configuration file /usr/local/glibc-2.14/etc/ld.so.conf: No such file or directory
+	make[1]: Leaving directory `/usr/local/src/glibc-2.14'
+解决：	将/etc/ld.so.conf文件复制到/usr/local/glibc-2.14/etc/下
+	cp /etc/ld.so.conf /usr/local/glibc-2.14/etc/
+	cp /etc/ld.so.c* /usr/local/glibc-2.14/etc/
+再执行：	make install
+
+安装完成后, 建立软链指向glibc-2.14, 执行如下命令:
+rm -rf /lib64/libc.so.6 			// 先删除先前的libc.so.6软链
+$ ln -s /usr/local/glibc-2.14/lib/libc-2.14.so /lib64/libc.so.6
+注意：删除libc.so.6之后可能导致系统命令不可用的情况, 可使用如下方法解决:
+LD_PRELOAD=/usr/local/glibc-2.14/lib/libc-2.14.so  ln -s /usr/local/glibc-2.14/lib/libc-2.14.so /lib64/libc.so.6
+LD_PRELOAD=/lib64/libc-2.12.so ln -s /lib64/libc-2.12.so /lib64/libc.so.6    // libc-2.12.so 此项是系统升级前的版本
+------------------------------
+下载glibc编译安装，升级
+wget http://ftp.gnu.org/gnu/glibc/glibc-2.14.tar.gz
+wget http://ftp.gnu.org/gnu/glibc/glibc-ports-2.14.tar.gz
+tar -xvf glibc-2.14.tar.gz
+tar -xvf glibc-ports-2.14.tar.gz
+mv glibc-ports-2.14 glibc-2.14/ports
+cd glibc-2.14
+mkdir build
+cd build
+../configure --prefix=/usr/local/glibc-2.14
+make -j4
+make install
+问题："/root/glibc-2.14/build/elf/ldconfig: Can't open configuration file /usr/local/glibc-2.14/etc/ld.so.conf: No such file or directory"
+解决：cp /etc/ld.so.c* /usr/local/glibc-2.14/etc/
+rm -rf /lib64/libc.so.6
+操作删除软链接后系统无法操作任何命令，我们需要复制下面的命令执行后才可以
+LD_PRELOAD=/usr/local/glibc-2.14/lib/libc-2.14.so ln -s /usr/local/glibc-2.14/lib/libc-2.14.so /lib64/libc.so.6
+ln -s /usr/local/glibc-2.14/lib/libc-2.14.so /lib64/libc.so.6
+重新检查版本，验证已升级
+=======================================================oci8
 ./configure --with-php-config=/usr/local/php/bin/php-config --with-oci8=shared,instantclient,/root/instantclient_18_3
-==========================================================================================================================================
+=======================================================
+
+=======================================================
+
+=======================================================

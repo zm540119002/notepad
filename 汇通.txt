@@ -19,15 +19,6 @@ http://mail.huitone.com/webmail7.5/webmail.php?r=site/index/domain/huitone.com
     )
   )
 ua_dbg  / ua_dbgrica
-============================================================================172.16.7.71
-username:	root
-password:	htgx@123456
----------------------------------------------------------------nginx
-vi /usr/local/nginx/conf/nginx_2c.conf
-ps -ef|grep nginx
-启动： /usr/local/nginx/sbin]$ /usr/local/nginx/sbin/nginx -c conf/nginx_2c.conf
-重启： /usr/local/nginx/sbin/nginx -s reload  
-停止： /usr/local/nginx/sbin/nginx -s stop 
 ============================================================================172.16.6.34
 username:	root
 password:	huitone2214
@@ -43,48 +34,6 @@ http://172.16.6.34:8099
 账号：	zmin
 邮箱：	qq邮箱
 密码：	12345678
-============================================================================172.16.7.54
----------------------------------------------------------------gitlab
-	http://172.16.7.54:9090
-	username:	root
-	password:	huitone2214
-参考：
-	https://www.jianshu.com/p/80d9a656d6c6?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
----------------------------------------------------------------
-============================================================================172.16.7.55
-username:	root
-password:	huitone2214
----------------------------------------------------------------oracle
-============================================================================172.16.7.56
-username:	root
-password:	huitone2214
----------------------------------------------------------------apache
-vim /etc/apache2.4/httpd.conf
-vim /etc/apache2.4/extra/httpd-vhosts.conf
-vim /etc/apache2.4/extra/httpd-ssl.conf
-cd /usr/local/apache2.4/htdocs
-/usr/local/apache2.4/bin/apachectl restart
----------------------------------------------------------------php
-vim /usr/local/php7/etc/php.ini
-============================================================================172.16.7.57  
-username:	root
-password:	huitone2214
-username:	oracle
-password:	huitone2214
-============================================================================172.16.7.58  
-username:	root
-password:	huitone2214
-username:	oracle
-password:	huitone2214
-============================================================================172.16.7.74
----------------------------------------------------------------apache
-vim /usr/local/apache2/conf/httpd.conf
-vim /usr/local/apache2/conf/extra/httpd-vhosts.conf
-/usr/local/apache2/bin/apachectl start
----------------------------------------------------------------php
-vim /usr/local/php/lib/php.ini
-extension_dir = "/usr/local/php/include/php/ext"
-cd /usr/local/php/include/php/ext
 ============================================================================172.16.6.44
 username:	root
 password:	huitone2214
@@ -121,18 +70,176 @@ vim /etc/odbc.ini
 ./configure --with-php-config=/usr/local/php2/bin/php-config --with-pdo-odbc=unixODBC,/usr/
 ============================================================================172.16.6.45
 https://172.16.6.45/api/rest/ruleRels/getTables/50
+============================================================================172.16.7.54
+---------------------------------------------------------------gitlab
+	http://172.16.7.54:9090
+	username:	root
+	password:	huitone2214
+	username:	git
+	password:	huitone2214
+参考：
+	https://www.jianshu.com/p/80d9a656d6c6?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
+---------------------------------------------------------------
+============================================================================172.16.7.55
+username:	root
+password:	huitone2214
+---------------------------------------------------------------oracle
+============================================================================172.16.7.56
+username:	root
+password:	huitone2214
+---------------------------------------------------------------apache
+vim /etc/apache2.4/httpd.conf
+vim /etc/apache2.4/extra/httpd-vhosts.conf
+vim /etc/apache2.4/extra/httpd-ssl.conf
+cd /usr/local/apache2.4/htdocs
+/usr/local/apache2.4/bin/apachectl restart
+cd /usr/local/apache2.4/logs
+---------------------------------------------------------------php-7.2.26
+扩展库路径：	cd /usr/local/php7/lib/php/extensions/no-debug-zts-20170718
+配置文件：	vim /usr/local/php7/etc/php.ini
+scp -r root@139.159.218.155:/app/dmdbms/drivers/oci/libdmoci.so oci8.so
+scp -r root@172.16.7.55:/home/oracle/dmdbms/drivers/oci/libdmoci.so oci8.so
+
+解压：tar zxvf libdmoci.so.tar.gz
+压缩：tar zcvf libdmoci.so.tar.gz libdmoci.so
+
+解包：tar xvf libdmoci.so.tar
+打包：tar cvf libdmoci.so.tar libdmoci.so
+（注：tar是打包，不是压缩！）
+---------------------------------------------------------------php-7.2.31
+cd /usr/local/lib/php/extensions/no-debug-non-zts-20170718/
+============================================================================172.16.7.57  
+username:	root
+password:	huitone2214
+username:	oracle
+password:	huitone2214
+============================================================================172.16.7.58  
+username:	root
+password:	huitone2214
+username:	oracle
+password:	huitone2214
+============================================================================172.16.7.60 
+username:	root
+password:	huitone2214
+============================================================================172.16.7.71
+username:	root
+password:	htgx@123456
+---------------------------------------------------------------nginx
+vi /usr/local/nginx/conf/nginx_2c.conf
+ps -ef|grep nginx
+启动： /usr/local/nginx/sbin]$ /usr/local/nginx/sbin/nginx -c conf/nginx_2c.conf
+重启： /usr/local/nginx/sbin/nginx -s reload  
+停止： /usr/local/nginx/sbin/nginx -s stop 
+============================================================================172.16.7.74
+---------------------------------------------------------------apache
+vim /usr/local/apache2/conf/httpd.conf
+vim /usr/local/apache2/conf/extra/httpd-vhosts.conf
+/usr/local/apache2/bin/apachectl start
+---------------------------------------------------------------php
+vim /usr/local/php/lib/php.ini
+extension_dir = "/usr/local/php/include/php/ext"
+cd /usr/local/php/include/php/ext
+============================================================================VPN
+帐号：	wwx747307-10    
+密码：	@L!RKrMvvkH#
+============================================================================172.16.96.57（华为-私有云-前端）
+username:	root
+password:	LLYSC@#1S1KR
+username:	openlab
+password:	htgx01@123#
+注意先登录：openlab帐号才能切换到root帐号	
+----------------------------------------apache
+vim /etc/apache2.4/httpd.conf
+vim /etc/apache2.4/extra/httpd-vhosts.conf
+/app/apache2.4/bin/apachectl stop
+----------------------------------------php
+vim /app/php7.2/etc/php.ini
+============================================================================172.16.96.60（华为-私有云-后端）
+username:	root
+password:	LLYSC@#1S1KR
+username:	openlab
+password:	htgx01@123#
+注意先登录：openlab帐号才能切换到root帐号	
+============================================================================172.16.96.155（华为-私有云-数据库）
+username:	root
+password:	LLYSC@#1S1KR
+username:	openlab
+password:	htgx01@123#
+注意先登录：openlab帐号才能切换到root帐号	
+============================================================================139.159.147.153-华为-公有云-前端
+username:	root
+password:	htgx@1234
+------------------------------apache2.4
+cd /app/apache2.4/htdocs/
+vim /etc/apache2.4/httpd.conf
+tail -f /tmp/php_output.log
+------------------------------php
+cd /app/apache2.4/htdocs/inc_chk
+vim /app/php7.2.31/etc/php.ini
+------------------------------git
+git clone ssh://git@127.0.0.1:9988/php/inc_chk.git
+------------------------------xshell配置
+连接属性-ssh-隧道：添加
+类型：远程传入
+源主机：127.0.0.1
+仅接受本地连接：勾选
+目标主机：172.16.7.54
+目标端口：22
+============================================================================139.9.214.65-华为-公有云-后端
+username:	root
+password:	htgx@1234
+username:	htgx  
+password:	online!34
+============================================================================139.159.218.155-华为-公有云-数据库
+username:	root
+password:	htgx@1234
+------------------------------达梦
+cd /app/dmdbms/drivers/php_pdo
+------------------------------
+============================================================================172.16.7.54和124.71.112.70
+172.16.7.54和124.71.112.70互通的情况：
+SecureCRT配置:
+172.16.7.54：会话选项-端口转发-远程/x11，添加：名称、远程：5236，本地：15236
+124.71.112.70：会话选项-端口转发-远程/x11，添加：名称、远程：1212，本地：勾选：目的地主机不同于本机：主机名：172.16.7.54，端口22
+124.71.112.70：ssh -v -p 1212 root@127.0.0.1
+然后本地git：git clone ssh://git@127.0.0.1:1212/php/inc_chk.git
+netstat -anp|grep LIS
+----------------------------------------php
+----------------------------------------
+============================================================================124.71.112.70
+username:	root
+password:	Huitone!2214
+------------------------------apache2.4
+vim /usr/local/apache2/conf/httpd.conf
+vim /usr/local/apache2/conf/extra/httpd-vhosts.conf
+/usr/local/apache2/bin/apachectl stop
+------------------------------达梦
+systemctl start DmServiceDMSERVER
+------------------------------php
+------------------------------php.ini
+extension_dir=/data/dmdbms/drivers/php_pdo
+extension=libphp72ts_dm.so
+extension_dir=/data/dmdbms/drivers/php_pdo
+extension=php72ts_pdo_dm.so
+------------------------------
+php增加DM、PDO_DM 扩展方法：
+1.服务器装一套达梦客户端：dmdbms .
+2.php.ini 文件增加扩展项：
+extension_dir=/data/dmdbms/drivers/php_pdo
+extension=libphp72ts_dm.so
+extension_dir=/data/dmdbms/drivers/php_pdo
+extension=php72ts_pdo_dm.so
+3.环境变量增加指向达梦的bin目录，并重载环境变量。
+export LD_LIBRARY_PATH=/data/dmdbms/bin
+4.重启apache 即可完成DM，PDO_DM的加载项安装。
 ============================================================================公司官方网站
-前台：http://www.huitone.com/
-后台:  http://www.faisco.cn/ 
+前台：	http://www.huitone.com/
+后台:  	http://www.faisco.cn/ 
 账号: iw13833136 
 员工号: xc 
 密码: ZGRiNDE0ZWYxODk5MTlk
 
-(2)域名:http://domain.cnolnic.com 
+(2)域名:http://domain.cnolnic.com
 账号: huitone.com 
 密码: OTEzZjgzNTBjMWFiNGQ0
-============================================================================
-
-============================================================================
-
-============================================================================
+=============================================================================

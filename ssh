@@ -5,8 +5,12 @@ ssh_config和sshd_config
 cd /usr/local/ssh/
 vim /usr/local/ssh/ssh_config
 service sshd restart
-=============================================
-
+=============================================案例
+cd ~/.ssh
+ssh-keygen -t rsa
+vim id_rsa.pub 复制内容上传到gitlab用户的key里
+git clone git@172.16.7.54:php/inc_chk.git
+git clone ssh://git@127.0.0.1:1212/php/inc_chk.git
 =============================================
 
 =============================================

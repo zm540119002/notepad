@@ -16,8 +16,20 @@
 	git clone https://github.com/johan/swfobject.git
 ========================================================================================
 	git clone https://github.com/jasonmadigan/Base.js.git
+========================================================================================图表错误
+-------------------------生成动态类错误，可能原因：
+文件权限问题
+	/usr/local/apache2.4/htdocs/inc_chk/RptCustom
+	解决：cd /usr/local/apache2/htdocs/inc_chk_new/RptCustom/
+	chown -R oracle:root tmp
+	chown -R daemon:root tmp
+-------------------------------
+$oRptChartCustom_T->getDoSettingList()
 ========================================================================================
 ========================================================================================
 ========================================================================================
 ========================================================================================
-========================================================================================
+
+Array ( [0] => Array ( [GRAPH_ID] => 1743458 [REPORT_ID] => 1743283 [SEQU] => 1 [NAME] => 11111 [TYPE] => Line [X_COLUMN] => 1743352 [X_COLUMN_NAME] => B2.data_date [X_COLUMN_CN] => 日期 [X_MIN] => [X_MAX] => [DATA_COLUMN] => 1743354 [DATA_COLUMN_NAME] => B2.data_total [DATA_COLUMN_CN] => 区域-数据量 [ON_LINE] => [EXPLAIN] => [SELECT_STMT] => B2.data_date COL_X, SUM(B2.data_total) COL_Y_1 [FROM_STMT] => ua_dbg.TB_DM_RESULT_MAP111 B2 [WHERE_STMT] => 1 = 1 1 = 1 AND ( B2.data_date is not null ) /*uc_rpt_cond_start*/ AND (B2.data_date = '$COL_1743446') /*uc_rpt_cond_end*/ /*uc_rpt_cond_start*/ AND (B2.data_date = '$COL_1743446') /*uc_rpt_cond_end*/ [GROUP_STMT] => B2.data_date [HAVING_STMT] => [ORDER_STMT] => [IS_CUSTOM_SQL] => NO ) )
+
+Array ( [GRAPH_ID] => 1743458 [REPORT_ID] => 1743283 [SEQU] => 1 [NAME] => 11111 [TYPE] => Line [X_COLUMN] => 1743352 [X_COLUMN_NAME] => B2.data_date [X_COLUMN_CN] => 日期 [X_MIN] => [X_MAX] => [DATA_COLUMN] => 1743354 [DATA_COLUMN_NAME] => B2.data_total [DATA_COLUMN_CN] => 区域-数据量 [ON_LINE] => [EXPLAIN] => [SELECT_STMT] => B2.data_date COL_X, SUM(B2.data_total) COL_Y_1 [FROM_STMT] => ua_dbg.TB_DM_RESULT_MAP111 B2 [WHERE_STMT] => 1 = 1 1 = 1 AND ( B2.data_date is not null ) /*uc_rpt_cond_start*/ AND (B2.data_date = '$COL_1743446') /*uc_rpt_cond_end*/ /*uc_rpt_cond_start*/ AND (B2.data_date = '$COL_1743446') /*uc_rpt_cond_end*/ [GROUP_STMT] => B2.data_date [HAVING_STMT] => [ORDER_STMT] => [IS_CUSTOM_SQL] => NO )
