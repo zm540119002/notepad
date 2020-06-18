@@ -1,0 +1,29 @@
+=============================华为云主机配置yum源
+问题：#
+　　拥有华为主机，配置华为云mirrors，不走公网流量加速体验
+　　系统：
+　　　　centos7.6
+解决：#
+01、华为云mirrors　#
+	https://mirrors.huaweicloud.com/
+	cd /etc/yum.repos.d && rm -rf *    //清理已经存在的yum源
+	wget -O /etc/yum.repos.d/CentOS-Base.repo https://repo.huaweicloud.com/repository/conf/CentOS-7-reg.repo   //下载华为mirrors
+
+02、新增epel源#
+	yum remove  -y  epel-release
+	yum install -y  https://repo.huaweicloud.com/epel/epel-release-latest-7.noarch.rpm
+	cd /etc/yum.repos.d/
+	
+	rm -rf epel-testing.repo
+	sed -i "s/#baseurl/baseurl/g" /etc/yum.repos.d/epel.repo
+	sed -i "s/mirrorlist/#mirrorlist/g" /etc/yum.repos.d/epel.repo
+	sed -i "s@http://download.fedoraproject.org/pub@https://repo.huaweicloud.com@g" /etc/yum.repos.d/epel.repo
+03、清理缓存测试#
+	yum clean all     //清除原有yum缓存
+	yum makecache  //刷新缓存
+	yum repolist all    //查看所有配置可以使用的文件，会自动刷新缓存
+=============================
+
+=============================
+
+=============================

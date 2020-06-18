@@ -1,0 +1,14 @@
+====================================================
+delete from  ua_dbg.tbl_gis_device_need_statistics  a where a.uc#data_date = '20200519'
+====================================================
+dbgLogHt("oRecList" . strHt($oRecList));
+cd /usr/local/apache2/logs
+tail -f dpi_error.log 
+tail -f error_log
+====================================================
+
+====================================================huitone2214
+待修改：
+文件：	task_run_log_act.php 
+函数：	getTaskLogDetail
+(CASE WHEN status IN ('WAIT_CONDITION', 'WAIT_BUSY', 'WAIT_EXEC') THEN decode(status, 'WAIT_CONDITION', '等待依赖', 'WAIT_EXEC', '等待执行', '等待资源')
