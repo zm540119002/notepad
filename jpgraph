@@ -1,0 +1,1 @@
+=======================================a plot has an illegal scale this could for example be that you are trying to user text auto scaling to draw a line plot with only one point or that the plot area is too small it could also be that no input data value is numeric

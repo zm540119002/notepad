@@ -5,6 +5,7 @@ git config --global user.name "139.159.147.153"
 git clone git@172.16.7.54:php/inc_chk_new.git inc_chk
 ================================================
 git commit -am 'zm' && git pull origin hch && git push origin hch
+git commit -am 'zm' && git pull origin master && git push origin master
 ================================================常用
 git log
 git show d21522728254aee1ab083e

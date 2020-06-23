@@ -113,6 +113,11 @@ username:	root
 password:	huitone2214
 username:	oracle
 password:	huitone2214
+--------------------------------------------------------------nginx
+cd /www/wwwroot/dm/dist
+vim /usr/local/nginx/conf/nginx.conf
+username:	xdl
+password:	xdl
 ============================================================================172.16.7.58  
 username:	root
 password:	huitone2214
