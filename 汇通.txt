@@ -144,6 +144,9 @@ vim /usr/local/apache2/conf/extra/httpd-vhosts.conf
 vim /usr/local/php/lib/php.ini
 extension_dir = "/usr/local/php/include/php/ext"
 cd /usr/local/php/include/php/ext
+============================================================================172.16.8.3  
+username:	root
+password:	123456
 ============================================================================VPN
 帐号：	wwx747307-10    
 密码：	@L!RKrMvvkH#
