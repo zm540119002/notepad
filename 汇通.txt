@@ -71,6 +71,7 @@ vim /etc/odbc.ini
 ============================================================================172.16.6.45
 https://172.16.6.45/api/rest/ruleRels/getTables/50
 ============================================================================172.16.7.54
+
 ---------------------------------------------------------------gitlab
 	http://172.16.7.54:9090
 	username:	root
@@ -181,6 +182,8 @@ password:	htgx@1234
 cd /app/apache2.4/htdocs/
 vim /etc/apache2.4/httpd.conf
 tail -f /tmp/php_output.log
+vim /etc/apache2.4/extra/httpd-ssl.conf
+/app/apache2.4/bin/apachectl stop
 ------------------------------php
 cd /app/apache2.4/htdocs/inc_chk
 vim /app/php7.2.31/etc/php.ini

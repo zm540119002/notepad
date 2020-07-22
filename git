@@ -10,10 +10,17 @@ git commit -am 'zm' && git pull origin master && git push origin master
 git log
 git show d21522728254aee1ab083e
 --------------------------------------------------
-git reflog
-git reset --hard dbe42d926bad2df3b27578a25b6017de0cf23d2a
-git push -f
+commit be97b85a0ecbcd34d7dd0da2cd07f8b05e0c8396 (HEAD -> master, origin/master, origin/HEAD)
+Author: zm <zm@qq.com>
+Date:   Tue Jun 30 14:50:51 2020 +0800
 
+git log --before="2019-11-25 23:59:59" --after="2018-05-21 00:00:00" 
+git log --since ="2018-07-19 00:00:00" --until=="2018-07-19 23:00:00"
+git reflog
+git reset --hard ca61405d0c69a86b9888978cd16fdec068ef9bfd
+git reset --hard be97b85a0ecbcd34d7dd0da2cd07f8b05e0c8396
+git push -f origin master
+git push -u origin 5.2
 11/1版本：	52f0d4e1
 修改全局布局		64ea0475d8dd65fe713620dbf088e789d1877520
 流程配置界面重构  	cc40c758270751d3a0fcbc09df4f8d7e91d4cc6a

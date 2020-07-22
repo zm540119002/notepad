@@ -47,13 +47,14 @@ scp -r root@172.16.6.44:/usr/local/apache/htdocs/inc_chk/new_index/svg .
 scp -r root@172.16.7.71:/usr/local/nginx/conf/nginx_2c.conf .
 scp -r root@172.16.6.45:/usr/local/nginx/conf/nginx_2c.conf .
 =============================================tar
-解压：tar zxvf FileName.tar.gz
-压缩：tar zcvf FileName.tar.gz DirName
+解压：tar -xzvf FileName.tar.gz
+压缩：tar -czvf FileName.tar.gz DirName
 
 -----------------------------------------文件压缩包太大，切分再合并，解压
 split -d -b 20m dmdbms.tgz dmdbms.tgz_new_
 cat dmdbms.tgz_new_* > dmdbms_new.tgz
-tar -zxf dmdbms_new.tgz
+tar -xzvf dmdbms_new.tgz
+tar -czvf 139.tgz 139*
 =============================================磁盘
 df -hl 查看磁盘剩余空间
  
@@ -209,3 +210,24 @@ RHEL以及他的衍生发行版如CentOS、Scientific Linux为了稳定，官方
 
 yum install -y epel-release
 =============================================
+# 下划线转小驼峰
+awk -F _ '{ # 按_拆分字符串
+  if (NF >= 2) 
+  {
+    # 拆成两个以上的字符串，需要做处理，把第2~n个字符串开头第一个字母改成大写
+    # print "yes";
+    strOut = $1;
+    # print "strOut = " strOut " NF " NF;
+    for (i = 2; i <= NF; i++)
+    {
+      preStr = substr($i, 1, 1);
+      endStr = substr($i, 2);
+      strOut = strOut toupper(preStr) endStr;
+    }
+    print strOut;
+  }
+  else
+  {
+    print $0;
+  }
+}' tmp.txt

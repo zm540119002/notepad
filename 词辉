@@ -7,7 +7,9 @@ tail -f dpi_error.log
 tail -f error_log
 ====================================================
 netstat -anp|grep LIS
+ssh root@127.0.0.1 -p 9898
 ====================================================
 RHEL以及他的衍生发行版如CentOS、Scientific Linux为了稳定，官方的rpm repository提供的rpm包往往是很滞后的，当然了，这样做这是无可厚非的，毕竟这是服务器版本，安全稳定是重点，官方的rpm repository提供的rpm包也不够丰富，很多时候需要自己编译那太辛苦了，而EPEL恰恰可以解决这两方面的问题。
 
 yum install -y epel-release
+
