@@ -1,0 +1,10 @@
+========================================================在源文件中提示 Cannot resolve method，但是项目可以编译运行	
+	1、安装lombok插件，点击菜单栏中的【File】->【Setting】->【Plugins】-> 输入 lombok ，【install】-> 【Ok】
+	2、允许插件运行， 点击菜单栏中的【File】->【Setting】->搜索框直接输入【Annotation Processors】-> 将 Enable Annotation Processors 打勾，重启软件即可。
+========================================================本地仓库路径
+file->settings 搜索maven
+C:\Users\Administrator\.m2\settings.xml
+C:\Users\Administrator\.m2\repository
+========================================================
+
+========================================================

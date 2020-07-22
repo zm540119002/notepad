@@ -1,0 +1,5 @@
+
+
+/root/mytar  
+
+nohup java  -jar databank-eurekaserver.jar  &
