@@ -1,3 +1,5 @@
+================================================
+
 ================================================常用注解：
 @Data ： 注在类上，提供类的get、set、equals、hashCode、canEqual、toString方法
 @Value : 注解和@Data类似，区别在于它会把所有成员变量默认定义为private final修饰，并且不会生成set方法
@@ -14,6 +16,12 @@
 @RequestMapping(value= 'xx', method=XX)表明方法是处理那种类型、什么地址的请求，返回值默认解析为跳转路径
 @GetMapping()	组合注解，是@RequestMapping(method = RequestMethod.GET)的缩写
 @PostMapping()	组合注解，是@RequestMapping(method = RequestMethod.POST)的缩写
+------------------------------------------------Spring 
+@Transactional 注解管理事务
+	@Transactional 可以作用在接口、类、类方法。
+	作用于类：当把@Transactional 注解放在类上时，表示所有该类的public方法都配置相同的事务属性信息。
+	作用于方法：当类配置了@Transactional，方法也配置了@Transactional，方法的事务会覆盖类的事务配置信息。
+	作用于接口：不推荐这种使用方法，因为一旦标注在Interface上并且配置了Spring AOP 使用CGLib动态代理，将会导致@Transactional注解失效
 ================================================
 PO(Persistant Object)
 	可以看成是与数据库中的表相映射的java对象。最简单的PO就是对应数据库中某个表中的一条记录，多个记录可以用PO的集合。
@@ -60,8 +68,10 @@ import java.lang.annotation.Target;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-================================================
-
+================================================究研治理项目的网关布署到57环境上,mybatis事务使用
+nohup java -jar data-govern.jar >> test.log &
+nohup java -jar target/baop-gateway-1.0.1-SNAPSHOT.jar >> govern-geteway.log &
+nohup java -jar baop-gateway-1.0.1-SNAPSHOT.jar >> baop-gateway-1.0.1-SNAPSHOT.log &
 ================================================
 
 ================================================

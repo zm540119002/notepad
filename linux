@@ -1,3 +1,8 @@
+=============================================
+netstat -anp|grep LIS
+ls -lrt /proc/14720
+ps -ef|grep 14720
+cat  /usr/local/nginx/conf/nginx.conf
 =============================================内存
 free -m
 echo 3 > /proc/sys/vm/drop_caches 

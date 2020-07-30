@@ -3,9 +3,12 @@
 http://157.122.61.228:2019/login/Login.jsp?logintype=1
 账户名为大家各自的手机号，密码是：	HTGX100。
 同时下载手机app端进行考勤签到，OA手机端服务器为157.122.61.228:89。
+
+蓝湖：	https://lanhuapp.com/url/vHYr6
+密码: 	uG6Y
 ============================================================================
 公司邮箱网址：
-http://mail.huitone.com/webmail7.5/webmail.php?r=site/index/domain/huitone.com
+	http://mail.huitone.com/webmail7.5/webmail.php?r=site/index/domain/huitone.com
 登录账户：	zm@huitone.com
 登录密码：	HTGX100
 ============================================================================
@@ -29,7 +32,7 @@ Bt-Panel:	 http://172.16.6.34:8888/144712be/
 username: 	oa4arqxc
 password: 	2d9f9cc4
 ---------------------------------------------------------------gitlab
-http://172.16.6.34:8099
+	http://172.16.6.34:8099
 姓名：	zm
 账号：	zmin
 邮箱：	qq邮箱

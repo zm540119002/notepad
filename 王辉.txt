@@ -56,6 +56,14 @@ jdbc:oracle:thin:@172.16.7.95:1521:orcl
 	3、分析依赖的源数据是否已准备好，一般可能有多种原因，如外部数据表未准备好，DBLINK失效等
 ======================================================================================================
 PROC:wk_p_uif_create_ifc STEP:生成工单附件日志表 TEXT:PROC:etl_p_run_ins_sqlSTEP:运行指定的指令：I_WO_UPDATE_INTERFACETEXT:successfully completed.
-======================================================================================================
-
+======================================================================================================php增加DM、PDO_DM 扩展方法：
+1.服务器装一套达梦客户端：dmdbms .
+2.php.ini 文件增加扩展项：
+	extension_dir=/data/dmdbms/drivers/php_pdo
+	extension=libphp72ts_dm.so
+	extension_dir=/data/dmdbms/drivers/php_pdo
+	extension=php72ts_pdo_dm.so
+3.环境变量增加指向达梦的bin目录，并重载环境变量。
+	export LD_LIBRARY_PATH=/data/dmdbms/bin
+4.重启apache 即可完成DM，PDO_DM的加载项安装。
 ======================================================================================================
