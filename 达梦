@@ -1,3 +1,22 @@
+============================================php增加DM、PDO_DM 扩展方法：
+1.服务器装一套达梦客户端：dmdbms .
+2.php.ini 文件增加扩展项：
+	extension_dir=/data/dmdbms/drivers/php_pdo
+	extension=libphp72ts_dm.so
+	extension_dir=/data/dmdbms/drivers/php_pdo
+	extension=php72ts_pdo_dm.so
+3.环境变量增加指向达梦的bin目录，并重载环境变量。
+	export LD_LIBRARY_PATH=/data/dmdbms/bin
+4.重启apache 即可完成DM，PDO_DM的加载项安装。
+
+export NLS_LANG=AMERICAN_AMERICA.ZHS16GBK
+htgx:/home/htgx #env|grep LANG
+NLS_LANG=AMERICAN_AMERICA.ZHS16GBK
+LANG=zh_CN.UTF-8
+SQL> select userenv('language') from dual;
+
+USERENV('LANGUAGE')
+AMERICAN_AMERICA.ZHS16GBK
 ============================================插入默认系统时间sysdate不正确的问题
 实际插入的日期时间值，比正确的系统时间要晚8个小时。检查客户端程序所在服务器的操作系统时区，为正确时区“+08:00”，检查数据库的系统时区也是“+08:00”。
 select para_value as time_zone from v$dm_ini where para_name = 'TIME_ZONE'
