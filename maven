@@ -88,7 +88,7 @@ mvn -compire
 
 mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true 
 mvn clean install -P dev -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
-
+==========================================172.16.7.57
 /usr/local/web/data-govern/
 ls /usr/local/web/data-govern/*/target/*.jar
 \cp /usr/local/web/data-govern/*/target/*.jar /usr/local/web/data-govern/*/*/target/*.jar /www/data_govern/jars/
@@ -98,6 +98,9 @@ cp /usr/local/web/data-govern/*/target/data-govern-0.0.1-SNAPSHOT.jar /www/data_
 
 tail -f /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.log
 tail -f /www/data_govern/jars/baop-dbserver-1.0.0-SNAPSHOT.log
+
+tail -f /www/data_govern/jars/baop-gateway-1.0.1-SNAPSHOT.log
+tail -f /www/jars/databank-gateway.log
 
 /www/data_govern/jars/
 nohup java -jar /www/data_govern/jars/baop-dbserver-1.0.0-SNAPSHOT.jar >> /www/data_govern/jars/baop-dbserver-1.0.0-SNAPSHOT.log &
@@ -111,10 +114,24 @@ nohup java -jar /www/jars/databank-eurekaserver.jar >> /www/jars/databank-eureka
 nohup java -jar /www/jars/databank-dbserver.jar >> /www/jars/databank-dbserver.log &
 nohup java -jar /www/jars/databank-gateway.jar >> /www/jars/databank-gateway.log &
 nohup java -jar /www/jars/databank-auapi.jar >> /www/jars/databank-auapi.log &
+==========================================172.16.7.71
+nohup java -jar /root/mytar/databank-eurekaserver.jar >> /root/mytar/databank-eurekaserver.log &
+==========================================示例
+cd /usr/local/web/data-govern/data-govern
+mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true 
+cp target/data-govern-0.0.1-SNAPSHOT.jar /www/data_govern/jars/
+ps -ef|grep java
+kill 27985
+nohup java -jar /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.jar >> /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.log &
 ==========================================
-
-==========================================
-
+{
+    "userAccount": "xyd",
+    "password": "1d6f7ce922ae65bbe01a4130f5b60335"
+}
+{
+    "userAccount": "zx",
+    "password": "e6c760b3216a51c656c5861d72d5bf62"
+}
 ==========================================
 
 ==========================================
