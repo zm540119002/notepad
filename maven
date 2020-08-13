@@ -108,6 +108,7 @@ nohup java -jar /www/data_govern/jars/baop-gateway-1.0.1-SNAPSHOT.jar >> /www/da
 nohup java -jar /www/data_govern/jars/baop-authapi-1.0.0-SNAPSHOT.jar >> /www/data_govern/jars/baop-authapi-1.0.0-SNAPSHOT.log &
 
 nohup java -jar /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.jar >> /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.log &
+nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48089,server=y,suspend=n -jar data-govern-0.0.1-TEST.jar >> /www/data_govern/logs/data-govern-0.0.1-TEST.jar.log 2>&1
 
 /www/jars/
 nohup java -jar /www/jars/databank-eurekaserver.jar >> /www/jars/databank-eurekaserver.log &
@@ -119,7 +120,7 @@ nohup java -jar /root/mytar/databank-eurekaserver.jar >> /root/mytar/databank-eu
 ==========================================示例
 cd /usr/local/web/data-govern/data-govern
 mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true 
-cp target/data-govern-0.0.1-SNAPSHOT.jar /www/data_govern/jars/
+\cp target/data-govern-0.0.1-SNAPSHOT.jar /www/data_govern/jars/
 ps -ef|grep java
 kill 27985
 nohup java -jar /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.jar >> /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.log &

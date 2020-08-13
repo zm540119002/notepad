@@ -1,5 +1,7 @@
-================================================
-
+================================================Y-API
+	http://172.16.7.71:3000/login
+	账号：	admin@admin.com
+	密码：	ymfe.org
 ================================================常用注解：
 @Data ： 注在类上，提供类的get、set、equals、hashCode、canEqual、toString方法
 @Value : 注解和@Data类似，区别在于它会把所有成员变量默认定义为private final修饰，并且不会生成set方法
@@ -68,10 +70,13 @@ import java.lang.annotation.Target;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-================================================究研治理项目的网关布署到57环境上,mybatis事务使用
-nohup java -jar data-govern.jar >> test.log &
-nohup java -jar target/baop-gateway-1.0.1-SNAPSHOT.jar >> govern-geteway.log &
-nohup java -jar baop-gateway-1.0.1-SNAPSHOT.jar >> baop-gateway-1.0.1-SNAPSHOT.log &
+================================================
+//全球标准时间
+serverTimezone=UTC
+//北京时间东八区
+serverTimezone=GMT%2B8 
+//或者使用上海时间
+serverTimezone=Asia/Shanghai
 ================================================
 
 ================================================
