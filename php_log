@@ -1,0 +1,144 @@
+
+//禁用错误报告 
+error_reporting(0); 
+//报告运行时错误 
+error_reporting(E_ERROR | E_WARNING | E_PARSE); 
+//报告所有错误 
+error_reporting(E_ALL); 
+=======================================================
+//const LOG_PATH = '/tmp/php_output.log_';
+//ini_set("error_log", LOG_PATH); #现在不允许动态修改error_log
+
+ini_set("display_errors","On");
+ini_set('log_errors', 1);
+error_reporting(E_ALL);
+
+/*
+oci_execute() 执行一条之前被解析过的语句（见 oci_parse()）。可选参数 mode 允许定义执行模式（默认是 OCI_COMMIT_ON_SUCCESS）。
+如果不需要将语句自动提交，则需要把 mode 设为 OCI_DEFAULT。
+
+用 OCI_DEFAULT 模式时，将建立一个事务。事务会在关闭连接或脚本结束时（看哪个先）自动回卷。
+需要明确调用 oci_commit() 来提交事务，或者 oci_rollback() 中止事务。
+*/
+const HT_DPI_DEFAULT = 2;
+const HT_DPI_COMMIT_ON_SUCCESS = 1;
+
+//获取变量值字符串
+function strHt($var) 
+{
+	return print_r($var, true);
+}
+
+/*
+function xlog(string $lv, string $format, ...$args)
+{
+    $log = "%s\t%s:%s\t%s" . PHP_EOL;
+    return sprintf($log, $lv, trim($backtrace[0]['file']), $backtrace[0]['line'], sprintf($format, ...$args));
+}
+echo xlog("info", "我是一条日志%s", ...["呀"]);
+
+function mySubFile($str)
+{
+	if ($str == "")
+	{
+		return "";
+	}
+
+	return strstr($str, "inc_chk");
+}
+
+function dbgLogHt(string $format, ...$args)
+{
+	if (!file_exists("/tmp/dbg"))
+	{
+		//如果不存在 /tmp/php_dbg 文件则不输出调试信息
+		return true; //暂时不输出调试信息
+	}
+
+	$log = "[DBG] %s:%s %s";
+	$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+	#$strHt = sprintf($log, '[dbg]',  trim($backtrace[1]['file']), $backtrace[1]['line'], sprintf($format, ...$args));
+	#($strHt, 0);
+	error_log(sprintf($log . PHP_EOL, mySubFile($backtrace[0]['file']), $backtrace[0]['line'], sprintf($format, ...$args)), 3, HT_LOG_PATH . session_id());
+
+	error_log(sprintf("from %s:%s %s:%s %s:%s %s:%s %s:%s %s:%s %s:%s %s:%s" . PHP_EOL,
+			mySubFile($backtrace[1]['file']), $backtrace[1]['line'], mySubFile($backtrace[2]['file']), $backtrace[2]['line'],
+			mySubFile($backtrace[3]['file']), $backtrace[3]['line'], mySubFile($backtrace[4]['file']), $backtrace[4]['line'],
+			mySubFile($backtrace[5]['file']), $backtrace[5]['line'], mySubFile($backtrace[6]['file']), $backtrace[6]['line'],
+			mySubFile($backtrace[7]['file']), $backtrace[7]['line'], mySubFile($backtrace[8]['file']), $backtrace[8]['line']),
+                        3, HT_LOG_PATH . session_id()
+	);
+	# error_log(strHt($backtrace));
+
+}
+
+function mylog($info, $fileName='mylog'){
+	//$basePath = dirname(__DIR__);
+	//$logPath = $basePath.'/log/';
+	$logPath = '/tmp/';
+	$logPath .= $fileName;
+	
+	if (!file_exists($logPath)){
+		return true; //如果文件不存在 则不输出调试信息
+	}
+	
+	$log = '[DBG] %s:%s %s';
+	$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+	error_log(sprintf($log . PHP_EOL, mySubFile($backtrace[0]['file']), $backtrace[0]['line'], $info), 3, $logPath);
+	error_log(sprintf("from %s:%s %s:%s %s:%s %s:%s %s:%s %s:%s %s:%s %s:%s" . PHP_EOL,
+		mySubFile($backtrace[1]['file']), $backtrace[1]['line'], mySubFile($backtrace[2]['file']), $backtrace[2]['line'],
+		mySubFile($backtrace[3]['file']), $backtrace[3]['line'], mySubFile($backtrace[4]['file']), $backtrace[4]['line'],
+		mySubFile($backtrace[5]['file']), $backtrace[5]['line'], mySubFile($backtrace[6]['file']), $backtrace[6]['line'],
+		mySubFile($backtrace[7]['file']), $backtrace[7]['line'], mySubFile($backtrace[8]['file']), $backtrace[8]['line']),
+		3, $logPath
+	);
+}
+
+function infLogHt(string $format, ...$args)
+{
+	$log = '[INF] %s:%s %s:%s %s:%s %s:%s %s:%s %s:%s %s:%s %s:%s %s:%s' . PHP_EOL . '[%s]' . PHP_EOL ;
+	$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+
+	error_log(sprintf($log, mySubFile($backtrace[0]['file']), $backtrace[0]['line'],
+		mySubFile($backtrace[1]['file']), $backtrace[1]['line'], mySubFile($backtrace[2]['file']), $backtrace[2]['line'],
+		mySubFile($backtrace[3]['file']), $backtrace[3]['line'], mySubFile($backtrace[4]['file']), $backtrace[4]['line'],
+		mySubFile($backtrace[5]['file']), $backtrace[5]['line'], mySubFile($backtrace[6]['file']), $backtrace[6]['line'],
+		mySubFile($backtrace[7]['file']), $backtrace[7]['line'], mySubFile($backtrace[8]['file']), $backtrace[8]['line'],
+		sprintf($format, ...$args)), 3, HT_LOG_PATH . session_id());
+}
+
+function errLogHt(string $format, ...$args)
+{
+	$log = '[ERR] %s:%s %s';
+	$backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+	error_log(sprintf($log . PHP_EOL, mySubFile($backtrace[0]['file']), $backtrace[0]['line'], sprintf($format, ...$args)), 3, HT_LOG_PATH . session_id());
+
+	error_log(sprintf("from %s:%s %s:%s %s:%s %s:%s %s:%s %s:%s %s:%s %s:%s" . PHP_EOL,
+			mySubFile($backtrace[1]['file']), $backtrace[1]['line'], mySubFile($backtrace[2]['file']), $backtrace[2]['line'],
+			mySubFile($backtrace[3]['file']), $backtrace[3]['line'], mySubFile($backtrace[4]['file']), $backtrace[4]['line'],
+			mySubFile($backtrace[5]['file']), $backtrace[5]['line'], mySubFile($backtrace[6]['file']), $backtrace[6]['line'],
+			mySubFile($backtrace[7]['file']), $backtrace[7]['line'], mySubFile($backtrace[8]['file']), $backtrace[8]['line']),
+                        3, HT_LOG_PATH . session_id()
+	);
+	# error_log(strHt($backtrace));
+
+}
+=======================================================
+
+=======================================================
+
+=======================================================
+
+=======================================================
+
+=======================================================
+
+=======================================================
+
+=======================================================
+
+=======================================================
+
+=======================================================
+
+=======================================================

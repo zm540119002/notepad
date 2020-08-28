@@ -1,0 +1,30 @@
+==========================================
+{
+    "userAccount": "xyd",
+    "password": "1d6f7ce922ae65bbe01a4130f5b60335"
+}
+{
+    "userAccount": "zx",
+    "password": "e6c760b3216a51c656c5861d72d5bf62"
+}
+==========================================TcGvnDsDataSource/connectionTest
+{
+    "sourceClass": "FILE",
+    "ip": "172.16.7.54",
+    "port": "22",
+    "username": "root",
+    "protocol": "sftp",
+    "password": "huitone2214"
+}
+{
+    "sourceClass": "DB",
+    "sourceType":"oracle",
+    "serviceName":"orcl",
+    "ip": "172.16.7.55",
+    "port": "1521",
+    "username": "ua_dbg",
+    "password": "ua_dbgrica"
+}
+=========================================
+
+=========================================
