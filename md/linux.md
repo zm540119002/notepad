@@ -1,4 +1,4 @@
-#### **常用**
+# **常用**
 
 ```
 chkconfig --list       			# 列出所有系统服务
@@ -11,9 +11,9 @@ netstat -an | grep LISTEN 		# 查看监听端口
 cat /etc/services 				# 查看所有服务默认的端口列表信息
 ```
 
-#### **iptables&firewall**
+# **iptables&firewall**
 
-*iptables*
+## *iptables*
 
 ```
 # 查看防火墙状态
@@ -40,7 +40,7 @@ cat /etc/services 				# 查看所有服务默认的端口列表信息
 关闭iptables规则：
 	iptables -F && iptables -t nat -F
 ```
-*firewall*
+## *firewall*
 
 ```
 1、查看firewall服务状态
@@ -83,7 +83,7 @@ firewall-cmd --reload
 
 
 
-#### **ssh 免密登录**
+# **ssh 免密登录**
 
 ```
 1、登录A机器 
@@ -105,7 +105,9 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCfn+AXJHXAv7y3VFOpfGCWX2Wlst5MJRq9eQ8bfuHi
 方法二：
 ssh-copy-id -i ~/.ssh/id_rsa.pub root@172.16.6.35
 ```
-#### **mkdir**
+# 文件操作
+
+## **mkdir**
 
 ```
 1、当存在文件下仅存在单一目录时：  
@@ -116,7 +118,7 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub root@172.16.6.35
 
 #此时会在a,b,c这三个文件下分别创建d文件
 ```
-####  **tar**
+##  **tar**
 
 ```
 压缩：	tar -czvf FileName.tar.gz DirName
