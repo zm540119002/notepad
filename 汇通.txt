@@ -4,8 +4,7 @@ http://157.122.61.228:2019/login/Login.jsp?logintype=1
 账户名为大家各自的手机号，密码是：	HTGX100。
 同时下载手机app端进行考勤签到，OA手机端服务器为157.122.61.228:89。
 
-蓝湖：	https://lanhuapp.com/url/vHYr6
-密码: 	uG6Y
+https://lanhuapp.com/web/#/item/project/product?pid=529b32a9-5bbd-48a6-bb82-ddd59c4f4d12&docId=019f83d6-89e9-4dc6-9ef6-75a83ed12925&docType=axure&pageId=3dc0fcc78faa4aba9892a9098d13f0bf&image_id=019f83d6-89e9-4dc6-9ef6-75a83ed12925
 ============================================================================
 公司邮箱网址：
 	http://mail.huitone.com/webmail7.5/webmail.php?r=site/index/domain/huitone.com
@@ -37,6 +36,9 @@ password: 	2d9f9cc4
 账号：	zmin
 邮箱：	qq邮箱
 密码：	12345678
+============================================================================172.16.6.35
+username:	root
+password:	oracle
 ============================================================================172.16.6.44
 username:	root
 password:	huitone2214
@@ -88,6 +90,8 @@ https://172.16.6.45/api/rest/ruleRels/getTables/50
 username:	root
 password:	huitone2214
 ---------------------------------------------------------------oracle
+ua_dbg/ua_dbgrica
+ltdba/ltdbarica
 ============================================================================172.16.7.56
 username:	root
 password:	huitone2214
@@ -98,6 +102,7 @@ vim /etc/apache2.4/extra/httpd-ssl.conf
 cd /usr/local/apache2.4/htdocs
 /usr/local/apache2.4/bin/apachectl restart
 cd /usr/local/apache2.4/logs
+tail -f access_log
 ---------------------------------------------------------------php-7.2.26
 扩展库路径：	cd /usr/local/php7/lib/php/extensions/no-debug-zts-20170718
 配置文件：	vim /usr/local/php7/etc/php.ini

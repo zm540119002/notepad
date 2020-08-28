@@ -10,7 +10,6 @@ encodeChar("gbk","utf-8",$val);
 	vim ~/.bash_profile
 	export NLS_LANG='SIMPLIFIED CHINESE_CHINA.ZHS16GBK'
 	source ~/.bash_profile
-	unset  NLS_LANG
 	然后重启apache：
 	/usr/local/apache2.4/bin/apachectl stop
 	/usr/local/apache2.4/bin/apachectl start

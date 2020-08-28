@@ -48,7 +48,7 @@ DTO(Data Transfer Object,数据传输对象)
 DAO ：数据访问对象 —— 同时还有 DAO 模式
 DTO ：数据传输对象 —— 同时还有 DTO 模式
 
-================================================
+================================================import
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.alibaba.fastjson.JSONObject;
 ------------------------------------
@@ -70,19 +70,27 @@ import java.lang.annotation.Target;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-================================================
+================================================serverTimezone
 //全球标准时间
 serverTimezone=UTC
 //北京时间东八区
 serverTimezone=GMT%2B8 
 //或者使用上海时间
 serverTimezone=Asia/Shanghai
+================================================Java中<? extends T>和<? super T>的理解*
+	https://www.cnblogs.com/chenxibobo/p/9655236.html
+================================================一些常用的泛型类型变量
+E：元素（Element），多用于java集合框架
+K：关键字（Key）
+N：数字（Number）
+T：类型（Type）
+V：值（Value）
+================================================深入理解Java中的List、Set与Map集合
+	https://zhuanlan.zhihu.com/p/34518772
 ================================================
-
-================================================
-
-================================================
-
-================================================
-
+export JAVA_HOME=/usr/local/java/jdk1.8.0_251
+export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+export PATH=$PATH:$JAVA_HOME/bin
+export M2_HOME=/usr/local/apache-maven-3.6.1
+export PATH=$PATH:$M2_HOME/bin
 ================================================

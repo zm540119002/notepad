@@ -1,5 +1,16 @@
-===========================================================
 
+show variables like '%version%'
+===========================================================常见错误
+[Err] 1055 - Expression #1 of ORDER BY clause is not in GROUP BY clause and contains nonaggregated column 'information_schema.PROFILING.SEQ' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by
+
+SHOW VARIABLES LIKE '%sql_mode%'
+
+ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+
+set sql_mode = 'NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES';
+set session sql_mode='STRICT_TRANS_TABLES';改为严格模式
+
+此方法只在当前会话中生效，关闭当前会话就不生效了
 ===========================================================
 管理-服务中找不到Mysql服务需要手动安装Mysql服务，安装命令为：
 在C:\phpStudy\PHPTutorial\MySQL\bin路径下打开cmd
@@ -158,7 +169,7 @@ copy the software into the correct location ready for operation.
 If you are using a binary release, you must either be at the top
 level of the extracted archive, or pass the --basedir option
 pointing to that location.
- 
+
 解决方法：
  [root@bogon scripts]# /usr/local/mysql/scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql --datadir=/usr/local/mysql/data &(这点非常重要)
 ===========================================================
