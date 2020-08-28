@@ -84,10 +84,120 @@ if(classStringArrayList.equals(classIntegerArrayList)){
 ```
 参考： https://www.jianshu.com/p/6b705a286be7
 ```
-####  ****
+####  **maven**
+
+*Linux安装*
 
 ```
+cd /usr/local/src
+	wget https://zysd-shanghai.oss-cn-shanghai.aliyuncs.com/software/linux/maven/apache-maven-3.6.1-bin.tar.gz
+	tar -zxvf apache-maven-3.6.1-bin.tar.gz -C /usr/local
+	cd ../apache-maven-3.6.1
+	
+环境变量
+	1. 编辑环境变量
+	vim /etc/profile
 
+	2. 添加Maven的M2_HOME地址
+	export M2_HOME=/usr/local/apache-maven-3.6.1
+	export PATH=$PATH:$M2_HOME/bin
+
+	3. 保存配置文件
+	source /etc/profile
+验证是否成功安装
+	mvn -version
+	
+配置maven的镜像仓库
+	vim  conf/settings.xml 
+	<!-- 指定b本地仓库 -->
+	<localRepository>/usr/local/apache-maven-3.6.1/repo</localRepository>
+	
+	设置镜像，在mirrors节点添加以下节点
+	<!-- 从阿里云镜像下载jar包 -->
+	<mirrors>
+		<mirror>
+			<id>alimaven</id>
+			<name>aliyun maven</name>
+			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+			<mirrorOf>central</mirrorOf>        
+		</mirror>
+	</mirrors>
+	
+	<!-- 指定jdk1.8 -->
+	 <profiles>
+		<profile>
+                <id>jdk1.8</id>
+                <activation>
+                <activeByDefault>true</activeByDefault>
+                <jdk>1.8</jdk>
+                </activation>
+                <properties>
+                        <maven.compiler.source>1.8</maven.compiler.source>
+                        <maven.compiler.target>1.8</maven.compiler.target>                        
+						<maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+                </properties>
+        </profile>
+	</profiles>
+
+去到pom.xml 目录下
+mvn -compire
+参考： https://www.linuxidc.com/linux/2020-04/162861.htm
+```
+
+*完整示例：172.16.7.57*
+
+```
+cd /usr/local/web/data-govern/data-govern
+mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true 
+\cp target/data-govern-0.0.1-SNAPSHOT.jar /www/data_govern/jars/
+ps -ef|grep java
+kill 27985 #(pid)
+tail -f /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.log
+nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48089,server=y,suspend=n -Dspring.profiles.active=dev -jar /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.jar >> /www/data_govern/logs/data-govern-0.0.1-SNAPSHOT.log 2>&1 &
+```
+
+```
+\cp /usr/local/web/data-govern/*/target/*.jar /usr/local/web/data-govern/*/*/target/*.jar /www/data_govern/jars/
+cp /usr/local/web/data-govern/*/target/*.jar /usr/local/web/data-govern/*/*/target/*.jar /www/data_govern/jars/
+```
+
+*可能错误：There are test failures*
+
+*解决：	maven 打包跳过单元测试*
+
+```
+mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true 
+mvn clean install -P dev -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
+```
+
+*settings.xml（windows路径：C:\Users\Administrator\.m2）*
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- 英文注释已经被删除了，直接修改本地仓库地址用就行了。 -->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+   <!-- 设置本地仓库的地址 -->
+  <localRepository>C:\Users\Administrator\.m2\repository</localRepository>
+  <pluginGroups>
+  </pluginGroups>
+  <proxies>
+  </proxies> 
+  <servers>  
+  </servers>
+ <!-- 设置国内的镜像 -->
+    <mirrors>
+    <mirror>
+      <id>alimaven</id>
+      <name>aliyun maven</name>
+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+      <mirrorOf>central</mirrorOf>        
+    </mirror>
+  </mirrors>
+  <profiles>
+  </profiles>
+</settings>
 ```
 ####  ****
 
