@@ -1,11 +1,120 @@
-#### **常用**
+# **常用**
 
 ```
 
 ```
 
+# **概念解析**
 
-#### **注解**
+## spring 
+
+### spring ioc
+
+```
+pring IOC容器是框架的核心，IOC是控制反转的意思，可以用来降低程序代码之间的耦合度。把强耦合的代码依赖从代码中移出去，放到统一的XML配置文件中，将程序对组件的主要控制权交给IOC，由IOC统一加载和管理。例如，可以把本案例中的JavaBean组件的创建、实体类的创建、以及JavaBean组件的属性注入等代码从Principal类移出，放入到Spring的XML配置文件中。这样就实现了Principal类与JavaBean组件的代码解耦，也解决了项目案例技术架构所存在的问题。
+
+Spring IOC容器的核心是把程序业务代码与事物（组件、POJO类）代码进行分离，程序有关事物的创建、属性和依赖对象的注入、以及生命周期交由容器进行加载和管理。业务代码只需从容器中获取组件或POJO实例对象即可，无需再考虑组件之间、组件与POJO之间的依赖关系以及属性的注入。
+```
+
+## spring mvc
+
+## spring boot
+
+# 注解
+
+## spring
+
+### 综合
+
+```
+https://www.jianshu.com/p/21f3e074e91a
+```
+
+### @Configuration
+
+```
+用于定义配置类，可替换XML配置文件，被注解的类内部包含一个或多个@Bean注解方法。可以被AnnotationConfigApplicationContext或者AnnotationConfigWebApplicationContext 进行扫描。用于构建bean定义以及初始化Spring容器。
+
+标注在类上，该类会被CGLIB动态代理生成子类，可以达到这样的效果：在某@Bean方法下调用另一个标注了@Bean的方法，得到的会是同一个Bean对象；
+@Configuration
+public class AppConfig {
+    @Bean
+    public Man getMan() {
+        Man man = new Man();
+        man.setName("吕彬彬");
+        man.setAge(23);
+        return man;
+    }
+    
+    @Bean
+    public Man getMan2() {
+        return getMan();
+    }
+}
+获取bean会发现getMan和getMan2对象是同一个对象，去掉Configuration的话就是两个不同的对象
+@Configuration注解注意点：
+    1.可以作为Component标签使用；  
+    2.标注的类不能是final类型的（final类无法动态代理生成子类）；
+    3.注解类里的@Bean对象的id默认是方法名，如果设置了@Bean的name或者value属性，取第一个作为beanId，name中其他的作为别名使用；
+    4. 标注了@Configuration的类不能是普通内部类，如果非要是个内部类，那就静态内部类也是可以的； 因为普通内部类依赖于外部类的存在；
+```
+
+### @Bean
+
+参考： https://www.cnblogs.com/javazhiyin/p/11175068.html
+
+```
+Spring的@Bean注解用于告诉方法，产生一个Bean对象，然后这个Bean对象交给Spring管理。产生这个Bean对象的方法Spring只会调用一次，随后这个Spring将会将这个Bean对象放在自己的IOC容器中。
+
+SpringIOC 容器管理一个或者多个bean，这些bean都需要在@Configuration注解下进行创建，在一个方法上使用@Bean注解就表明这个方法需要交给Spring进行管理。
+
+@Bean另外一个重要的功能是能够和其他注解产生化学反应，@profile,@scope,@lazy,@depends-on @primary等
+```
+
+### @Profile
+
+```
+@Profile的作用是把一些meta-data进行分类，分成Active和InActive这两种状态，然后你可以选择在active 和在Inactive这两种状态下配置bean，在Inactive状态通常的注解有一个！操作符，通常写为：@Profile("!p")，这里的p是Profile的名字。
+
+三种设置方式：
+
+可以通过ConfigurableEnvironment.setActiveProfiles()以编程的方式激活
+
+可以通过AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME (spring.profiles.active )属性设置为JVM属性
+
+作为环境变量，或作为web.xml 应用程序的Servlet 上下文参数。也可以通过@ActiveProfiles 注解在集成测试中以声明方式激活配置文件。
+
+作用域
+
+作为类级别的注释在任意类或者直接与@Component 进行关联，包括@Configuration 类
+
+作为原注解，可以自定义注解
+
+作为方法的注解作用在任何方法
+
+注意:
+
+如果一个配置类使用了Profile 标签或者@Profile 作用在任何类中都必须进行启用才会生效，如果@Profile({"p1","!p2"}) 标识两个属性，那么p1 是启用状态 而p2 是非启用状态的。
+```
+
+## spring mvc
+
+### @Value
+
+```
+该注解的作用是将我们配置文件的属性读出来，有@Value(“${}”)和@Value(“#{}”)两种方式
+${ property : default_value }
+#{ obj.property? :default_value }
+第一个注入的是外部配置文件对应的property，第二个则是SpEL表达式对应的内容。 
+那个default_value，就是前面的值为空时的默认值。注意二者的不同，#{}里面那个obj代表对象。
+${}:用于获取配置文件中的属性值，通常用于获取写在application.properties中的内容，例如：@Value(""${jdbc.url})
+#{}:用于获取SpEL表达式的值，可以表示常量的值，或者获取bean中的属性
+注意事项
+    将配置文件交给sping加载,最好不要交给springMVC加载 避免出现错误,因为web.xml配置时spring的监听先启动,
+    springMVC的Dispatcherservlet接收到请求时初始化springMVC的配置文件。
+```
+
+## spring boot
 
 ```
 @Service用于标注业务层组件
@@ -13,17 +122,15 @@
 @Repository用于标注数据访问组件，即DAO组件
 @Component泛指组件，当组件不好归类的时候，我们可以使用这个注解进行标注。
 
-@Bean 基础声明
-Spring的@Bean注解用于告诉方法，产生一个Bean对象，然后这个Bean对象交给Spring管理。产生这个Bean对象的方法Spring只会调用一次，随后这个Spring将会将这个Bean对象放在自己的IOC容器中。
 ```
-#### **注意事项**
+# **注意事项**
 
 ```
 在Spring中对于bean的默认处理都是单例的，我们通过上下文容器.getBean方法拿到bean容器，并对其进行实例化，这个实例化的过程其实只进行一次，即多次getBean 获取的对象都是同一个对象，也就相当于这个bean的实例在IOC容器中是public的，对于所有的bean请求来讲都可以共享此bean。
 
 字符串用equals ,例如："".equals(yourStr)
 ```
-#### **Future机制**
+# **Future机制**
 
 ```
 常见的两种创建线程的方式。一种是直接继承Thread，另外一种就是实现Runnable接口。
@@ -31,7 +138,7 @@ Spring的@Bean注解用于告诉方法，产生一个Bean对象，然后这个Be
 从Java 1.5开始，就提供了Callable和Future，通过它们可以在任务执行完毕之后得到任务执行结果。
 Future模式的核心思想是能够让主线程将原来需要同步等待的这段时间用来做其他的事情。（因为可以异步获得执行结果，所以不用一直同步等待去获得执行结果）
 ```
-####  **泛型**
+#  **泛型**
 
 ```
 顾名思义，就是将类型由原来的具体的类型参数化，类似于方法中的变量参数，此时类型也定义成参数形式（可以称之为类型形参），
@@ -79,14 +186,49 @@ if(classStringArrayList.equals(classIntegerArrayList)){
     	if(ex_num instanceof Generic<Number>){ }
 参考：	https://www.cnblogs.com/coprince/p/8603492.html
 ```
-####  **idea-2020.1**
+# *IntelliJ IDEA-2020.1*
 
 ```
 参考： https://www.jianshu.com/p/6b705a286be7
 ```
-####  **maven**
+## *常用插件（plugin）*
 
-*Linux安装*
+```
+Lombok
+	开发神器，可以简化你的实体类，让你i不再写get/set方法，还能快速的实现builder模式，以及链式调用方法，总之就是为了简化实体类而生的插件。
+CamelCase
+	将不是驼峰格式的名称，快速转成驼峰格式，安装好后，选中要修改的名称，按快捷键shift+alt+u
+GsonFormat 
+	把 JSON 字符串直接实例化成类
+Grep console
+	自定义日志颜色，idea控制台可以彩色显示各种级别的log，安装完成后，在console中右键就能打开，
+	并且可以设置不同的日志级别的显示样式，可以直接根据关键字搜索你想要的，搜索条件是支持正则表达式的
+MyBatis Log Plugin
+	Mybatis现在是java中操作数据库的首选，在开发的时候，我们都会把Mybatis的脚本直接输出在console中，但是默认的情况下，输出的脚本不是一个可以直接执行的。
+	如果我们想直接执行，还需要在手动转化一下。MyBatis Log Plugin 这款插件是直接将Mybatis执行的sql脚本显示出来，无需处理，可以直接复制出来执行的。
+String Manipulation
+	强大的字符串转换工具。使用快捷键，Alt+m。
+Maven Helper
+	一键查看maven依赖，查看冲突的依赖，一键进行exclude依赖
+Restfultookit
+	Spring MVC网页开发的时候，我们都是通过requestmapping的方式来定义页面的URL地址的，为了找到这个地址我们一般都是cmd+shift+F的方式进行查找，
+	大家都知道，我们URL的命名一个是类requestmapping+方法requestmapping，查找的时候还是有那么一点不方便的，restfultookit就能很方便的帮忙进行查找。
+
+```
+
+*Cannot resolve method "XX" 问题解决*
+
+```
+1、安装lombok插件，点击菜单栏中的【File】->【Setting】->【Plugins】-> 输入 lombok ，【install】-> 【Ok】
+2、允许插件运行， 点击菜单栏中的【File】->【Setting】->搜索框直接输入【Annotation Processors】-> 
+	将 Enable Annotation Processors 打勾，重启软件即可。
+```
+
+#  **maven**
+
+## *Linux*
+
+### 安装配置
 
 ```
 cd /usr/local/src
@@ -144,9 +286,10 @@ mvn -compire
 参考： https://www.linuxidc.com/linux/2020-04/162861.htm
 ```
 
-*完整示例：172.16.7.57*
+### *完整示例*
 
 ```
+172.16.7.57
 cd /usr/local/web/data-govern/data-govern
 mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true 
 \cp target/data-govern-0.0.1-SNAPSHOT.jar /www/data_govern/jars/
@@ -161,16 +304,18 @@ nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48089,server=y,suspend=
 cp /usr/local/web/data-govern/*/target/*.jar /usr/local/web/data-govern/*/*/target/*.jar /www/data_govern/jars/
 ```
 
-*可能错误：There are test failures*
-
-*解决：	maven 打包跳过单元测试*
+### *可能错误*
 
 ```
+报错：There are test failures
+解决：maven 打包跳过单元测试
 mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true 
 mvn clean install -P dev -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 ```
 
-*settings.xml（windows路径：C:\Users\Administrator\.m2）*
+## windows
+
+*C:\Users\Administrator\.m2\settings.xml*
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -229,3 +374,4 @@ mvn clean install -P dev -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 ```
 
 ```
+
