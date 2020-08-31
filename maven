@@ -85,7 +85,6 @@ mvn -compire
 ==========================================可能错误
 -----------------------There are test failures
 解决：	maven 打包跳过单元测试
-
 mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true 
 mvn clean install -P dev -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 ==========================================172.16.7.57
@@ -123,6 +122,7 @@ mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 \cp target/data-govern-0.0.1-SNAPSHOT.jar /www/data_govern/jars/
 ps -ef|grep java
 kill 27985
+tail -f /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.log
 nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48089,server=y,suspend=n -Dspring.profiles.active=dev -jar /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.jar >> /www/data_govern/logs/data-govern-0.0.1-SNAPSHOT.log 2>&1 &
 ==========================================
 {
