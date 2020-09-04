@@ -8,6 +8,16 @@
     "password": "e6c760b3216a51c656c5861d72d5bf62"
 }
 ==========================================TcGvnDsDataSource/connectionTest
+-----------------------------------------ftp
+{
+	"sourceClass": "FILE", 
+	"protocol": "ftp", 
+	"ip": "172.16.6.35", 
+	"port": "21", 
+	"username": "ftp_test", 
+	"password": "test1234"
+}
+-----------------------------------------sftp
 {
     "sourceClass": "FILE",
     "ip": "172.16.7.54",
@@ -16,6 +26,7 @@
     "protocol": "sftp",
     "password": "huitone2214"
 }
+-----------------------------------------oracle
 {
     "sourceClass": "DB",
     "sourceType":"oracle",
@@ -25,6 +36,63 @@
     "username": "ua_dbg",
     "password": "ua_dbgrica"
 }
+-----------------------------------------mysql-暂不支持
+{
+    "ip": "172.16.7.55",
+    "password": "abc123!",
+    "port": "3306",
+    "serviceName": "dev",
+    "sourceClass": "DB",
+    "sourceType": "mysql",
+    "username": "dev"
+}
+-----------------------------------------pg
+{
+    "sourceClass": "DB", 
+    "sourceType": "pg", 
+    "serviceName": "dev", 
+    "ip": "172.16.7.71", 
+    "port": "5432",
+    "username": "postgre",
+    "password": "huitone2214"
+}
+-----------------------------------------dm
+{
+    "sourceClass": "DB", 
+    "sourceType": "dm", 
+    "ip": "172.16.7.55", 
+    "port": "5236",
+    "username": "sysdba",
+    "password": "huitone2214"
+}
+=========================================TcGvnDsDataSource/add
+{
+    "sourceName": "03",
+    "usedFor": "remote",
+    "sourceClass": "FILE",
+    "ip": "172.16.7.57",
+    "port": "3306",
+    "serviceName": "dev",
+    "username": "qq",
+    "password": "qq",
+    "sourceType": "mysql",
+    "connectionStatus": "OK"
+}
+{
+    sourceName: "sftp文件测试2", 
+    usedFor: "remote", 
+    sourceClass: "FILE", 
+    ip: "172.16.7.71", 
+    port: "22",
+    password: "htgx!34", 
+    protocol: "sftp", 
+    username: "dev", 
+    connectionStatus: "OK"
+}
+=========================================
+
+=========================================
+
 =========================================
 
 =========================================

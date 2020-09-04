@@ -92,6 +92,13 @@ password:	huitone2214
 ---------------------------------------------------------------oracle
 ua_dbg/ua_dbgrica
 ltdba/ltdbarica
+---------------------------------------------------------------mysql
+/home/mysql/bin/mysqld --basedir=/home/mysql --datadir=/home/mysql/data/mysql --plugin-dir=/home/mysql/lib/plugin --log-error=/home/mysql/data/mysql/error.log --open-files-limit=65535 --pid-file=/home/mysql/data/mysql/mysqldb.pid --socket=/tmp/mysql.sock --port=3306
+
+/bin/sh /home/mysql/bin/mysqld_safe --datadir=/home/mysql/data/mysql --pid-file=/home/mysql/data/mysql/mysqldb.pid
+
+/home/mysql/bin/mysqld stop
+/home/mysql/bin/mysqld start
 ============================================================================172.16.7.56
 username:	root
 password:	huitone2214
