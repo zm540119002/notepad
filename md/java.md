@@ -6,15 +6,17 @@
 
 # **概念解析**
 
-## spring 
-
-### spring ioc
+## spring ioc
 
 ```
 pring IOC容器是框架的核心，IOC是控制反转的意思，可以用来降低程序代码之间的耦合度。把强耦合的代码依赖从代码中移出去，放到统一的XML配置文件中，将程序对组件的主要控制权交给IOC，由IOC统一加载和管理。例如，可以把本案例中的JavaBean组件的创建、实体类的创建、以及JavaBean组件的属性注入等代码从Principal类移出，放入到Spring的XML配置文件中。这样就实现了Principal类与JavaBean组件的代码解耦，也解决了项目案例技术架构所存在的问题。
 
 Spring IOC容器的核心是把程序业务代码与事物（组件、POJO类）代码进行分离，程序有关事物的创建、属性和依赖对象的注入、以及生命周期交由容器进行加载和管理。业务代码只需从容器中获取组件或POJO实例对象即可，无需再考虑组件之间、组件与POJO之间的依赖关系以及属性的注入。
 ```
+
+
+
+## spring 
 
 ## spring mvc
 
@@ -128,7 +130,8 @@ ${}:用于获取配置文件中的属性值，通常用于获取写在applicatio
 ```
 在Spring中对于bean的默认处理都是单例的，我们通过上下文容器.getBean方法拿到bean容器，并对其进行实例化，这个实例化的过程其实只进行一次，即多次getBean 获取的对象都是同一个对象，也就相当于这个bean的实例在IOC容器中是public的，对于所有的bean请求来讲都可以共享此bean。
 
-字符串用equals ,例如："".equals(yourStr)
+1.先判断null，再判断equals("")
+2.字符串用equals ,例如："".equals(yourStr)
 ```
 # **Future机制**
 
@@ -226,7 +229,7 @@ Restfultookit
 
 #  **maven**
 
-## *Linux*
+## *Linux版*
 
 ### 安装配置
 
@@ -286,24 +289,6 @@ mvn -compire
 参考： https://www.linuxidc.com/linux/2020-04/162861.htm
 ```
 
-### *完整示例*
-
-```
-172.16.7.57
-cd /usr/local/web/data-govern/data-govern
-mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true 
-\cp target/data-govern-0.0.1-SNAPSHOT.jar /www/data_govern/jars/
-ps -ef|grep java
-kill 27985 #(pid)
-tail -f /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.log
-nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48089,server=y,suspend=n -Dspring.profiles.active=dev -jar /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.jar >> /www/data_govern/logs/data-govern-0.0.1-SNAPSHOT.log 2>&1 &
-```
-
-```
-\cp /usr/local/web/data-govern/*/target/*.jar /usr/local/web/data-govern/*/*/target/*.jar /www/data_govern/jars/
-cp /usr/local/web/data-govern/*/target/*.jar /usr/local/web/data-govern/*/*/target/*.jar /www/data_govern/jars/
-```
-
 ### *可能错误*
 
 ```
@@ -313,7 +298,7 @@ mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 mvn clean install -P dev -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 ```
 
-## windows
+## windows版
 
 *C:\Users\Administrator\.m2\settings.xml*
 

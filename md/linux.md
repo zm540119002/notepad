@@ -9,6 +9,9 @@ whereis oracle					# 查看文件安装路径
 which oracle					# 查询运行文件所在路径
 netstat -an | grep LISTEN 		# 查看监听端口
 cat /etc/services 				# 查看所有服务默认的端口列表信息
+vmstat 10
+top
+free -m
 ```
 
 # 网络
