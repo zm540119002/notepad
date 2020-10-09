@@ -1,5 +1,17 @@
 # **常用**
 
+## 文件
+
+### 清空文件内容命令
+
+```
+1. > test.log
+2. cat /dev/null  test.log
+3. echo "" >test.log
+```
+
+
+
 ```
 chkconfig --list       			# 列出所有系统服务
 chkconfig --list | grep on    	# 列出所有启动的系统服务
@@ -13,6 +25,26 @@ vmstat 10
 top
 free -m
 ```
+
+```
+yum list all|grep nginx
+yum list all mysql*
+
+只显示已安装的包。
+	命令：yum list installed
+只显示没有安装，但可安装的包。
+	命令：yum list available
+查看所有可更新的包。
+	命令：yum list updates
+显示不属于任何仓库的，额外的包。
+	命令：yum list extras
+显示被废弃的包
+	命令：yum list obsoletes
+新添加进yum仓库的包
+	命令：yum list recent
+```
+
+
 
 # 网络
 
@@ -336,8 +368,12 @@ ARP命令可用于查询本机ARP缓存中IP地址和MAC地址的对应关系、
 ## DNS
 
 ```
-本地域名解析配置文件： /etc/hosts 
+系统会首先自动从Hosts文件中寻找对应的IP地址：
 	vim /etc/hosts
+	10.10.10.10 www.a.com
+域名如果在hosts中找不到对应的IP，会访问此文件寻找域名解析服务器。
+	vim /etc/resolv.conf
+	nameserver x.x.x.x  #该选项用来制定DNS服务器的，可以配置多个nameserver指定多个DNS。
 配置网卡设备文件添加DNS域名解析服务器地址
     DNS1=114.114.114.114   # 是国内移动、电信和联通通用的DNS
     DNS2=8.8.8.8      # GOOGLE公司提供的DNS,适合国外以及访问国外网站的用户使用
@@ -446,6 +482,50 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCfn+AXJHXAv7y3VFOpfGCWX2Wlst5MJRq9eQ8bfuHi
 方法二：
 ssh-copy-id -i ~/.ssh/id_rsa.pub root@172.16.6.35
 ```
+# ftp & sftp
+
+```
+1、检查是否安装 了vsftpd，如果未安装 则安装vsftpd。
+    1）查看系统中是否安装了vsftpd： rpm -qa | grep vsftpd
+    2）如果没有安装 vsftpd，则安装 ：yum -y install vsftpd
+
+2、创建ftp用户，比如ftp_test。命令：useradd -s /sbin/nologin -d /home/ftp_test ftp_test
+注意：
+    1）目录尽量不要选择根目录下，这里是/home/ftp_test，并且ftp_test这个目录不要手动创建，否则权限会有问题，执行命令的时候会自动创建
+    2）注意目录的权限，如果有需要，应该设置相应的权限
+    
+3、为ftp_test用户创建密码。命令：passwd ftp_test
+	设置密码为：test1234
+
+4、编辑vsftpd配置文件，命令:vim /etc/vsftpd/vsftpd.conf
+	找到anonymous_enable这个配置项，默认是YES，修改成NO，表示不允许匿名用户登录。
+
+5、启动vsftp服务，命令：systemctl start vsftpd.service
+
+6、查看ftp服务的状态，命令：systemctl status vsftpd.service
+
+7、用ftp客户端进行连接访问。
+
+service vsftpd start | stop
+```
+
+```
+启动ftp服务：
+	yum install vsftpd 
+	在/etc/rc.d/init.d/目录下：命令 service vsftp start
+启动ssh服务，sftp服务
+	在/etc/init.d/目录下： 命令 /etc/init.d/sshd start 注意这里需要在绝对路径下执行sshd start
+```
+
+```
+在其他服务器上验证sftp 用户名@ip地址
+示例：在172.16.7.57上
+    sftp root@172.16.6.35
+    密码： oracle
+```
+
+
+
 # 文件操作
 
 ## **mkdir**
@@ -466,6 +546,35 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub root@172.16.6.35
 解压：	tar -xzvf FileName.tar.gz -C /usr/local #-C 选项的作用是：指定需要解压到的目录。
 示例： 
 ```
+## find
+
+```
+find / -name '*.logout*' 2>/dev/null
+find . -type f -name *.svn*    | xargs rm -f
+find . -name \*52\* 
+```
+
+## cp
+
+```
+cp -r svg/* /usr/local/apache2/htdocs/inc_chk/new_index/svg/
+```
+
+## scp
+
+```
+scp -r git@120.79.201.125:/home/www/web/thinkphp5.1/msy/public/uploads/weiya_project .
+scp /usr/local/dm7client/drivers/php_pdo/*52* root@172.16.6.44:/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
+scp /usr/local/php/include/php/ext/pdo_oci.so root@172.16.6.44:/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
+scp test.php root@172.16.6.44:/usr/local/apache2/htdocs/test.php
+scp -r root@172.16.6.44:/usr/local/apache/htdocs/inc_chk/new_index/svg .
+scp -r root@172.16.7.71:/usr/local/nginx/conf/nginx_2c.conf .
+scp -r root@172.16.6.45:/usr/local/nginx/conf/nginx_2c.conf .
+scp -r root@172.16.7.57:/root/sbin/INS_convert.sh .
+```
+
+
+
 #  **mysql**
 
 ## 启动
@@ -479,7 +588,7 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub root@172.16.6.35
 ```
 
 ```
-####  ****
+####  **cmake**
 
 ```
 

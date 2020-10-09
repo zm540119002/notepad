@@ -1,7 +1,7 @@
 # **常用**
 
 ```
-
+ExceptionUtil.throwError(aliasPrefix.returnCode, aliasPrefix.errMsg);
 ```
 
 # **概念解析**
@@ -23,6 +23,19 @@ Spring IOC容器的核心是把程序业务代码与事物（组件、POJO类）
 ## spring boot
 
 # 注解
+
+## 常用
+
+```
+事务：
+	@Transactional(rollbackFor = Exception.class)
+@Param
+	1.便于传多个参数；
+	2.类似于别名之类的功能
+	不使用@Param注解时，参数只能有一个，而且是JavaBean，在sql中只能引用JavaBean的属性。
+```
+
+
 
 ## spring
 
@@ -123,7 +136,11 @@ ${}:用于获取配置文件中的属性值，通常用于获取写在applicatio
 @Controller用于标注控制层组件（如struts中的action）
 @Repository用于标注数据访问组件，即DAO组件
 @Component泛指组件，当组件不好归类的时候，我们可以使用这个注解进行标注。
-
+@ControllerAdvice
+	实现三个方面的功能：
+        全局异常处理
+        全局数据绑定
+        全局数据预处理
 ```
 # **注意事项**
 
@@ -132,6 +149,18 @@ ${}:用于获取配置文件中的属性值，通常用于获取写在applicatio
 
 1.先判断null，再判断equals("")
 2.字符串用equals ,例如："".equals(yourStr)
+
+打开的资源都没有在finally里关闭的？？？如果不想写关闭，实现了autocloseable的用try-with-resources 写法
+如果是实现了autocloseable接口的资源，用try with resource写法，否则在finally里执行关闭
+
+java中e.printStackTrace()不要使用，请使用logger记录
+logger.error("",e);
+
+java的toString()导致空指针异常的技巧
+解决空指针的代码：
+    Object object = null;
+    String d=object+"";
+    或者先判断
 ```
 # **Future机制**
 
@@ -216,7 +245,7 @@ Maven Helper
 Restfultookit
 	Spring MVC网页开发的时候，我们都是通过requestmapping的方式来定义页面的URL地址的，为了找到这个地址我们一般都是cmd+shift+F的方式进行查找，
 	大家都知道，我们URL的命名一个是类requestmapping+方法requestmapping，查找的时候还是有那么一点不方便的，restfultookit就能很方便的帮忙进行查找。
-
+POJO To Json
 ```
 
 *Cannot resolve method "XX" 问题解决*
@@ -350,5 +379,220 @@ mvn clean install -P dev -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 2、线程间数据隔离
 3、进行事务操作，用于存储线程事务信息。
 4、数据库连接，Session会话管理。
+```
+
+# 常用示例
+
+## list对象集合中获取某一列的集合数据
+
+```
+List<Book> list = Lists.newArrayList();
+
+list.add(new Book("1", "sql基础大全", 200));
+list.add(new Book("2", "Java基础", 500));
+System.out.println(list);
+List<String> nameList = list.stream().map(Book -> Book.getName()).collect(Collectors.toList());
+System.out.println(nameList);
+
+示例：
+	List<TbUcCfgQuoteDs> list = tbUcCfgQuoteDsService.select(tbUcCfgQuoteDs);
+	
+    List<String> aliasList = list.stream().map(TbUcCfgQuoteDs -> TbUcCfgQuoteDs.getAlias()).collect(Collectors.toList());
+    System.out.println(aliasList);
+    结果：[A1, A1, A2, A3, A4]
+    //取出最大的别名
+	List<Long> newAliasList = new ArrayList<>();
+    for(String alias:aliasList){
+    	newAliasList.add(getStrNumber(alias));
+    }
+    //取出最大的别名
+    Long alias = Collections.max(newAliasList);
+    System.out.println(alias);
+	结果：4
+```
+
+## string
+
+```
+字符串转数组：
+	String[] columnIdArr = columnId.split(",");
+去掉最后一个字符：
+	response = response.substring(0,response.length()-1);
+提取字母
+	str.replaceAll("\\s*","").replaceAll("[^(A-Za-z)]","")
+提取数字
+	str.replaceAll("\\s*","").replaceAll("[^(0-9)]","")
+提取数字+字母
+	str.replaceAll("\\s*","").replaceAll("[^(a-zA-Z0-9)]","")
+```
+
+## selectByExample
+
+```
+Example exampleUpdateColumn = new Example(TbUcCfgEtlUpdColumn.class);
+Example.Criteria criteriaUpdateColumn  = exampleUpdateColumn.createCriteria();
+criteriaUpdateColumn.andEqualTo("etlTaskId", tbUcCfgEtlTask.getEtlTaskId());
+List<TbUcCfgEtlUpdColumn> updateColumns = tbUcCfgEtlUpdColumnService.selectByExample(example);
+
+Example exampleParam = new Example(TbUcTaskParam.class);
+Example.Criteria criteriaParam = exampleParam.createCriteria();
+criteriaParam.andIn("taskId", oldTaskIdList);
+if(tbUcTaskParamService.deleteByExample(exampleParam) <1 ){
+	ExceptionUtil.throwError(StatusCode.FAILURE.getCode(),StatusCode.FAILURE.getMessage());
+}
+```
+
+## List
+
+```
+List的遍历：
+for(Iterator<String>    it    =    list.iterator();    it.hasNext();    )    {  
+    ....  
+}  
+for(Iterator<String>    it    =    list.iterator();    it.hasNext();    )    {  
+    ....  
+}  
+for(String   data    :    list)    {  
+    .....  
+} 
+for(int    i=0;    i<list.size();    i++)    {  
+    A    a    =    list.get(i);  
+    ...  
+}  //内部不锁定, 效率最高, 但是当写多线程时要考虑并发操作的问题。
+
+List转换为Array可以这样处理：
+    ArrayList<String> list=new ArrayList<String>();
+    String[] strings = new String[list.size()];
+    list.toArray(strings);
+
+注：List直接转换,list.toArray()会抛异常，编译通过，执行异常。
+
+反过来，将数组转成List如下：
+    String[] s = {"a","b","c"};
+    List list = java.util.Arrays.asList(s);
+示例：
+    for (TbUaCfgVarOutVo cur:tbUaCfgVarOutVoList){
+        List<String> list = StringUtils.splitToStringList(cur.getNameCn(),"：");
+        for (int i=0;i<list.size();i++){
+            if(i==0){
+                cur.setNameCn(list.get(i));
+            }
+            if(i==1){
+                cur.setExplain(list.get(i));
+            }
+        }
+    }	
+```
+
+
+
+## ArrayList
+
+```
+遍历arrayList的四种方法:
+	List<String> list = new ArrayList<String>();
+    list.add("luojiahui");
+    list.add("luojiafeng");
+
+    //方法1
+    Iterator it1 = list.iterator();
+        while(it1.hasNext()){
+        System.out.println(it1.next());
+    }
+
+    //方法2
+    for(Iterator it2 = list.iterator();it2.hasNext();){
+        System.out.println(it2.next());
+    }
+
+    //方法3
+    for(String tmp:list){
+        System.out.println(tmp);
+    }
+
+    //方法4
+    for(int i = 0;i < list.size(); i ++){
+        System.out.println(list.get(i));
+    }
+1.HashSet   
+    1)   HashSet不能够存储相同的元素，元素是否相同的判断：重写元素的equals方法。equals方法和hashCode方法必须兼容，
+    如：equals方法判断的是用户的名字name，那么hashCode的返回的hashcode必须是name。hashcode（）；
+    2)   HashSet存储是无序的，保存的顺序与添加的顺序是不一致的，它不是线性结构，而是散列结构，（通过散列表：散列单元指向链表）。
+    因此，HashSet的查询效率相对比较高。
+    3)   HashSet不是线程安全的，不是线程同步的。这需要自己实现线程同步：Collections.synchronizedCollection()，方法实现。
+
+2.ArrayList
+    1)   ArrayList中存放顺序和添加顺序是一致的。并且可重复元素。
+    2)   不是线程安全的，不是线程同步的。
+    3)   ArrayList是通过可变大小的数组实现的，允许null在内的所有元素。
+    4)   ArrayList适合通过位子来读取元素。
+对比：
+    1)   ArrayList始终比HashSet性能要高
+    2)   HashSet每次添加总要判断hashcode导致效率低
+    3)   HashSet两种循环中iterator 方式不稳定，不过总是比foreach要快一点
+```
+
+
+
+# 异常
+
+```
+任何Java代码都可以抛出异常，如：自己编写的代码、来自Java开发环境包中代码，或者Java运行时系统。
+无论是谁，都可以通过Java的throw语句抛出异常。从方法中抛出的任何异常都必须使用throws子句。
+捕捉异常通过try-catch语句或者try-catch-finally语句实现。          
+
+总体来说，Java规定：对于可查异常必须捕捉、或者声明抛出。允许忽略不可查的RuntimeException和Error。  
+
+抛出异常的方法：throws和throw
+    throws：通常被用在声明方法时，用来指定方法可能抛出的异常，多个异常可使用逗号分隔。throws关键字将异常抛给上一级，如果不想处理该异常，
+    可以继续向上抛出，但最终要有能够处理该异常的代码。
+
+    throw：通常用在方法体中或者用来抛出用户自定义异常，并且抛出一个异常对象。程序在执行到throw语句时立即停止，如果要捕捉throw抛出的异常，
+    则必须使用try-catch语句块或者try-catch-finally语句。
+
+例1：throws方法抛出异常
+public class Shoot {
+    static void pop()throws NegativeArraySizeException{
+    	int[] arr = new int[-3];
+    }
+	public static void main(String[] args) {
+		 try{
+			 pop();
+		 }catch(NegativeArraySizeException e){
+			 System.out.println("pop()方法抛出的异常");
+		 }
+	}
+ 
+}
+运行结果：
+	pop()方法抛出的异常
+                 
+例2：throw方法抛出异常
+public class TestException {
+	public static void main(String[] args) {
+		int a = 6;
+		int b = 0;
+		try {  
+			if (b == 0) throw new ArithmeticException(); // 通过throw语句抛出异常
+			System.out.println("a/b的值是：" + a / b);
+		}
+		catch (ArithmeticException e) { // catch捕捉异常
+			System.out.println("程序出现异常，变量b不能为0。");
+		}
+		System.out.println("程序正常结束。");
+	}
+}
+运行结果：
+    程序出现异常，变量b不能为0。
+    程序正常结束。
+
+对于try-catch-finally语句：先执行try 块中的代码，如果正常运行没有发生异常则执行完后执行finally 代码块中的代码；
+如若在try 中发生异常且被catch 捕捉到则执行catch 中的代码块，然后执行finally 块中的代码；
+但也存在以下4种特殊情况，finally块不会被执行：
+      在前面的代码中使用了System.exit()退出程序；
+      在finally语句块中发生异常；
+      程序所在的线程死亡；
+      关闭CPU。
+
 ```
 

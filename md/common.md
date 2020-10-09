@@ -100,10 +100,9 @@ password:	huitone2214
 vim /etc/apache2.4/httpd.conf
 vim /etc/apache2.4/extra/httpd-vhosts.conf
 vim /etc/apache2.4/extra/httpd-ssl.conf
-cd /usr/local/apache2.4/htdocs
 /usr/local/apache2.4/bin/apachectl restart
-cd /usr/local/apache2.4/logs
-tail -f access_log
+tail -f /usr/local/apache2.4/logs/access_log
+tail -f /usr/local/apache2.4/logs/error_log
 ---------------------------------------------------------------php-7.2.26
 扩展库路径：	cd /usr/local/php7/lib/php/extensions/no-debug-zts-20170718
 配置文件：	vim /usr/local/php7/etc/php.ini
@@ -132,6 +131,17 @@ cd /www/wwwroot/dm/dist
 vim /usr/local/nginx/conf/nginx.conf
 username:	xdl
 password:	xdl
+启动：	/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+--------------------------------------------------------------redis
+#启动
+	/usr/local/redis/bin/redis-server redis.conf
+--------------------------------------------------------------mongoDB
+#启动
+	/usr/local/mongodb/bin/mongod --config /usr/local/mongodb/bin/mongodb.conf
+#关闭
+	/usr/local/mongodb/bin/mongod --config /usr/local/mongodb/bin/mongodb.conf --shutdown
+--------------------------------------------------------------编译并部署convert
+/root/sbin/INS_convert.sh
 ```
 
 ## 172.16.7.58
