@@ -39,6 +39,7 @@ iperf -s -i 1 -w 1M
 E:\software\jperf\jperf_68547\bin
 cmd
 iperf.exe -c 172.16.7.56  -i 10 -t 30
+iperf  -c 172.16.7.55  -i 10 -t 30
 --------------------------------------window版
 https://blog.csdn.net/tengxing007/article/details/80919798
 

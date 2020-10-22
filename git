@@ -46,16 +46,6 @@ git push -u origin 5.2
 	git push origin dm8:dm8
 其他git：
 	git checout -b dm8
-----------------------------------从其他分支checkout文件到当前分支
-示例：当前分支：hch
-git checkout origin/master new_index/service_report.php
-git commit . -m 'zm' && git pull origin hch && git push origin hch
--------------------------------------------------注意
-git checkout -b newbranch	//从本地拉取代码创建新的分支，并切换到新的分支
-git checkout -b newbranch origin/newbranch //从远程拉取代码创建新的分支，并切换到新的分支
--------------------------------------------------删除本地并删除相应远程分支示例
-git branch -D dm8
-git push origin --delete dm8
 =================================================git 大文件提交
  git lfs install
  git lfs track "*.rar *.txt"

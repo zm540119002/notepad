@@ -36,21 +36,6 @@ echo 3 > /proc/sys/vm/drop_caches
 env|grep LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/dm7client/bin/:/usr/local/dm7client/drivers/odbc/
 -------------------------------------PATH
-=============================================find
-find / -name '*.logout*' 2>/dev/null
-=============================================scp
-find . -type f -name *.svn*    | xargs rm -f
-find . -name \*52\* 
-cp -r svg/* /usr/local/apache2/htdocs/inc_chk/new_index/svg/
-服务器之间copy文件：
-scp -r git@120.79.201.125:/home/www/web/thinkphp5.1/msy/public/uploads/weiya_project .
-scp /usr/local/dm7client/drivers/php_pdo/libphp52_dm.so root@172.16.6.44:/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
-scp /usr/local/dm7client/drivers/php_pdo/*52* root@172.16.6.44:/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
-scp /usr/local/php/include/php/ext/pdo_oci.so root@172.16.6.44:/usr/local/php2/lib/php/extensions/no-debug-non-zts-20060613
-scp test.php root@172.16.6.44:/usr/local/apache2/htdocs/test.php
-scp -r root@172.16.6.44:/usr/local/apache/htdocs/inc_chk/new_index/svg .
-scp -r root@172.16.7.71:/usr/local/nginx/conf/nginx_2c.conf .
-scp -r root@172.16.6.45:/usr/local/nginx/conf/nginx_2c.conf .
 =============================================tar
 解压：tar -xzvf FileName.tar.gz -C /usr/local/
 -C 选项的作用是：指定需要解压到的目录。
@@ -188,20 +173,7 @@ nginx默认监听80端口，iptables规则开放80端口
 重启防火墙：service iptables restart
 或者关闭iptables规则：iptables -F && iptables -t nat -F
 =============================================
-yum list all|grep nginx
-yum list all mysql*
-只显示已安装的包。
-命令：yum list installed
-只显示没有安装，但可安装的包。
-命令：yum list available
-查看所有可更新的包。
-命令：yum list updates
-显示不属于任何仓库的，额外的包。
-命令：yum list extras
-显示被废弃的包
-命令：yum list obsoletes
-新添加进yum仓库的包
-命令：yum list recent
+
 =============================================
 userdel，只有一个参数可选 -r ；如果加参数-r ，表示在删除用户的同时，一并把用户的家目录及本地邮件存储的目录或文件也一同删除；比如我们现在有个用户linuxso，其家目录位于/var目录中，现在我们来删除这个用户。
 userdel linuxso 注：删除用户linuxso，但不删除其家目录及文件；

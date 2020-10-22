@@ -94,3 +94,7 @@ export PATH=$PATH:$JAVA_HOME/bin
 export M2_HOME=/usr/local/apache-maven-3.6.1
 export PATH=$PATH:$M2_HOME/bin
 ================================================
+
+
+List<Integer> tableNames = adminEntityList.stream().map(AdminEntity::getAdminId).collect(Collectors.toList());
+    System.out.println("输出用户id : " + tableNames);
