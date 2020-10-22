@@ -127,11 +127,15 @@ password:	huitone2214
 username:	oracle
 password:	huitone2214
 --------------------------------------------------------------nginx
-cd /www/wwwroot/dm/dist
-vim /usr/local/nginx/conf/nginx.conf
-username:	xdl
-password:	xdl
-启动：	/usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+安装目录：	cd /usr/local/nginx/
+web目录：	 cd /www/wwwroot/front/
+配置文件：	vim /usr/local/nginx/conf/nginx.conf
+启动：		 /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
+停止：
+	ps -ef|grep nginx
+	从容停止： kill -QUIT 2072
+	快速停止： kill -TERM 2132 | kill -INT 2132
+	强制停止： pkill -9 nginx
 --------------------------------------------------------------redis
 #启动
 	/usr/local/redis/bin/redis-server redis.conf
@@ -140,8 +144,6 @@ password:	xdl
 	/usr/local/mongodb/bin/mongod --config /usr/local/mongodb/bin/mongodb.conf
 #关闭
 	/usr/local/mongodb/bin/mongod --config /usr/local/mongodb/bin/mongodb.conf --shutdown
---------------------------------------------------------------编译并部署convert
-/root/sbin/INS_convert.sh
 ```
 
 ## 172.16.7.58

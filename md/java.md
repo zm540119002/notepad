@@ -1,7 +1,30 @@
 # **常用**
 
+# Spring Cloud
+
+# Spring Boot
+
+### 连接池
+
+```
+目前最热门的数据库连接池，就要属阿里巴巴的Druid以及HikariCP了，它们也分别是Spring Boot 1.x和Spring Boot 2.x默认的数据库连接池。
+
+```
+
+# Spring Mvc
+
+# Spring
+
+
+
 ```
 ExceptionUtil.throwError(aliasPrefix.returnCode, aliasPrefix.errMsg);
+@Slf4j
+
+H_api_key:Huitone@2214
+H_sign:RoW1EOIN9Lsd2GzhoHitqQhxunqiPaGuEG0tqsF6wCxy99kl2EPhXJJgE4ICsedR0HnGFNx/wN39Sq4tGbPWR8o4jnh4RXgZ60vG0MTnFGVdRFLbft+QS5CjDKUdDziPD7UvhUcJSasUEz1YcyXH1k1upSrQcdMvgf2zaVaUNj0=
+H_timestamp:1595836849999
+H_token:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHBpcmVUaW1lIjoxNTk1ODM4NjQ5OTQ0LCJ1c2VySXAiOiIxNzIuMTYuMTYuOTIiLCJ1c2VySWQiOjMwMywiYWNjb3VudCI6Inp4In0.zF6XoMx2RljYHaPpHuqsz7QzwpEzBIC8U9S9v7v9yxI
 ```
 
 # **概念解析**
@@ -33,6 +56,12 @@ Spring IOC容器的核心是把程序业务代码与事物（组件、POJO类）
 	1.便于传多个参数；
 	2.类似于别名之类的功能
 	不使用@Param注解时，参数只能有一个，而且是JavaBean，在sql中只能引用JavaBean的属性。
+	
+@JsonProperty 此注解用于属性上，作用是把该属性的名称序列化为另外一个名称，示例：
+    @JsonProperty("svgName")
+    @Column(name = "file_name")
+    @ApiModelProperty(value = "file_name", name = "fileName")
+    private String fileName;
 ```
 
 
@@ -43,7 +72,68 @@ Spring IOC容器的核心是把程序业务代码与事物（组件、POJO类）
 
 ```
 https://www.jianshu.com/p/21f3e074e91a
+
+https://blog.csdn.net/weixin_40423597/article/details/80643990
+
 ```
+
+### @Autowire和@Resource注解的区别
+
+```
+@Autowire和@Resource都是Spring支持的注解方式动态装配bean。
+
+介绍
+	@Autowire和@Resource都是Spring支持的注解方式动态装配bean。
+
+详解
+    @Autowire
+    @Autowire默认按照类型(by-type)装配，默认情况下要求依赖对象必须存在。
+
+如果允许依赖对象为null，需设置required属性为false，即
+    @Autowire(required=false)
+    private InjectionBean beanName;
+
+如果使用按照名称(by-name)装配，需结合@Qualifier注解使用，即
+    @Autowire
+    @Qualifier("beanName")
+    private InjectionBean beanName;
+
+说明
+    @Autowire按照名称(by-name)装配，则
+    @Autowire + @qualifier("") = @Resource(name="")
+
+@Resource
+@Resource默认按照名称(by-name)装配，名称可以通过name属性指定。
+    如果没有指定name
+    当注解在字段上时，默认取name=字段名称装配。
+    当注解在setter方法上时，默认取name=属性名称装配。
+    当按照名称(by-name）装配未匹配时，按照类型(by-type)装配。
+    当显示指定name属性后，只能按照名称(by-name)装配。
+    
+@Resoure装配顺序
+    如果同时指定name和type属性，则找到唯一匹配的bean装配，未找到则抛异常；
+    如果指定name属性，则按照名称(by-name)装配，未找到则抛异常；
+    如果指定type属性，则按照类型(by-type)装配，未找到或者找到多个则抛异常；
+    既未指定name属性，又未指定type属性，则按照名称(by-name)装配；如果未找到，则按照类型(by-type)装配。
+对比
+    对比项	@Autowire	@Resource
+    注解来源	Spring注解	JDK注解(JSR-250标准注解，属于J2EE)
+    装配方式	优先按类型	优先按名称
+    属性	required	name、type
+	作用范围	字段、setter方法、构造器	字段、setter方法
+	
+说明：
+	作用范围在字段上，均无需在写setter方法
+	
+个人总结：
+    @Autowired//默认按type注入
+    @Qualifier("cusInfoService")//一般作为@Autowired()的修饰用
+    @Resource(name="cusInfoService")//默认按name注入，可以通过name和type属性进行选择性注入
+	一般@Autowired和@Qualifier一起用，@Resource单独用。
+	当然没有冲突的话@Autowired也可以单独用
+```
+
+
 
 ### @Configuration
 
@@ -161,7 +251,29 @@ java的toString()导致空指针异常的技巧
     Object object = null;
     String d=object+"";
     或者先判断
+    
+如果mybatis有xml配置文件，要配成如上（加*）
+
+JAVA中try、catch、finally带return的执行顺序：
+参考：	
+	https://www.cnblogs.com/pcheng/p/10968841.html
+总结：
+    1、finally中的代码总会被执行。
+    2、当try、catch中有return时，也会执行finally。return的时候，要注意返回值的类型，是否受到finally中代码的影响。
+    3、finally中有return时，会直接在finally中退出，导致try、catch中的return失效。
 ```
+# Spring中Bean的单例和多例
+
+```
+在Spring中，bean可以被定义为两种模式：prototype（多例）和singleton（单例）
+    singleton（单例）：只有一个共享的实例存在，所有对这个bean的请求都会返回这个唯一的实例。
+    prototype（多例）：对这个bean的每次请求都会创建一个新的bean实例，类似于new。
+	注：Spring bean 默认是单例模式。如果要配置单例或者多例，可以在对应的bean上加一个@Scope("prototype")注解
+
+```
+
+
+
 # **Future机制**
 
 ```
@@ -381,6 +493,22 @@ mvn clean install -P dev -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 4、数据库连接，Session会话管理。
 ```
 
+# 线程安全
+
+```
+非线程安全：
+    ArrayList
+    HashMap
+    StringBuilder
+	LinkedList
+线程安全的：
+    Vector
+    HashTable
+    StringBuffer
+```
+
+
+
 # 常用示例
 
 ## list对象集合中获取某一列的集合数据
@@ -411,7 +539,7 @@ System.out.println(nameList);
 	结果：4
 ```
 
-## string
+## 字符串截取
 
 ```
 字符串转数组：
@@ -424,6 +552,47 @@ System.out.println(nameList);
 	str.replaceAll("\\s*","").replaceAll("[^(0-9)]","")
 提取数字+字母
 	str.replaceAll("\\s*","").replaceAll("[^(a-zA-Z0-9)]","")
+```
+
+## 字符串拼接
+
+```
+1. plus方式
+	当左右两个量其中有一个为String类型时，用plus方式可将两个量转成字符串并拼接。
+    String a="";
+    int b=0xb;
+    String c=a+b;
+    
+2. concat方式
+	当两个量都为String类型且值不为null时，可以用concat方式。
+    String a="a";
+    String b="b";
+    String c= a.concat(b);
+    理论上，此时拼接效率应该最高，因为已经假定两个量都为字符串，做底层优化不需要额外判断或转换，而其他方式无论如何优化，都要先走到这一步。
+
+3. append方式
+	当需要拼接至少三个量的时候，可以考虑使用StringBuffer#append()以避免临时字符串的产生
+    StringBuffer buf=new StringBuffer()
+    buf.append("a");
+    if(someCondition){
+    	buf.append("b");
+    }
+    buf.append("c");
+    String d=buf.toString();
+	当a,b,c拼接起来会很长时，可以给在构造器中传入一个合适的预估容量以减少因扩展缓冲空间而带来的性能开销。
+
+StringBuffer buf=new StringBuffer(a.length()+b.length()+c.length());
+JDK对外提供的一些涉及可append CharSequence的参数或返回值类型往往是StringBuffer类型，毕竟安全第一，而StringBuffer大多数情况(包括append操作)线程安全。
+
+若不会出现多线程同时对一实例并发进行append操作，建议使用非线程安全的StringBuilder以获得更好性能
+
+示例：
+StringBuffer sql = new StringBuffer("update ");
+sql.deleteCharAt(sql.length()-2).
+    append(" where ( ").
+    append(etlFilterList.get(0).getFilterExpr()).
+    append(" ) ");
+tbUcTaskParam.setValue(sql.toString());
 ```
 
 ## selectByExample
@@ -441,6 +610,14 @@ if(tbUcTaskParamService.deleteByExample(exampleParam) <1 ){
 	ExceptionUtil.throwError(StatusCode.FAILURE.getCode(),StatusCode.FAILURE.getMessage());
 }
 ```
+
+## selectOneByExample
+
+```
+
+```
+
+
 
 ## List
 

@@ -571,45 +571,7 @@ scp -r root@172.16.6.44:/usr/local/apache/htdocs/inc_chk/new_index/svg .
 scp -r root@172.16.7.71:/usr/local/nginx/conf/nginx_2c.conf .
 scp -r root@172.16.6.45:/usr/local/nginx/conf/nginx_2c.conf .
 scp -r root@172.16.7.57:/root/sbin/INS_convert.sh .
+scp -r root@172.16.7.56:/usr/local/apache2.4/htdocs/inc_chk/new_index/svg/* .
 ```
 
 
-
-#  **mysql**
-
-## 启动
-
-```
-
-```
-
-
-
-```
-
-```
-####  **cmake**
-
-```
-
-```
-####  ****
-
-```
-
-```
-####  ****
-
-```
-
-```
-####  ****
-
-```
-
-```
-####  ****
-
-```
-
-```
