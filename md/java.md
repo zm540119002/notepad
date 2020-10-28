@@ -1,5 +1,3 @@
-# **常用**
-
 # Spring Cloud
 
 # Spring Boot
@@ -8,7 +6,6 @@
 
 ```
 目前最热门的数据库连接池，就要属阿里巴巴的Druid以及HikariCP了，它们也分别是Spring Boot 1.x和Spring Boot 2.x默认的数据库连接池。
-
 ```
 
 # Spring Mvc
@@ -19,7 +16,10 @@
 
 ```
 ExceptionUtil.throwError(aliasPrefix.returnCode, aliasPrefix.errMsg);
+
 @Slf4j
+
+private Logger logger = LoggerFactory.getLogger(GvnXxlJobConfig.class);
 
 H_api_key:Huitone@2214
 H_sign:RoW1EOIN9Lsd2GzhoHitqQhxunqiPaGuEG0tqsF6wCxy99kl2EPhXJJgE4ICsedR0HnGFNx/wN39Sq4tGbPWR8o4jnh4RXgZ60vG0MTnFGVdRFLbft+QS5CjDKUdDziPD7UvhUcJSasUEz1YcyXH1k1upSrQcdMvgf2zaVaUNj0=
@@ -29,6 +29,8 @@ H_token:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHBpcmVUaW1lIjoxNTk1ODM4NjQ5OTQ
 
 # **概念解析**
 
+## spring 
+
 ## spring ioc
 
 ```
@@ -37,15 +39,103 @@ pring IOC容器是框架的核心，IOC是控制反转的意思，可以用来�
 Spring IOC容器的核心是把程序业务代码与事物（组件、POJO类）代码进行分离，程序有关事物的创建、属性和依赖对象的注入、以及生命周期交由容器进行加载和管理。业务代码只需从容器中获取组件或POJO实例对象即可，无需再考虑组件之间、组件与POJO之间的依赖关系以及属性的注入。
 ```
 
-
-
-## spring 
-
 ## spring mvc
 
 ## spring boot
 
+## spring cloud
+
 # 注解
+
+```
+参考： https://blog.csdn.net/yuzongtao/article/details/84314103
+```
+
+## 元注解
+
+```
+jdk1.5起开始提供了4个元注解：@Target、@Retention、@Documented、@Inherited
+何谓元注解？就是注解的注解。
+在程序开发中，有时候我们需要自定义一个注解，这个自定义注解类就需要被元注解修饰，以定义该类的一些基本特征。
+
+例如，我们创建一个LogAnnotation的自定义注解类：
+
+@Target({ ElementType.METHOD })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface LogAnnotation {
+	String module() default "";
+}
+@interface意思是声明一个注解，方法名对应参数名，返回值类型对应参数类型。
+
+@Target注解用于定义注解的使用位置，如果没有该项，表示注解可以用于任何地方。@Target的格式为：
+// 单参数
+@Target({ ElementType.METHOD })
+// 多参数
+@Target(value = {ElementType.METHOD,ElementType.TYPE})
+@Target的ElementType取值有以下类型：
+    TYPE：类，接口或者枚举
+    FIELD：域，包含枚举常量
+    METHOD：方法
+    PARAMETER：参数
+    CONSTRUCTOR：构造方法
+    LOCAL_VARIABLE：局部变量
+    ANNOTATION_TYPE：注解类型
+    PACKAGE：包
+
+@Retention注解用于指明修饰的注解的生存周期，即会保留到哪个阶段。格式为：
+@Retention(RetentionPolicy.RUNTIME)
+RetentionPolicy的取值包含以下三种：
+    SOURCE：源码级别保留，编译后即丢弃。
+    CLASS：编译级别保留，编译后的class文件中存在，在jvm运行时丢弃，这是默认值。
+    RUNTIME：运行级别保留，编译后的class文件中存在，在jvm运行时保留，可以被反射调用。
+    
+@Documented
+	指明修饰的注解，可以被例如javadoc此类的工具文档化，只负责标记，没有成员取值。
+
+@Inherited
+@Inherited注解用于标注一个父类的注解是否可以被子类继承，如果一个注解需要被其子类所继承，则在声明时直接使用@Inherited注解即可。
+如果没有写此注解，则无法被子类继承。下面做一个测试：
+    //自定义一个注解
+    @interface MyAnnoation
+    {
+        public String key() default "key1";
+        public String value() default "value1";
+    }
+
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    @Documented
+    //如果父类使用了HeritedApplication注解，则子类应该继承
+    @Inherited
+    @MyAnnoation
+    @interface HeritedApplication {
+
+    }
+
+    //父类使用了@HeritedApplication注解
+    @HeritedApplication
+    class Person {
+
+    }
+
+    class Student extends Person{
+
+    }
+
+    class AnnotationInherited{
+        public static void main(String[] args) throws Exception
+        {
+            Class clazz = Student.class;
+            //Student类是否有@HeritedApplication
+            if(clazz.isAnnotationPresent(HeritedApplication.class)){
+                System.out.println("true");
+            }
+        }
+    }
+    运行程序，结果为 true。
+```
+
+
 
 ## 常用
 
@@ -64,17 +154,12 @@ Spring IOC容器的核心是把程序业务代码与事物（组件、POJO类）
     private String fileName;
 ```
 
-
-
 ## spring
 
-### 综合
-
 ```
-https://www.jianshu.com/p/21f3e074e91a
-
-https://blog.csdn.net/weixin_40423597/article/details/80643990
-
+参考：
+    https://www.jianshu.com/p/21f3e074e91a
+    https://blog.csdn.net/weixin_40423597/article/details/80643990
 ```
 
 ### @Autowire和@Resource注解的区别
@@ -227,10 +312,10 @@ ${}:用于获取配置文件中的属性值，通常用于获取写在applicatio
 @Repository用于标注数据访问组件，即DAO组件
 @Component泛指组件，当组件不好归类的时候，我们可以使用这个注解进行标注。
 @ControllerAdvice
-	实现三个方面的功能：
-        全局异常处理
-        全局数据绑定
-        全局数据预处理
+实现三个方面的功能：
+    全局异常处理
+    全局数据绑定
+    全局数据预处理
 ```
 # **注意事项**
 
@@ -528,7 +613,7 @@ System.out.println(nameList);
     List<String> aliasList = list.stream().map(TbUcCfgQuoteDs -> TbUcCfgQuoteDs.getAlias()).collect(Collectors.toList());
     System.out.println(aliasList);
     结果：[A1, A1, A2, A3, A4]
-    //取出最大的别名
+    //取出别名数组里的数字
 	List<Long> newAliasList = new ArrayList<>();
     for(String alias:aliasList){
     	newAliasList.add(getStrNumber(alias));
@@ -614,7 +699,10 @@ if(tbUcTaskParamService.deleteByExample(exampleParam) <1 ){
 ## selectOneByExample
 
 ```
-
+Example example = new Example(TbUcCfgQuoteDs.class);
+Example.Criteria criteria = example.createCriteria();
+criteria.andEqualTo("dsId", dsId);
+int count = this.selectCountByExample(example);
 ```
 
 
