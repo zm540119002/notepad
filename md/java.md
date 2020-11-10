@@ -1,4 +1,274 @@
+
+
+
+
+
+
+
+
+
+
+
+
+# shiro
+
+## 使用注解控制鉴权授权
+
+```
+注解							功能
+@RequiresGuest				只有游客可以访问
+@RequiresAuthentication		需要登录才能访问
+@RequiresUser				已登录的用户或“记住我”的用户能访问
+@RequiresRoles				已登录的用户需具有指定的角色才能访问
+@RequiresPermissions		已登录的用户需具有指定的权限才能访问
+```
+
+## 使用 url配置控制鉴权授权
+
+```
+配置缩写					对应的过滤器							功能
+anon					AnonymousFilter						指定url可以匿名访问
+authc					FormAuthenticationFilter			指定url需要form表单登录，默认会从请求中获取username、password,rememberMe
+															等参数并尝试登录，如果登录不了就会跳转到loginUrl配置的路径。
+															我们也可以用这个过滤器做默认的登录逻辑，但是一般都是我们自己在控制器写登录逻辑的，
+															自己写的话出错返回的信息都可以定制嘛。
+authcBasic				BasicHttpAuthenticationFilter		指定url需要basic登录
+logout					LogoutFilter						登出过滤器，配置指定url就可以实现退出功能，非常方便
+noSessionCreation		NoSessionCreationFilter				禁止创建会话
+perms					PermissionsAuthorizationFilter		需要指定权限才能访问
+port					PortFilter							需要指定端口才能访问
+rest					HttpMethodPermissionFilter			将http请求方法转化成相应的动词来构造一个权限字符串，这个感觉意义不大
+roles					RolesAuthorizationFilter			需要指定角色才能访问
+ssl						SslFilter							需要https请求才能访问
+user					UserFilter							需要已登录或“记住我”的用户才能访问
+```
+
+
+
+# JWT
+
+## 介绍
+
+```
+JWT（JSON Web Tokens）是一种用于安全的传递信息而采用的一种标准。
+Web系统中，我们使用加密的Json来生成Token在服务端与客户端无状态传输，代替了之前常用的Session。
+系统采用Redis作为缓存，解决Token过期更新的问题，同时集成SSO登录，完整过程这里来总结一下。
+经常用在跨域身份验证。因为存在数字签名，因此可以起到防串改的作用。
+```
+
+## 格式
+
+```
+Header 头信息
+{  
+	"alg": "Algorithm  加密方法：HS256",  
+	"cty": "Content Type ",  
+	"typ": "Type" ,  
+	"kid": "Key Id" 
+}
+
+Payload  载体信息：数据包放在这里
+{  
+	"iss": "Issuer JWT的签发者",  
+	"aud": "Audience 接收JWT的一方",  
+	"sub": "Subject JWT的主题",  
+	"exp": "Expiration Time JWT的过期时间",  
+	"nbf": "Not Before 在xxx之间，该JWT都是可用的",  
+	"iat": "Issued At 该JWT签发的时间",  
+	"jti": "JWT ID JWT的唯一身份标识",  
+	"xxx": "自定义属性"
+}
+
+Signature 签名信息 = 加密算法(header + "." + payload, 密钥)
+
+TOKEN
+base64(Header).base64(Payload).Signature
+```
+
+## 请求流程
+
+```
+1. 用户使用账号和面发出post请求；
+2. 服务器使用私钥创建一个jwt；
+3. 服务器返回这个jwt给浏览器；
+4. 浏览器将该jwt串在请求头中像服务器发送请求；
+5. 服务器验证该jwt；
+6. 返回响应的资源给浏览器。
+```
+
+## 登录主要流程
+
+```
+登录时，密码验证通过，取当前时间戳生成签名Token，放在Response Header的Authorization属性中，同时在缓存中记录值为当前时间戳的RefreshToken，并设置有效期。
+客户端请求每次携带Token进行请求。
+服务端每次校验请求的Token有效后，同时比对Token中的时间戳与缓存中的RefreshToken时间戳是否一致，一致则判定Token有效。
+当请求的Token被验证时抛出TokenExpiredException异常时说明Token过期，校验时间戳一致后重新生成Token并调用登录方法。
+每次生成新的Token后，同时要根据新的时间戳更新缓存中的RefreshToken，以保证两者时间戳一致。
+```
+
+## 主要应用场景
+
+```
+身份认证在这种场景下，一旦用户完成了登陆，在接下来的每个请求中包含JWT，可以用来验证用户身份以及对路由，服务和资源的访问权限进行验证。
+由于它的开销非常小，可以轻松的在不同域名的系统中传递，所有目前在单点登录（SSO）中比较广泛的使用了该技术。 
+信息交换在通信的双方之间使用JWT对数据进行编码是一种非常安全的方式，由于它的信息是经过签名的，可以确保发送者发送的信息是没有经过伪造的。
+```
+
+## 优点
+
+```
+1.简洁(Compact): 可以通过URL，POST参数或者在HTTP header发送，因为数据量小，传输速度也很快
+2.自包含(Self-contained)：负载中包含了所有用户所需要的信息，避免了多次查询数据库
+3.因为Token是以JSON加密的形式保存在客户端的，所以JWT是跨语言的，原则上任何web形式都支持。
+4.不需要在服务端保存会话信息，特别适用于分布式微服务。
+```
+
+## 缺点
+
+```
+默认生成的token不加密，别人可以解析token获取到其中的数据，如果要传递敏感信息，可以先将信息加密后再放入token，或者将生成的token进行加密
+每次延长token有效期，会从新生成一个token，需要前端替换原有的token
+由于服务器不保存 session状态，因此无法在使用过程中废止某个token，或者更改 token的权限。
+也就是说，一旦JWT签发了，在到期之前就会始终有效，需要在服务端设置相应的业务逻辑去处理。
+```
+
+# HttpServletRequest
+
+## 介绍
+
+```
+HttpServletRequest对象代表客户端的请求，当客户端通过HTTP协议访问服务器时，HTTP请求头中的所有信息都封装在这个对象中，通过这个对象提供的方法，可以获得客户端请求的所有信息。
+```
+
+## ttpServletRequest类的常用方法
+
+```
+getRequestURI()
+	获取请求的资源路径
+getRequestURL()
+	获取请求的统一资源定位符（绝对路径）
+getRemoteHost()
+	获取客户端的 ip 地址
+getHeader()
+	获取请求头
+getParameter()
+	获取请求的参数
+getParameterValues()
+	获取请求的参数（多个值的时候使用）
+getMethod()
+	获取请求的方式 GET 或 POST
+setAttribute()
+	设置域数据
+getAttribute()
+	获取域数据
+getRequestDispatcher()
+	获取请求转发对象
+```
+
+## 示例
+
+```
+Enumeration<String> reqHeadInfos = httpServletRequest.getHeaderNames();//获取所有的请求头
+System.out.println("获取到的客户端所有的请求头信息如下：");
+while (reqHeadInfos.hasMoreElements()) {
+	String headName = (String) reqHeadInfos.nextElement();
+	String headValue = httpServletRequest.getHeader(headName);//根据请求头的名字获取对应的请求头的值
+	System.out.println(headName+":"+headValue);
+}
+System.out.println("获取到的客户端Accept-Encoding请求头的值：");
+String value = httpServletRequest.getHeader("Accept-Encoding");//获取Accept-Encoding请求头对应的值
+System.out.println(value);
+```
+
+
+
 # Spring Cloud
+
+## zuul
+
+### Filter
+
+参考：http://c.biancheng.net/view/5417.html
+
+```
+Zuul 中的过滤器总共有 4 种类型，且每种类型都有对应的使用场景。
+1）pre
+	可以在请求被路由之前调用。适用于身份认证的场景，认证通过后再继续执行下面的流程。
+2）route
+	在路由请求时被调用。适用于灰度发布场景，在将要路由的时候可以做一些自定义的逻辑。
+3）post
+	在 route 和 error 过滤器之后被调用。这种过滤器将请求路由到达具体的服务之后执行。适用于需要添加响应头，记录响应日志等应用场景。
+4）error
+	处理请求时发生错误时被调用。在执行过程中发送错误时会进入 error 过滤器，可以用来统一记录错误信息。
+	
+使用方法：
+通过继承ZuulFilter然后覆写4个方法，示例：
+public class IpFilter extends ZuulFilter {
+    // IP黑名单列表
+    private List<String> blackIpList = Arrays.asList("127.0.0.1");
+
+    public IpFilter() {
+        super();
+    }
+
+    @Override
+    public boolean shouldFilter() {
+        return true
+    }
+
+    @Override
+    public String filterType() {
+        return "pre";
+    }
+
+    @Override
+    public int filterOrder() {
+        return 1;
+    }
+
+    @Override
+    public Object run() {
+        RequestContext ctx = RequestContext.getCurrentContext();
+        String ip = IpUtils.getIpAddr(ctx.getRequest());
+        // 在黑名单中禁用
+        if (StringUtils.isNotBlank(ip) && blackIpList.contains(ip)) {
+
+            ctx.setSendZuulResponse(false);
+            ResponseData data = ResponseData.fail("非法请求 ", ResponseCode.NO_AUTH_CODE.getCode());
+            ctx.setResponseBody(JsonUtils.toJson(data));
+            ctx.getResponse().setContentType("application/json; charset=utf-8");
+            return null;
+        }
+        return null;
+    }
+}
+
+1）shouldFilter
+	是否执行该过滤器，true 为执行，false 为不执行，这个也可以利用配置中心来实现，达到动态的开启和关闭过滤器。
+2）filterType
+	过滤器类型，可选值有 pre、route、post、error。
+3）filterOrder
+	过滤器的执行顺序，数值越小，优先级越高。
+4）run
+	执行自己的业务逻辑，本段代码中是通过判断请求的 IP 是否在黑名单中，决定是否进行拦截。blackIpList 字段是 IP 的黑名单，判断条件成立之后，
+	通过设置 ctx.setSendZuulResponse（false），告诉 Zuul 不需要将当前请求转发到后端的服务了。通过 setResponseBody 返回数据给客户端。
+	
+过滤器定义完成之后我们需要配置过滤器才能生效，IP 过滤器配置代码如下所示。
+@Configuration
+public class FilterConfig {
+    @Bean
+    public IpFilter ipFilter() {
+        return new IpFilter();
+    }
+}
+
+过滤器禁用
+有的场景下，我们需要禁用过滤器，此时可以采取下面的两种方式来实现：
+	利用 shouldFilter 方法中的 return false 让过滤器不再执行
+	通过配置方式来禁用过滤器，格式为“zuul. 过滤器的类名.过滤器类型 .disable=true”。
+	如果我们需要禁用“使用过滤器”部分中的 IpFilter，可以用下面的配置：
+		zuul.IpFilter.pre.disable=true
+```
 
 # Spring Boot
 
@@ -140,8 +410,23 @@ RetentionPolicy的取值包含以下三种：
 ## 常用
 
 ```
-事务：
-	@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class)
+    1）接口实现类或接口实现方法上，而不是接口类中。
+    2）访问权限：public 的方法才起作用。@Transactional 注解应该只被应用到 public 方法上，这是由 Spring AOP 的本质决定的。
+        将标签放置在需要进行事务管理的方法上，而不是放在所有接口实现类上：
+        只读的接口就不需要事务管理，由于配置了@Transactional就需要AOP拦截及事务的处理，可能影响系统性能。
+    3）错误使用：
+        1.接口中A、B两个方法，A无@Transactional标签，B有，上层通过A间接调用B，此时事务不生效。
+        2.接口中异常（运行时异常）被捕获而没有被抛出。
+          默认配置下，spring 只有在抛出的异常为运行时 unchecked 异常时才回滚该事务，
+          也就是抛出的异常为RuntimeException 的子类(Errors也会导致事务回滚)，
+          而抛出 checked 异常则不会导致事务回滚 。可通过 @Transactional rollbackFor进行配置。
+        3.多线程下事务管理因为线程不属于 spring 托管，故线程不能够默认使用 spring 的事务,
+          也不能获取spring 注入的 bean 。
+          在被 spring 声明式事务管理的方法内开启多线程，多线程内的方法不被事务控制。
+          一个使用了@Transactional 的方法，如果方法内包含多线程的使用，方法内部出现异常，
+          不会回滚线程中调用方法的事务。
+
 @Param
 	1.便于传多个参数；
 	2.类似于别名之类的功能
@@ -218,9 +503,18 @@ RetentionPolicy的取值包含以下三种：
 	当然没有冲突的话@Autowired也可以单独用
 ```
 
+### @ComponentScan
 
+参考：https://www.jianshu.com/p/64aac6461d5b
+
+```
+会自动扫描指定包下全部标有@Component的类，并注册成bean，当然包括@Component下的子注解：@Service，@Repository，@Controller；
+默认会扫描当前包和所有子包。
+```
 
 ### @Configuration
+
+参考：	https://www.jianshu.com/p/21f3e074e91a
 
 ```
 用于定义配置类，可替换XML配置文件，被注解的类内部包含一个或多个@Bean注解方法。可以被AnnotationConfigApplicationContext或者AnnotationConfigWebApplicationContext 进行扫描。用于构建bean定义以及初始化Spring容器。
@@ -267,24 +561,18 @@ SpringIOC 容器管理一个或者多个bean，这些bean都需要在@Configurat
 @Profile的作用是把一些meta-data进行分类，分成Active和InActive这两种状态，然后你可以选择在active 和在Inactive这两种状态下配置bean，在Inactive状态通常的注解有一个！操作符，通常写为：@Profile("!p")，这里的p是Profile的名字。
 
 三种设置方式：
-
-可以通过ConfigurableEnvironment.setActiveProfiles()以编程的方式激活
-
-可以通过AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME (spring.profiles.active )属性设置为JVM属性
-
-作为环境变量，或作为web.xml 应用程序的Servlet 上下文参数。也可以通过@ActiveProfiles 注解在集成测试中以声明方式激活配置文件。
+    可以通过ConfigurableEnvironment.setActiveProfiles()以编程的方式激活
+    可以通过AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME (spring.profiles.active )属性设置为JVM属性
+    作为环境变量，或作为web.xml 应用程序的Servlet 上下文参数。也可以通过@ActiveProfiles 注解在集成测试中以声明方式激活配置文件。
 
 作用域
-
-作为类级别的注释在任意类或者直接与@Component 进行关联，包括@Configuration 类
-
-作为原注解，可以自定义注解
-
-作为方法的注解作用在任何方法
+    作为类级别的注释在任意类或者直接与@Component 进行关联，包括@Configuration 类
+    作为原注解，可以自定义注解
+    作为方法的注解作用在任何方法
 
 注意:
-
-如果一个配置类使用了Profile 标签或者@Profile 作用在任何类中都必须进行启用才会生效，如果@Profile({"p1","!p2"}) 标识两个属性，那么p1 是启用状态 而p2 是非启用状态的。
+	如果一个配置类使用了Profile 标签或者@Profile 作用在任何类中都必须进行启用才会生效，
+	如果@Profile({"p1","!p2"}) 标识两个属性，那么p1 是启用状态 而p2 是非启用状态的。
 ```
 
 ## spring mvc
@@ -453,6 +741,21 @@ POJO To Json
 	将 Enable Annotation Processors 打勾，重启软件即可。
 ```
 
+## 常见错误
+
+### shorten command line
+
+```
+如果类路径太长，或者有许多VM参数，程序就无法启动。原因是大多数操作系统都有命令行长度限制。在这种情况下，IntelliJIDEA将试图缩短类路径。
+shorten command line 选项提供三种选项缩短类路径。
+    none：这是默认选项，idea不会缩短命令行。如果命令行超出了OS限制，这个想法将无法运行您的应用程序，但是工具提示将建议配置缩短器。
+    JAR manifest：idea 通过临时的classpath.jar传递长的类路径。原始类路径在MANIFEST.MF中定义为classpath.jar中的类路径属性。
+    classpath file：idea 将一个长类路径写入文本文件中。
+建议使用JAR manifest
+```
+
+
+
 #  **maven**
 
 ## *Linux版*
@@ -514,6 +817,22 @@ cd /usr/local/src
 mvn -compire
 参考： https://www.linuxidc.com/linux/2020-04/162861.htm
 ```
+
+### 注意事项
+
+```
+--会执行单元测试
+	mvn  -Dmaven.multiModuleProjectDirectory=M:\data-govern -Dmaven.home=E:\java\MAVEN\apache-maven-3.6.3   
+	-DskipTests=true package
+
+-- 不会执行单元测试
+	mvn  -Dmaven.multiModuleProjectDirectory=M:\data-govern -Dmaven.home=E:\java\MAVEN\apache-maven-3.6.3   
+	-Dmaven.test.skip=true package
+
+maven插件选中了不执行单元测试  打包时还是会执行  原来它是加了 -DskipTests=true
+```
+
+
 
 ### *可能错误*
 

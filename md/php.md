@@ -60,47 +60,7 @@ select distinct C.SERVICE_ID, C.SERVICE_NAME, C.BIZ_DOMAIN, C.SEQU
    delete TB_UC_ROLE_RIGHT where role_id='1000' and uc_rsc_type='SUB_SERVICE' 
    insert into TB_UC_ROLE_RIGHT(ROLE_RIGHT_ID,ROLE_ID,UC_RSC_TYPE,UC_RSC_ID,RIGHT) 		values(SEQ_UA_TO_CFG.nextval,'1000','SUB_SERVICE',1723201,'EDIT') 
 ```
-## ****
-
-```
-
-```
-# ****
-
-```
-
-```
-# ****
-
-```
-
-```
-# ****
-
-```
-
-```
-# ****
-
-```
-
-```
-# ****
-
-```
-
-```
-# ****
-
-```
-
-```
-# ****
-
-```
-
-```
-# ****
+## 权限
 
 ```
 
