@@ -86,3 +86,23 @@ SQL> ALTER TABLE [schema.]table_name ADD CONSTRAINT constarint [PRIMARY KEY | UN
 小结：该方法可以有效解决分区表因删除分区导致的索引不可用问题。
 ```
 
+# linux 启动oracle
+
+## 1、启动lsnrctl监听
+
+```
+先登陆服务器，切换到oracle用户：su - oracle
+lsnrctl status
+lsnrctl start
+相关文件：listener.ora
+```
+
+## 2、启动数据库实例
+
+```
+以system用户身份登陆oracle：	sqlplus /nolog
+SQL> conn as sysdba
+SQL> startup
+SQL> shutdown
+```
+

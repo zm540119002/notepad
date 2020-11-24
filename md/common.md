@@ -138,7 +138,8 @@ web目录：	 cd /www/wwwroot/front/
 	强制停止： pkill -9 nginx
 --------------------------------------------------------------redis
 #启动
-	/usr/local/redis/bin/redis-server redis.conf
+	cd /usr/local/redis/bin/
+	/usr/local/bin/redis-server redis.conf
 --------------------------------------------------------------mongoDB
 #启动
 	/usr/local/mongodb/bin/mongod --config /usr/local/mongodb/bin/mongodb.conf
@@ -153,6 +154,8 @@ username:	root
 password:	huitone2214
 username:	oracle
 password:	huitone2214
+---------------------------------------------------------------mysql
+service mysqld start
 ```
 
 ## 172.16.7.60 

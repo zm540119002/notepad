@@ -4,13 +4,41 @@
 
 ```
 
+# 常见问题
 
-# **连不上数据库常见原因**
+## **连不上数据库常见原因**
 
 ```
 ip限制
 ip冲突
 ```
+## ERR_CONNECTION_TIMED_OUT
+
+```
+关闭防火墙： 
+	service iptables stop 
+启动oracle： 
+    su - oracle
+    sqlplus /nolog
+    conn /as sysdba
+    startup | shutdown
+启动oracle监听：
+    su - oracle
+    lsnrctl status
+    lsnrctl start|stop
+vim /etc/hosts
+```
+
+## 访问慢
+
+```
+vim /etc/resolv.conf
+注释掉dns配置
+
+```
+
+
+
 # **安装**
 
 ```

@@ -295,8 +295,7 @@ systemctl status firewalld
 
 出现 Active: inactive (dead)灰色表示停止，看单词也行。
 2、查看firewall的状态
-
-firewall-cmd --state
+	firewall-cmd --state
 3、开启、重启、关闭、firewalld.service服务
 
 # 开启
