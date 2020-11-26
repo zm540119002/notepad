@@ -102,11 +102,11 @@ echo $ORACLE_SID
 netca
 delete LISTENER
 add LISTENER
- 
+
+su - oracle
 sqlplus  / as sysdba
-startup
-lsnrctl reload
 lsnrctl status
+lsnrctl startup
 
 动态注册，数据库必须起来
 ===============================================

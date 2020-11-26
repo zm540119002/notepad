@@ -1,15 +1,3 @@
-# **常用**
-
-## 文件
-
-### 清空文件内容命令
-
-```
-1. > test.log
-2. cat /dev/null  test.log
-3. echo "" >test.log
-```
-
 
 
 ```
@@ -48,66 +36,9 @@ yum list all mysql*
 
 # 网络
 
-## 基本命令
+## **概念解析**
 
-```
-开机启动： chkconfig NetworkManager off|on
-开机启动： chkconfig network on|off
-网络管理服务： service NetworkManager restart|stop|start
-网络服务： service network restart|stop|start|status|reload
-```
-
-```
-ifconfig
-ip
-netstat
-hostname
-ping
-traceroute
-iproute
-```
-
-### ifconfig
-
-```
-up（开启）和down（关闭）某个网络接口（网卡）
-	示例：	ifconfig eth0 down|up
-ifdown （网卡名）
-	示例： ifdown eth0
-ifup （网卡名）
-	示例： ifup eth0
-设置网络接口（网卡），例如我们将eth0的IP设置成192.168.1.11，子网衍码设置成255.255.255.0如下：
-	示例：	ifconfig eth0 inet 192.168.1.11 netmask 255.255.255.0
-	
-注意ifdown命令不能再xshell终端中单独用，不然会中断你的连接，如果是跑着业务的服务器就只能让人到机房去启动网卡了。
-```
-
-### ip
-
-```
-ip命令常用参数
-	Ip  [选项]  操作对象{link|addr|route...}
-    # ip link show                           # 显示网络接口信息
-    # ip link set eth0 upi                   # 开启网卡
-    # ip link set eth0 down                  # 关闭网卡
-    # ip link set eth0 promisc on            # 开启网卡的混合模式
-    # ip link set eth0 promisc offi          # 关闭网卡的混个模式
-    # ip link set eth0 txqueuelen 1200       # 设置网卡队列长度
-    # ip link set eth0 mtu 1400              # 设置网卡最大传输单元
-    # ip addr show                           # 显示网卡IP信息
-    # ip addr add 192.168.0.1/24 dev eth0    # 设置eth0网卡IP地址192.168.0.1
-    # ip addr del 192.168.0.1/24 dev eth0    # 删除eth0网卡IP地址
-
-    # ip route list                                            # 查看路由信息
-    # ip route add 192.168.4.0/24  via  192.168.0.254 dev eth0 # 设置192.168.4.0网段的网关为192.168.0.254,数据走eth0接口
-    # ip route add default via  192.168.0.254  dev eth0        # 设置默认网关为192.168.0.254
-    # ip route del 192.168.4.0/24                              # 删除192.168.4.0网段的网关
-    # ip route del default                                     # 删除默认路由
-```
-
-
-
-## 基本设置
+### 配置文件
 
 ```
 1．网络的基本设置
@@ -168,7 +99,20 @@ ip命令常用参数
 
 
 
-## IPv4
+### 虚拟机中三种连接模式
+
+```
+1.Bridge模式（桥接模式）
+    这种模式是在新建虚拟机的时候默认选择的，是将虚拟主机的虚拟网卡桥接到一个Host主机的物理网卡上面，实际上是将Host主机的物理网卡设置为混杂模式，从而达到侦听多个IP的能力。在这种模式下，虚拟主机的虚拟网卡直接与Host主机的物理网卡所在的网络相连，可以理解为虚拟机和Host主机处于对等的地位，在网络关系上是平等的，没有谁主谁次、谁前谁后之分。
+
+2.NAT模式
+    这种模式下Host主机的“网络连接”中会出现了一个虚拟的网卡VMnet8（默认情况下）。如果你做过2000/2003的NAT服务器的实验就会理解：Host主机上的VMnet8虚拟网卡就相当于连接到内网的网卡，Host主机上的物理网卡就相当于连接到外网的网卡，而虚拟机本身则相当于运行在内网上的计算机，虚拟机内的虚拟网卡则独立于Virtual Ethernet Switch（VMnet8）。在这种方式下，VMware自带的DHCP服务会默认地加载到Virtual Ethernet Switch（VMnet8）上，这样虚拟机就可以使用DHCP服务。
+
+3.Host-Only模式
+   这种模式是一种封闭的方式，适合在一个独立的环境中进行各种网络实验。这种方式下Host主机的“网络连接”中出现了一个虚拟的网卡VMnet1（默认情况下）。和NAT唯一的不同的是：此种方式下，没有地址转换服务。因此这种情况下，虚拟机只能访问到主机，这也是Host-Only的名字的意义。
+```
+
+### IPv4
 
 ```
 Internet上的每台主机(Host)都有一个唯一的IP地址。IP协议就是使用这个地址在主机之间传递信息，这是Internet 能够运行的基础。IP地址的长度为32位(共有2^32个IP地址)，分为4段，每段8位，用十进制数字表示，每段数字范围为0～255，段与段之间用句点隔开。例如159.226.1.1。
@@ -177,36 +121,34 @@ IP地址 =  网络标识号码 + 主机标识号码。
 IP地址分为A、B、C、D、E 5类，它们适用的类型分别为：大型网络；中型网络；小型网络；多目地址；备用。常用的是B和C两类。
 
 特殊的网址
-1.  “lll0”开始的地址都叫多点广播地址。因此，任何第一个字节大于223小于240的IP地址(范围224.0.0.1-239.255.255.254)是多点广播地址；
-2.  每一个字节都为0的地址（“0.0.0.0”）对应于当前主机；
-3.  IP地址中的每一个字节都为1的IP地址（“255．255．255．255”）是当前子网的广播地址；
-4.  IP地址中凡是以“llll0”开头的E类IP地址都保留用于将来和实验使用。
-5.  IP地址中不能以十进制“127”作为开头，该类地址中数字127．0．0．1到127．255．255．255用于回路测试。
-     如：127.0.0.1可以代表本机IP地址，用“http://127.0.0.1”就可以测试本机中配置的Web服务器。
-6.  网络ID的第一个6位组也不能全置为“0”，全“0”表示本地网络。
-```
+    1.  “lll0”开始的地址都叫多点广播地址。因此，任何第一个字节大于223小于240的IP地址(范围224.0.0.1-239.255.255.254)是多点广播地址；
+    2.  每一个字节都为0的地址（“0.0.0.0”）对应于当前主机；
+    3.  IP地址中的每一个字节都为1的IP地址（“255．255．255．255”）是当前子网的广播地址；
+    4.  IP地址中凡是以“llll0”开头的E类IP地址都保留用于将来和实验使用。
+    5.  IP地址中不能以十进制“127”作为开头，该类地址中数字127．0．0．1到127．255．255．255用于回路测试。
+         如：127.0.0.1可以代表本机IP地址，用“http://127.0.0.1”就可以测试本机中配置的Web服务器。
+    6.  网络ID的第一个6位组也不能全置为“0”，全“0”表示本地网络。
 
-```
 公有地址
-公有地址（Public address）由Inter NIC（Internet Network Information Center因特网信息中心）负责。
-这些IP地址分配给注册并向Inter NIC提出申请的组织机构。通过它直接访问因特网。
-私有地址
-私有地址（Private address）属于非注册地址，专门为组织机构内部使用。
-以下列出留用的内部私有地址
-A类 10.0.0.0--10.255.255.255
-B类 172.16.0.0--172.31.255.255
-C类 192.168.0.0--192.168.255.255
+    公有地址（Public address）由Inter NIC（Internet Network Information Center因特网信息中心）负责。
+    这些IP地址分配给注册并向Inter NIC提出申请的组织机构。通过它直接访问因特网。
+    私有地址
+    私有地址（Private address）属于非注册地址，专门为组织机构内部使用。
+    以下列出留用的内部私有地址
+    A类 10.0.0.0--10.255.255.255
+    B类 172.16.0.0--172.31.255.255
+    C类 192.168.0.0--192.168.255.255
 
 局域网中的IP
-在一个局域网中，有两个IP地址比较特殊，一个是网络号，一个是广播地址。
-网络号是用于三层寻址的地址，它代表了整个网络本身；另一个是广播地址，它代表了网络全部的主机。
-网络号是网段中的第一个地址，广播地址是网段中的最后一个地址，这两个地址是不能配置在计算机主机上的。
-例如在192.168.0.0，255.255.255.0这样的网段中，网络号是192.168.0.0，广播地址是192.168.0.255。因此，在一个局域网中，能配置在计算机中的地址比网段内的地址要少两个（网络号、广播地址），这些地址称之为主机地址。在上面的例子中，主机地址就只有192.168.0.1至192.168.0.254可以配置在计算机上了。
+    在一个局域网中，有两个IP地址比较特殊，一个是网络号，一个是广播地址。
+    网络号是用于三层寻址的地址，它代表了整个网络本身；另一个是广播地址，它代表了网络全部的主机。
+    网络号是网段中的第一个地址，广播地址是网段中的最后一个地址，这两个地址是不能配置在计算机主机上的。
+    例如在192.168.0.0，255.255.255.0这样的网段中，网络号是192.168.0.0，广播地址是192.168.0.255。因此，在一个局域网中，能配置在计算机中的地址比网段内的地址要少两个（网络号、广播地址），这些地址称之为主机地址。在上面的例子中，主机地址就只有192.168.0.1至192.168.0.254可以配置在计算机上了。
 ```
 
-```
-Netmask
+### Netmask
 
+```
 用来指明一个IP地址的哪些位标识的是主机所在的子网以及哪些位标识的是主机的位掩码。子网掩码不能单独存在，它必须结合IP地址一起使用。子网掩码只有一个作用，就是将某个IP地址划分成网络地址和主机地址两部分。
 
 子网掩码的设定必须遵循一定的规则。
@@ -221,9 +163,9 @@ Netmask
 利用子网掩码可以把大的网络划分成子网即VLSM（可变长子网掩码），也可以把小的网络归并成大的网络即超网。
 ```
 
-```
-Gateway
+### Gateway
 
+```
 网关（Gateway）就是一个网络连接到另一个网络的“关口”。
 一个用于 TCP/IP 协议的配置项，是一个可直接到达的 IP路由器的 IP 地址。
 
@@ -239,15 +181,102 @@ Gateway
 那么网关到底是什么呢？网关实质上是一个网络通向其他网络的IP地址。比如有网络A和网络B，网络A的IP地址范围为“192.168.1.1~192. 168.1.254”，子网掩码为255.255.255.0；网络B的IP地址范围为“192.168.2.1~192.168.2.254”，子网掩码为255.255.255.0。在没有路由器的情况下，两个网络之间是不能进行TCP/IP通信的，即使是两个网络连接在同一台交换机（或集线器）上，TCP/IP协议也会根据子网掩码（255.255.255.0）判定两个网络中的主机处在不同的网络里。而要实现这两个网络之间的通信，则必须通过网关。如果网络A中的主机发现数据包的目的主机不在本地网络中，就把数据包转发给它自己的网关，再由网关转发给网络B的网关，网络B的网关再转发给网络B的某个主机（如附图所示）。网络B向网络A转发数据包的过程也是如此。所以说，只有设置好网关的IP地址，TCP/IP协议才能实现不同网络之间的相互通信。那么这个IP地址是哪台机器的IP地址呢？网关的IP地址是具有路由功能的设备的IP地址，具有路由功能的设备有路由器、启用了路由协议的服务器（实质上相当于一台路由器）、代理服务器（也相当于一台路由器）。
 ```
 
-## Telnet
+### ARP
 
 ```
-telnet ip port
+arp -a是   显示查看高速缓存中的所有项目。arp -d是   人工删du除一zhi个静态项目。
+
+ARP缓存是个用来储存IP地址和MAC地址的缓冲区，其本质就是一个IP地址-->MAC地址的对应表，表中每一个条目分别记录了网络上其他主机的IP地址和对应的MAC地址。每一个以太网或令牌环网络适配器都有自己单独的表。
+
+当地址解析协议被询问一个已知IP地址节点的MAC地址时，先在ARP缓存中查看，若存在，就直接返回与之对应的MAC地址，若不存在，才发送ARP请求向局域网查询。
+
+ARP（地址解析协议）地址解析协议，即ARP（Address Resolution Protocol），是根据IP地址获取物理地址的一个TCP/IP协议。
+
+主机发送信息时将包含目标IP地址的ARP请求广播到网络上的所有主机，并接收返回消息，以此确定目标的物理地址；收到返回消息后将该IP地址和物理地址存入本机ARP缓存中并保留一定时间，下次请求时直接查询ARP缓存以节约资源。
+
+地址解析协议是建立在网络中各个主机互相信任的基础上的，网络上的主机可以自主发送ARP应答消息，其他主机收到应答报文时不会检测该报文的真实性就会将其记入本机ARP缓存；
+
+由此攻击者就可以向某一主机发送伪ARP应答报文，使其发送的信息无法到达预期的主机或到达错误的主机，这就构成了一个ARP欺骗。
+
+ARP命令可用于查询本机ARP缓存中IP地址和MAC地址的对应关系、添加或删除静态对应关系等。相关协议有RARP、代理ARP。NDP用于在IPv6中代替地址解析协议。
+```
+
+### DNS
+
+```
+系统会首先自动从Hosts文件中寻找对应的IP地址：
+	vim /etc/hosts
+	10.10.10.10 www.a.com
+域名如果在hosts中找不到对应的IP，会访问此文件寻找域名解析服务器。
+	vim /etc/resolv.conf
+	nameserver x.x.x.x  #该选项用来制定DNS服务器的，可以配置多个nameserver指定多个DNS。
+配置网卡设备文件添加DNS域名解析服务器地址
+    nameserver=114.114.114.114   # 是国内移动、电信和联通通用的DNS
+    nameserver=8.8.8.8      # GOOGLE公司提供的DNS,适合国外以及访问国外网站的用户使用
 ```
 
 
 
-## IPv6
+## 常用命令
+
+```
+开机启动： chkconfig NetworkManager off|on
+开机启动： chkconfig network on|off
+网络管理服务： service NetworkManager restart|stop|start
+网络服务： service network restart|stop|start|status|reload
+```
+
+```
+ifconfig
+ip
+netstat
+hostname
+ping
+traceroute
+iproute
+```
+
+### ifconfig
+
+```
+up（开启）和down（关闭）某个网络接口（网卡）
+	示例：	ifconfig eth0 down|up
+ifdown （网卡名）
+	示例： ifdown eth0
+ifup （网卡名）
+	示例： ifup eth0
+设置网络接口（网卡），例如我们将eth0的IP设置成192.168.1.11，子网衍码设置成255.255.255.0如下：
+	示例：	ifconfig eth0 inet 192.168.1.11 netmask 255.255.255.0
+	
+注意ifdown命令不能再xshell终端中单独用，不然会中断你的连接，如果是跑着业务的服务器就只能让人到机房去启动网卡了。
+```
+
+### ip
+
+```
+ip命令常用参数
+	Ip  [选项]  操作对象{link|addr|route...}
+    # ip link show                           # 显示网络接口信息
+    # ip link set eth0 upi                   # 开启网卡
+    # ip link set eth0 down                  # 关闭网卡
+    # ip link set eth0 promisc on            # 开启网卡的混合模式
+    # ip link set eth0 promisc offi          # 关闭网卡的混个模式
+    # ip link set eth0 txqueuelen 1200       # 设置网卡队列长度
+    # ip link set eth0 mtu 1400              # 设置网卡最大传输单元
+    # ip addr show                           # 显示网卡IP信息
+    # ip addr add 192.168.0.1/24 dev eth0    # 设置eth0网卡IP地址192.168.0.1
+    # ip addr del 192.168.0.1/24 dev eth0    # 删除eth0网卡IP地址
+
+    # ip route list                                            # 查看路由信息
+    # ip route add 192.168.4.0/24  via  192.168.0.254 dev eth0 # 设置192.168.4.0网段的网关为192.168.0.254,数据走eth0接口
+    # ip route add default via  192.168.0.254  dev eth0        # 设置默认网关为192.168.0.254
+    # ip route del 192.168.4.0/24                              # 删除192.168.4.0网段的网关
+    # ip route del default                                     # 删除默认路由
+```
+
+
+
+
 
 ## **防火墙**
 
@@ -277,8 +306,6 @@ iptables通过控制端口来控制服务，而firewalld则是通过控制协议
 	vim /etc/sysconfig/iptables
 在文件中间添加iptables规则：
 	-A INPUT -p tcp -m state --state NEW -m tcp --dport 27017 -j ACCEPT
-重启防火墙：
-	service iptables restart
 关闭iptables规则：
 	iptables -F && iptables -t nat -F
 /etc/sysconfig/iptables 保存规则的文件；
@@ -288,52 +315,49 @@ iptables通过控制端口来控制服务，而firewalld则是通过控制协议
 
 ```
 1、查看firewall服务状态
-
-systemctl status firewalld
-
-出现Active: active (running)切高亮显示则表示是启动状态。
-
-出现 Active: inactive (dead)灰色表示停止，看单词也行。
+	systemctl status firewalld
+    出现Active: active (running)切高亮显示则表示是启动状态。
+    出现 Active: inactive (dead)灰色表示停止，看单词也行。
+    
 2、查看firewall的状态
 	firewall-cmd --state
+	
 3、开启、重启、关闭、firewalld.service服务
-
 # 开启
-service firewalld start
+	service firewalld start
 # 重启
-service firewalld restart
+	service firewalld restart
 # 关闭
-service firewalld stop
+	service firewalld stop
+	
 4、查看防火墙规则
-
-firewall-cmd --list-all
+	firewall-cmd --list-all
+	
 5、查询、开放、关闭端口
-
-# 查询端口是否开放
-firewall-cmd --query-port=8080/tcp
-# 开放80端口
-firewall-cmd --permanent --add-port=80/tcp
-# 移除端口
-firewall-cmd --permanent --remove-port=8080/tcp
-#重启防火墙(修改配置后要重启防火墙)
-firewall-cmd --reload
+    # 查询端口是否开放
+        firewall-cmd --query-port=8080/tcp
+    # 开放80端口
+        firewall-cmd --permanent --add-port=80/tcp
+    # 移除端口
+        firewall-cmd --permanent --remove-port=8080/tcp
+    #重启防火墙(修改配置后要重启防火墙)
+        firewall-cmd --reload
 
 # 参数解释
-1、firwall-cmd：是Linux提供的操作firewall的一个工具；
-2、--permanent：表示设置为持久；
-3、--add-port：标识添加的端口；
+    1、firwall-cmd：是Linux提供的操作firewall的一个工具；
+    2、--permanent：表示设置为持久；
+    3、--add-port：标识添加的端口；
 ```
 
-## ping
+## 常见问题
 
 ### 只能单向ping通的原因
 
 ```
 1.主机A的防火墙没有关闭，解决方法：执行service iptables stop
 2.主机A上有两张或以上的网卡跟主机B在同一网段内，当从这台主机Ping其他的机器时，会存在这样的问题：
-（1）主机不知道将数据包发到哪个网络接口，因为有两个网络接口都连接在同一网段；
-（2）主机不知道用哪个地址作为数据包的源地址。因此，从这台主机去Ping其他机器，IP层协议会无法处理，超时后，Ping
-就会给出一个“超时无应答”的错误信息提示。
+	（1）主机不知道将数据包发到哪个网络接口，因为有两个网络接口都连接在同一网段；
+    （2）主机不知道用哪个地址作为数据包的源地址。因此，从这台主机去Ping其他机器，IP层协议会无法处理，超时后，Ping就会给出一个“超时无应答”的错误信息提示。
 ```
 
 ```
@@ -344,49 +368,15 @@ firewall-cmd --reload
     ping DNS服务器地址
 ```
 
-## ARP
-
-```
-arp -a是   显示查看高速缓bai存中的所有项目。arp -d是   人工删du除一zhi个静态项目。
-
-ARP缓存是个用来储存IP地址dao和MAC地址的缓冲区，其本质就是一个IP地址-->MAC地址的对应表，表中每一个条目分别记录了网络上其他主机的IP地址和对应的MAC地址。每一个以太网或令牌环网络适配器都有自己单独的表。
-
-当地址解析协议被询问一个已知IP地址节点的MAC地址时，先在ARP缓存中查看，若存在，就直接返回与之对应的MAC地址，若不存在，才发送ARP请求向局域网查询。
-
-ARP（地址解析协议）地址解析协议，即ARP（Address Resolution Protocol），是根据IP地址获取物理地址的一个TCP/IP协议。
-
-主机发送信息时将包含目标IP地址的ARP请求广播到网络上的所有主机，并接收返回消息，以此确定目标的物理地址；收到返回消息后将该IP地址和物理地址存入本机ARP缓存中并保留一定时间，下次请求时直接查询ARP缓存以节约资源。
-
-地址解析协议是建立在网络中各个主机互相信任的基础上的，网络上的主机可以自主发送ARP应答消息，其他主机收到应答报文时不会检测该报文的真实性就会将其记入本机ARP缓存；
-
-由此攻击者就可以向某一主机发送伪ARP应答报文，使其发送的信息无法到达预期的主机或到达错误的主机，这就构成了一个ARP欺骗。
-
-ARP命令可用于查询本机ARP缓存中IP地址和MAC地址的对应关系、添加或删除静态对应关系等。相关协议有RARP、代理ARP。NDP用于在IPv6中代替地址解析协议。
-```
-
-## DNS
-
-```
-系统会首先自动从Hosts文件中寻找对应的IP地址：
-	vim /etc/hosts
-	10.10.10.10 www.a.com
-域名如果在hosts中找不到对应的IP，会访问此文件寻找域名解析服务器。
-	vim /etc/resolv.conf
-	nameserver x.x.x.x  #该选项用来制定DNS服务器的，可以配置多个nameserver指定多个DNS。
-配置网卡设备文件添加DNS域名解析服务器地址
-    DNS1=114.114.114.114   # 是国内移动、电信和联通通用的DNS
-    DNS2=8.8.8.8      # GOOGLE公司提供的DNS,适合国外以及访问国外网站的用户使用
-```
 
 
+## 网卡
 
-# 网卡
-
-## 配置
+### 配置
 
 ```
 安装ifconfig
-	yum install net-tools
+	yum install net-tools	
 	
 查看网卡：ifconfig -a
 
@@ -436,22 +426,9 @@ ARP命令可用于查询本机ARP缓存中IP地址和MAC地址的对应关系、
 
 
 
-## 虚拟机中三种连接模式
+# 常用工具
 
-```
-1.Bridge模式（桥接模式）
-    这种模式是在新建虚拟机的时候默认选择的，是将虚拟主机的虚拟网卡桥接到一个Host主机的物理网卡上面，实际上是将Host主机的物理网卡设置为混杂模式，从而达到侦听多个IP的能力。在这种模式下，虚拟主机的虚拟网卡直接与Host主机的物理网卡所在的网络相连，可以理解为虚拟机和Host主机处于对等的地位，在网络关系上是平等的，没有谁主谁次、谁前谁后之分。
-
-2.NAT模式
-    这种模式下Host主机的“网络连接”中会出现了一个虚拟的网卡VMnet8（默认情况下）。如果你做过2000/2003的NAT服务器的实验就会理解：Host主机上的VMnet8虚拟网卡就相当于连接到内网的网卡，Host主机上的物理网卡就相当于连接到外网的网卡，而虚拟机本身则相当于运行在内网上的计算机，虚拟机内的虚拟网卡则独立于Virtual Ethernet Switch（VMnet8）。在这种方式下，VMware自带的DHCP服务会默认地加载到Virtual Ethernet Switch（VMnet8）上，这样虚拟机就可以使用DHCP服务。
-
-3.Host-Only模式
-   这种模式是一种封闭的方式，适合在一个独立的环境中进行各种网络实验。这种方式下Host主机的“网络连接”中出现了一个虚拟的网卡VMnet1（默认情况下）。和NAT唯一的不同的是：此种方式下，没有地址转换服务。因此这种情况下，虚拟机只能访问到主机，这也是Host-Only的名字的意义。
-```
-
-
-
-# **ssh**
+## **ssh**
 
 ```
 ssh -p port user@host
@@ -481,7 +458,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCfn+AXJHXAv7y3VFOpfGCWX2Wlst5MJRq9eQ8bfuHi
 方法二：
 ssh-copy-id -i ~/.ssh/id_rsa.pub root@172.16.6.35
 ```
-# ftp & sftp
+## ftp & sftp
 
 ```
 1、检查是否安装 了vsftpd，如果未安装 则安装vsftpd。
@@ -573,4 +550,11 @@ scp -r root@172.16.7.57:/root/sbin/INS_convert.sh .
 scp -r root@172.16.7.56:/usr/local/apache2.4/htdocs/inc_chk/new_index/svg/* .
 ```
 
+## 清空文件内容命令
+
+```
+1. > test.log
+2. cat /dev/null  test.log
+3. echo "" >test.log
+```
 

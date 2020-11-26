@@ -1,3 +1,13 @@
+
+
+
+
+
+
+
+
+
+
 # git 命令行拉去远程的非master分支报错
 
 当使用git进行操作：
@@ -63,3 +73,6 @@ git branch -D dm8
 git push origin --delete dm8
 ```
 
+# 工作流
+
+参考：	https://blog.csdn.net/qq_35865125/article/details/80049655
