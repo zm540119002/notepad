@@ -432,11 +432,85 @@ ls -lrt /proc/14720
 ps -ef|grep 14720
 ```
 
+## 查看Linux系统
+
+```
+cat /proc/version
+uname -a
+uname -r
+lsb_release -a（适用于所有的Linux发行版本），有些系统中默认并没有安装lsb_release，需要进行安装，以CentOS为例：
+    首先查找lsb_release安装包：	yum provides lsb_release
+    安装：	yum install -y redhat-lsb-core
+    
+CentOS版本信息：
+	cat /proc/version
+	uname -a
+	cat /etc/issue
+	cat /etc/redhat-release
+	cat  /etc/*release*
+
+查看系统是64位还是32位:
+	getconf LONG_BIT
+查看cpu相关信息，包括型号、主频、内核信息等
+	cat /proc/cpuinfo
+查看端口：
+	netstat   -anp   |   grep  portno
+	示例：
+	查看监听端口：	netstat -anp | grep LISTEN
+	查看php-fpm是否启动了：	netstat -nlp|grep php-fpm
+查看用户：		cat /etc/passwd
+查看用户组：  	cat /etc/group
+查看用户所属组：groups user1
+查看服务：
+	chkconfig --list       			# 列出所有系统服务
+	chkconfig --list | grep on    	# 列出所有启动的系统服务
+查看运行用户信息：
+	ps -ef|grep http
+查看进程号：	pgrep php-fpm
+追踪进程号：	strace -f -e connect  -p 你的进程编号
+```
+
+## service、systemctl 和 chkconfig
+
+```
+1.service命令其实是去/etc/init.d目录下，去执行相关程序
+	# 启动、停止、重启服务等
+		service redis start|stop|restart|reload(重新加载配置文件,不终止服务)|status
+	# 直接启动redis脚本
+		/etc/init.d/redis start
+	# 开机自启动
+		update-rc.d redis defaults
+
+systemd是Linux系统最新的初始化系统(init),作用是提高系统的启动速度，尽可能启动较少的进程，尽可能更多进程并发启动。
+systemd对应的进程管理命令是systemctl
+2. systemctl命令兼容了service，即systemctl也会去/etc/init.d目录下，查看，执行相关程序
+	# 启动、停止、重启服务等
+		systemctl start|stop|restart|reload(重新加载配置文件,不终止服务)|status redis
+	# 开机自启动 
+		systemctl enable|disable redis
+	# 检查某个单元是否启动
+		systemctl is-enabled httpd.service 
+	# 查询服务是否激活，和配置是否开机启动
+		systemctl is-active httpd
+	
+区别：
+	systemctl命令：是一个systemd工具，主要负责控制systemd系统和服务管理器。
+    service命令：可以启动、停止、重新启动和关闭系统服务，还可以显示所有系统服务的当前状态。
+    chkconfig命令：是管理系统服务(service)的命令行工具。所谓系统服务(service)，就是随系统启动而启动，随系统关闭而关闭的程序。
+    systemctl命令是系统服务管理器指令，它实际上将 service 和 chkconfig 这两个命令组合到一起。
+
+    systemctl是RHEL 7 的服务管理工具中主要的工具，它融合之前service和chkconfig的功能于一体。可以使用它永久性或只在当前会话中启用/禁用服务。
+
+    所以systemctl命令是service命令和chkconfig命令的集合和代替。
+```
+
+
+
 ## 进程
 
 ```
-查看内存占用前五的进程：	ps auxw | head -1;ps auxw|sort -rn -k4|head -5
-查看CPU占用前三的进程：		ps auxw | head -1;ps auxw|sort -rn -k3|head -3
+查看内存占用前五的进程：   ps auxw | head -1;ps auxw|sort -rn -k4|head -5
+查看CPU占用前三的进程：	 ps auxw | head -1;ps auxw|sort -rn -k3|head -3
 ```
 
 ## 内存
