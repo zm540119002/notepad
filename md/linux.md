@@ -424,6 +424,88 @@ iptables通过控制端口来控制服务，而firewalld则是通过控制协议
         IPV6_PEERROUTES=yes
 ```
 
+# 常用命令
+
+```
+netstat -anp|grep LIS
+ls -lrt /proc/14720
+ps -ef|grep 14720
+```
+
+## 进程
+
+```
+查看内存占用前五的进程：	ps auxw | head -1;ps auxw|sort -rn -k4|head -5
+查看CPU占用前三的进程：		ps auxw | head -1;ps auxw|sort -rn -k3|head -3
+```
+
+## 内存
+
+```
+free -m
+echo 3 > /proc/sys/vm/drop_caches 
+```
+
+## 环境变量
+
+```
+-------------------------------------
+1、查看某一个环境变量（PATH）
+     echo $PATH
+	 env|grep PATH
+2、查看所有的环境变量
+    env
+-------------------------------------
+1、当前shell有效，临时设置
+	# PATH=$PATH:/usr/local/php7/bin
+	使用这种方法,只对当前会话有效，也就是说每当登出或注销系统以后，PATH设置就会失效。
+2、所有用户有效
+	# vim /etc/profile
+	export PATH="$PATH:/usr/local/php7/bin"
+	使环境变量生效：
+	# source /etc/profile
+	注：＝ 等号两边不能有任何空格。这种方法最好，除非手动强制修改PATH的值,否则将不会被改变。
+3、当前用户有效
+	# vim ~/.bash_profile
+	export PATH="$PATH:/usr/local/php7/bin"
+	使环境变量生效：
+	# source ~/.bash_profile
+-------------------------------------
+ ~/.bashrc			当前用户有效
+/etc/bashrc			所有用户有效
+/etc/environment	所有用户有效
+-------------------------------------LD_LIBRARY_PATH
+env|grep LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/dm7client/bin/:/usr/local/dm7client/drivers/odbc/
+-------------------------------------PATH
+```
+
+## 磁盘
+
+```
+df -hl 查看磁盘剩余空间
+ 
+df -h 查看每个根路径的分区大小
+ 
+du -sh [目录名] 返回该目录的大小
+ 
+du -sm [文件夹] 返回该文件夹总M数
+ 
+du -h [目录名] 查看指定文件夹下的所有文件大小（包含子文件夹）
+
+查看硬盘的分区 #sudo fdisk -l
+
+查看IDE硬盘信息 #sudo hdparm -i /dev/hda
+
+查看STAT硬盘信息 #sudo hdparm -I /dev/sda 或 #sudo apt-get install blktool #sudo blktool /dev/sda id
+
+查看硬盘剩余空间 #df -h #df -H
+
+查看目录占用空间 #du -hs 目录名
+
+优盘没法卸载 #sync fuser -km /media/usbdisk
+```
+
 
 
 # 常用工具

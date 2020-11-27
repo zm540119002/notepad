@@ -32,6 +32,7 @@ vim /etc/hosts
 ## 访问慢
 
 ```
+数据库服务器
 vim /etc/resolv.conf
 注释掉dns配置
 
