@@ -504,6 +504,65 @@ systemd对应的进程管理命令是systemctl
     所以systemctl命令是service命令和chkconfig命令的集合和代替。
 ```
 
+## cpu
+
+```
+/*CPU
+查看CPU型号*/
+cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
+
+/*查看物理CPU个数*/
+cat /proc/cpuinfo | grep "physical id" | sort -u | wc -l  
+
+/*查看逻辑CPU个数*/
+cat /proc/cpuinfo | grep "processor" | wc -l  
+
+/*查看CPU内核数*/
+cat /proc/cpuinfo | grep "cpu cores" | uniq  
+
+/*查看单个物理CPU封装的逻辑CPU数量*/
+cat /proc/cpuinfo | grep "siblings" | uniq  
+
+/*计算是否开启超线程
+##逻辑CPU > 物理CPU x CPU核数 #开启超线程
+##逻辑CPU = 物理CPU x CPU核数 #没有开启超线程或不支持超线程*/
+
+/*查看是否超线程,如果cpu cores数量和siblings数量一致，则没有启用超线程，否则超线程被启用。*/
+cat /proc/cpuinfo | grep -e "cpu cores"  -e "siblings" | sort | uniq
+
+
+/*查看进程相关信息占用的内存情况，(进程号可以通过ps查看)如下所示：*/
+pmap -d 14596
+
+ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid' 
+ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid' | grep postgres |  sort -nrk5
+/*其中rsz为实际内存，上例实现按内存排序，由大到小*/
+
+/*查看IO情况*/
+iostat -x 1 10
+/*
+如果 iostat 没有，要 yum install sysstat安装这个包，第一眼看下图红色圈圈的那个如果%util接近100%,表明I/O请求太多,I/O系统已经满负荷，磁盘可能存在瓶颈,一般%util大于70%,I/O压力就比较大，读取速度有较多的wait，然后再看其他的参数，
+内容解释:
+rrqm/s:每秒进行merge的读操作数目。即delta(rmerge)/s 
+wrqm/s:每秒进行merge的写操作数目。即delta(wmerge)/s 
+r/s:每秒完成的读I/O设备次数。即delta(rio)/s 
+w/s:每秒完成的写I/0设备次数。即delta(wio)/s 
+rsec/s:每秒读扇区数。即delta(rsect)/s 
+wsec/s:每秒写扇区数。即delta(wsect)/s 
+rKB/s:每秒读K字节数。是rsec/s的一半，因为每扇区大小为512字节 
+
+wKB/s:每秒写K字节数。是wsec/s的一半 
+avgrq-sz:平均每次设备I/O操作的数据大小(扇区)。即delta(rsect+wsect)/delta(rio+wio) 
+avgqu-sz:平均I/O队列长度。即delta(aveq)/s/1000(因为aveq的单位为毫秒) 
+await:平均每次设备I/O操作的等待时间(毫秒)。即delta(ruse+wuse)/delta(rio+wio) 
+svctm:平均每次设备I/O操作的服务时间(毫秒)。即delta(use)/delta(rio+wio) 
+%util:一秒中有百分之多少的时间用于I/O操作,或者说一秒中有多少时间I/O队列是非空的
+
+*/
+/*找到对应进程*/
+ll /proc/进程号/exe
+```
+
 
 
 ## 进程
@@ -518,6 +577,32 @@ systemd对应的进程管理命令是systemctl
 ```
 free -m
 echo 3 > /proc/sys/vm/drop_caches 
+
+TOP
+/*命令经常用来监控linux的系统状况，比如cpu、内存的使用等。*/
+/*查看某个用户内存使用情况,如:postgres*/
+top -u postgres
+/*
+内容解释：
+
+　　PID：进程的ID
+　　USER：进程所有者
+　　PR：进程的优先级别，越小越优先被执行
+　　NInice：值
+　　VIRT：进程占用的虚拟内存
+　　RES：进程占用的物理内存
+　　SHR：进程使用的共享内存
+　　S：进程的状态。S表示休眠，R表示正在运行，Z表示僵死状态，N表示该进程优先值为负数
+　　%CPU：进程占用CPU的使用率
+　　%MEM：进程使用的物理内存和总内存的百分比
+　　TIME+：该进程启动后占用的总的CPU时间，即占用CPU使用时间的累加值。
+　　COMMAND：进程启动命令名称
+
+常用的命令：
+
+　　P：按%CPU使用率排行
+　　T：按MITE+排行
+　　M：按%MEM排行
 ```
 
 ## 环境变量
@@ -557,9 +642,10 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/dm7client/bin/:/usr/local/dm7
 ## 磁盘
 
 ```
+/*看硬盘占用率*/
+df -h
+
 df -hl 查看磁盘剩余空间
- 
-df -h 查看每个根路径的分区大小
  
 du -sh [目录名] 返回该目录的大小
  

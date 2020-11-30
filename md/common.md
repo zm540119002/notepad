@@ -179,6 +179,15 @@ ps -ef|grep nginx
 启动： /usr/local/nginx/sbin]$ /usr/local/nginx/sbin/nginx -c conf/nginx_2c.conf
 重启： /usr/local/nginx/sbin/nginx -s reload  
 停止： /usr/local/nginx/sbin/nginx -s stop 
+---------------------------------------------------------------postgresql
+vim /usr/local/pgsql/data/postgresql.conf
+    shared_buffers = 128MB | 4GB
+    max_wal_size = 1GB | 4GB
+    
+vim /usr/local/pgsql/data/pg_hba.conf
+启动：
+	/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l /usr/local/pgsql/log/pgsql.log start
+
 ```
 
 ## 172.16.7.74
