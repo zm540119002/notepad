@@ -68,3 +68,11 @@ git push origin --delete dm8
 # 工作流
 
 参考：	https://blog.csdn.net/qq_35865125/article/details/80049655
+
+# 常用命令
+
+```
+
+ git checkout --patch master audit_config
+```
+

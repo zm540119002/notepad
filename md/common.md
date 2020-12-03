@@ -182,14 +182,15 @@ ps -ef|grep nginx
 ---------------------------------------------------------------postgresql
 vim /usr/local/pgsql/data/postgresql.conf
     shared_buffers = 128MB | 4GB
-    max_wal_size = 1GB | 4GB
-    huge_pages = try | on
+    max_wal_size = 1GB | 8GB
     work_mem = 4MB | 256MB
     maintenance_work_mem = 64MB | 2GB
+    autovacuum_work_mem = -1 | 2GB
+    effective_cache_size = 4GB
     
 vim /usr/local/pgsql/data/pg_hba.conf
 启动：
-	/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l /usr/local/pgsql/log/pgsql.log start | restart | status
+	/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l /usr/local/pgsql/log/pgsql.log start | stop | status
 登陆：
 	psql -h 127.0.0.1 -p 5432 -U postgre -d dev
 密码：	

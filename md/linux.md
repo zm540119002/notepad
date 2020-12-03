@@ -680,6 +680,17 @@ du -h [目录名] 查看指定文件夹下的所有文件大小（包含子文�
 
 ```
 ssh -p port user@host
+sevice ssh start|stop|restart|status
+
+ssh -V
+openssl version
+
+安装SSH：yum install ssh
+启动SSH： service sshd start
+设置开机运行： chkconfig sshd on
+
+SSH 服务配置文件位置
+/etc/ssh/sshd_config
 ```
 
 
