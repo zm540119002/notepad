@@ -86,6 +86,22 @@ SQL> ALTER TABLE [schema.]table_name ADD CONSTRAINT constarint [PRIMARY KEY | UN
 小结：该方法可以有效解决分区表因删除分区导致的索引不可用问题。
 ```
 
+## ora-01810
+
+```
+select to_date('2011-03-21 10:10:10','YYYY-MM-DD HH24:MM:SS') from dual; 
+改成：
+select to_date('2011-03-21 10:10:10','YYYY-MM-DD HH24:MI:SS') from dual; 
+```
+
+## ora-01843
+
+```
+
+```
+
+
+
 # linux 启动oracle
 
 ## 1、启动lsnrctl监听

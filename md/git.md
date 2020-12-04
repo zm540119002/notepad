@@ -44,7 +44,7 @@ git checkout -b local-name origin/remote-name
 	git checout -b dm8
 ```
 
-## 从其他分支checkout文件到当前分支
+## checkout
 
 ```
 示例：当前分支：master
@@ -58,11 +58,13 @@ git checkout -b local-name origin/remote-name
     git checkout -b newbranch origin/newbranch //从远程拉取代码创建新的分支，并切换到新的分支
 ```
 
-## 删除本地并删除相应远程分支示例
+## 删除分支
 
 ```
-git branch -D dm8
-git push origin --delete dm8
+删除本地分支：
+	git branch -D dm8
+删除远程分支：
+	git push origin --delete hz
 ```
 
 # 工作流
@@ -72,7 +74,6 @@ git push origin --delete dm8
 # 常用命令
 
 ```
-
- git checkout --patch master audit_config
+git checkout --patch master audit_config
 ```
 
