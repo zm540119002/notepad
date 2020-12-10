@@ -171,13 +171,14 @@ password:	huitone2214
 ## 172.16.7.71
 
 ```
+---------------------------------------------------------------
 username:	root
 password:	htgx@123456
 ---------------------------------------------------------------nginx
 vi /usr/local/nginx/conf/nginx_2c.conf
 ps -ef|grep nginx
-启动： /usr/local/nginx/sbin]$ /usr/local/nginx/sbin/nginx -c conf/nginx_2c.conf
-重启： /usr/local/nginx/sbin/nginx -s reload  
+启动： /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx_2c.conf
+重启： /usr/local/nginx/sbin/nginx -s reload
 停止： /usr/local/nginx/sbin/nginx -s stop 
 ---------------------------------------------------------------postgresql
 vim /usr/local/pgsql/data/postgresql.conf
@@ -195,6 +196,7 @@ vim /usr/local/pgsql/data/pg_hba.conf
 	psql -h 127.0.0.1 -p 5432 -U postgre -d dev
 密码：	
 	huitone2214
+---------------------------------------------------------------
 ```
 
 ## 172.16.7.74
@@ -208,6 +210,7 @@ vim /usr/local/apache2/conf/extra/httpd-vhosts.conf
 vim /usr/local/php/lib/php.ini
 extension_dir = "/usr/local/php/include/php/ext"
 cd /usr/local/php/include/php/ext
+---------------------------------------------------------------
 ```
 
 ## 172.16.8.3  
@@ -261,3 +264,47 @@ export LD_LIBRARY_PATH=/data/dmdbms/bin
 6 增加实时数据采集，微批处理
 7 运维优化（一键部署 一键启停 健康检查 绿灯测试 链路跟踪 报错日志优化）
 ```
+
+## 流程配置
+
+### 问题
+
+```
+1，数据同步新增字段
+```
+
+### sql备份
+
+```
+##################################################治理点
+select * from dev.tc_gvn_sub_service_type  where service_id = 1502437164957696
+select * from dev.tc_gvn_sub_service_type where sub_service_id = 1532847642566656
+select * from dev.tc_gvn_sub_service_type where sub_service_id = 1535082045325312
+##################################################数据标准配置
+#数据标准配置表字段从下表拿
+select * from dev.tc_gvn_stored_object where table_name like 't_stu_class'
+select * from dev.tc_gvn_stored_column where stored_object_id = 1535694487584768
+select * from dev.tc_gvn_stored_column where stored_object_id = 1535694487592960
+##################################################
+select * from tb_uc_cfg_ds where name = '源系统班级信息'
+select * from tb_uc_cfg_ds where name = '班级信息统计表'
+select * from tb_uc_cfg_ds where name like '%图书%'
+select * from tb_uc_cfg_ds where service_id = 1502437164957696
+##################################################引用数据表
+select * from tb_uc_cfg_quote_ds where sub_service_id = 1535082045325312
+select * from tb_uc_cfg_ds_column  where ds_id = 1535725379862528
+select * from tb_uc_cfg_ds_table   where ds_id = 1535725379862528
+##################################################生成新数据
+select * from tb_uc_cfg_etl_task where sub_service_id = 1532847642566656 ##and name = 'zm_new_data_1'
+select * from tb_uc_cfg_etl_column where etl_task_id = 1511546854416384
+select * from tb_uc_cfg_etl_join where etl_task_id = 1511546854416384
+select * from tb_uc_cfg_etl_filter where etl_task_id = 1511546854416384
+select * from tb_uc_task where source_id = 1511546854416384
+select * from tb_uc_task_param where task_id in (select task_id from tb_uc_task  where source_id = 1511546854416384)
+
+##################################################
+select * from dev.tc_gvn_ds_db where source_id = 1471313880965120
+##################################################
+
+```
+

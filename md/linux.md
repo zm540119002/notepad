@@ -329,12 +329,12 @@ iptables通过控制端口来控制服务，而firewalld则是通过控制协议
 	firewall-cmd --state
 	
 3、开启、重启、关闭、firewalld.service服务
-# 开启
-	service firewalld start
-# 重启
-	service firewalld restart
-# 关闭
-	service firewalld stop
+    # 开启
+        service firewalld start
+    # 重启
+        service firewalld restart
+    # 关闭
+        service firewalld stop
 	
 4、查看防火墙规则
 	firewall-cmd --list-all
@@ -460,7 +460,7 @@ CentOS版本信息：
 查看cpu相关信息，包括型号、主频、内核信息等
 	cat /proc/cpuinfo
 查看端口：
-	netstat   -anp   |   grep  portno
+	netstat -anp | grep portno
 	示例：
 	查看监听端口：	netstat -anp | grep LISTEN
 	查看php-fpm是否启动了：	netstat -nlp|grep php-fpm
@@ -515,37 +515,36 @@ systemd对应的进程管理命令是systemctl
 ```
 /*CPU
 查看CPU型号*/
-cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
+	cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
 
 /*查看物理CPU个数*/
-cat /proc/cpuinfo | grep "physical id" | sort -u | wc -l  
+	cat /proc/cpuinfo | grep "physical id" | sort -u | wc -l  
 
 /*查看逻辑CPU个数*/
-cat /proc/cpuinfo | grep "processor" | wc -l  
+	cat /proc/cpuinfo | grep "processor" | wc -l  
 
 /*查看CPU内核数*/
-cat /proc/cpuinfo | grep "cpu cores" | uniq  
+	cat /proc/cpuinfo | grep "cpu cores" | uniq  
 
 /*查看单个物理CPU封装的逻辑CPU数量*/
-cat /proc/cpuinfo | grep "siblings" | uniq  
+	cat /proc/cpuinfo | grep "siblings" | uniq  
 
 /*计算是否开启超线程
 ##逻辑CPU > 物理CPU x CPU核数 #开启超线程
 ##逻辑CPU = 物理CPU x CPU核数 #没有开启超线程或不支持超线程*/
 
 /*查看是否超线程,如果cpu cores数量和siblings数量一致，则没有启用超线程，否则超线程被启用。*/
-cat /proc/cpuinfo | grep -e "cpu cores"  -e "siblings" | sort | uniq
+	cat /proc/cpuinfo | grep -e "cpu cores"  -e "siblings" | sort | uniq
 
 
 /*查看进程相关信息占用的内存情况，(进程号可以通过ps查看)如下所示：*/
-pmap -d 14596
-
-ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid' 
-ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid' | grep postgres |  sort -nrk5
+    pmap -d 14596
+    ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid' 
+    ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid' | grep postgres |  sort -nrk5
 /*其中rsz为实际内存，上例实现按内存排序，由大到小*/
 
 /*查看IO情况*/
-iostat -x 1 10
+	iostat -x 1 10
 /*
 如果 iostat 没有，要 yum install sysstat安装这个包，第一眼看下图红色圈圈的那个如果%util接近100%,表明I/O请求太多,I/O系统已经满负荷，磁盘可能存在瓶颈,一般%util大于70%,I/O压力就比较大，读取速度有较多的wait，然后再看其他的参数，
 内容解释:
@@ -587,7 +586,7 @@ echo 3 > /proc/sys/vm/drop_caches
 TOP
 /*命令经常用来监控linux的系统状况，比如cpu、内存的使用等。*/
 /*查看某个用户内存使用情况,如:postgres*/
-top -u postgres
+	top -u postgres
 /*
 内容解释：
 
@@ -670,6 +669,76 @@ du -h [目录名] 查看指定文件夹下的所有文件大小（包含子文�
 查看目录占用空间 #du -hs 目录名
 
 优盘没法卸载 #sync fuser -km /media/usbdisk
+```
+
+## date
+
+```
+date : 查看当前日期
+date -R ： 查看当前时区
+
+查看硬件时间（BIOS的）：
+    hwclock [-rw]
+    -r:查看现有BIOS时间，默认为－r参数
+    -w:将现在的linux系统时间写入BIOS中
+    注：当我们进行完 Linux 时间的校时后，还需要以 hwclock -w 来更新 BIOS 的时间，因为每次开机的时候，系统会重新由 BIOS 将时间读出来，所以BIOS 才是重要的时间依据。
+
+修改Linux系统当前时间。
+
+1.不修改年的情况：
+命令： date 月日时分.秒    --注意每个单位都是两位数，例如 date 05241636.00
+
+2.修改年月日：
+命令： date -s "年/月/日"  或  date -s "年-月-日"   --例如 date -s "2018-05-24"
+
+3.修改时分秒：
+命令： date -s  时:分:秒   --例如： date -s "16:36:00"
+
+4.修改全部：
+命令： date -s "年-月-日 时:分:秒"    --例如：date -s "2020-12-10 14:57:00"
+
+修改之后如果不能正常生效的话就在修改完时间之后再输入：clock -w  就把当前时间修改到系统配置当中，不会再跳回之间的时间了。
+
+同步网络时间
+yum install -y ntpdate
+ntpdate -u 210.72.145.44 #210.72.145.44：中国国家授时中心的官方服务器。
+ntpdate -u ntp.api.bz
+```
+
+## **I/O重定向**
+
+```
+标准输入 (stdin): 代码为0，使用<或<<
+标准输出 (stdout): 代码为1，使用>或>>
+标准错误输出(stderr): 代码为2，使用2>或2>>
+0,1,2对应的物理设备一般是 ： 键盘、显示器、显示器
+
+>: 覆盖输出 
+>>：追加输出
+
+# set -C  禁止对已经存在文件使用覆盖重定向；强制覆盖输出，则使用 >|
+# set +C  关闭上述功能
+
+2>: 重定向错误输出
+2>>: 追加方式
+
+将正确的与错误的分别存入不同的文件中
+# ls / /varr > /tmp/var3.out 2> /tmp/err.out
+# ls /varr > /tmp/var4.out 2> /tmp/var4.out
+        
+/dev/null垃圾桶黑洞装置
+&>: 重定向标准输出或错误输出至同一个文件(或者2>&1)
+
+如果希望将 stdout 和 stderr 合并后重定向到 file，可以这样写：
+$ command > file 2>&1
+或者
+$ command >> file 2>&1
+```
+
+## **管道**
+
+```
+管道是将前一个命令的输出作为后一个命令的输入
 ```
 
 
@@ -809,11 +878,28 @@ scp -r root@172.16.7.57:/root/sbin/INS_convert.sh .
 scp -r root@172.16.7.56:/usr/local/apache2.4/htdocs/inc_chk/new_index/svg/* .
 ```
 
-## 清空文件内容命令
+## 清空文件内容
 
 ```
-1. > test.log
-2. cat /dev/null  test.log
-3. echo "" >test.log
+1. 清空或者让一个文件成为空白的最简单方式，是像下面那样，通过 shell 重定向 null （不存在的事物）到该文件：
+	# > test.log
+2. 使用 : 符号，它是 shell 的一个内置命令，等同于 true 命令，它可被用来作为一个 no-op（即不进行任何操作）。
+另一种清空文件的方法是将 : 或者 true 内置命令的输出重定向到文件中，具体如下：
+	# : > test.log
+	# true > test.log
+3.使用 cat/cp/dd 实用工具及 /dev/null 设备来清空文件
+	# cat /dev/null  test.log
+	# cp /dev/null test.log
+	# dd if=/dev/null of=test.log （ if 代表输入文件，of 代表输出文件）
+4. 使用 echo 命令清空文件
+	# echo "" >test.log
+	# echo > test.log
+	注意：你应该记住空字符串并不等同于 null 。字符串表明它是一个具体的事物，只不过它的内容可能是空的，但 null 则意味着某个事物并不存在。
+	基于这个原因，当你将 echo命令 的输出作为输入重定向到文件后，使用cat命令来查看该文件的内容时，你将看到一个空白行（即一个空字符串）。
+    要将 null 做为输出输入到文件中，你应该使用 -n 选项，这个选项将告诉 echo 不再像上面的那个命令那样输出结尾的那个新行。
+    # echo -n "" > test.log
+5. 使用 truncate 命令来清空文件内容，truncate 可被用来将一个文件缩小或者扩展到某个给定的大小。
+你可以利用它和 -s 参数来特别指定文件的大小。要清空文件的内容，则在下面的命令中将文件的大小设定为 0:
+	# truncate -s 0 test.log
 ```
 

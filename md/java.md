@@ -260,11 +260,85 @@ public class FilterConfig {
 
 # Spring Boot
 
-### 连接池
+## 连接池
 
 ```
 目前最热门的数据库连接池，就要属阿里巴巴的Druid以及HikariCP了，它们也分别是Spring Boot 1.x和Spring Boot 2.x默认的数据库连接池。
 ```
+
+## 日志
+
+```
+参考：	https://blog.csdn.net/weixin_43054590/article/details/88553997
+
+常见日志框架：JUL、JCL、Log4j、Log4j2，Logback、SLF4j、Jboss-logging
+
+企业级开发日志选择：
+    日志门面：SLF4j；
+    日志实现：Log4j、Logback；
+    Log4j2功能非常强大，但是设计比较复杂并且没有日志门面与之相匹配，作为企业级日志会存在不稳定的问题；
+
+日志选择逻辑：日志门面+日志实现，运行日志时调用的是日志门面的接口，但是配置采用的是日志实现的配置。
+
+springboot日志选择：spring框架默认采用的是JCL日志门面，所以springboot底层默认排除了spring框架采用的JCL，选择：
+    日志门面：SLF4j；
+    日志实现：Logback；它相对于Log4j来说更加的强大功能更加齐全。
+    
+SLF4j：只导入SLF4j的jar包，没有实现日志，日志功能单一
+SLF4j+Logback：导入slf4j-api.jar和Logback相关jar包
+
+日志级别从低到高分为TRACE < DEBUG < INFO < WARN < ERROR < FATAL；
+Spring Boot中默认配置ERROR、WARN和INFO级别的日志输出到控制台；
+日志默认输出在控制台，日志输出内容springboot底层已配置好，开箱即用
+
+logging.level.* : 作为package（包）的前缀来设置日志级别；日志级别从低到高分为TRACE < DEBUG < INFO < WARN < ERROR < FATAL
+logging.file :配置日志输出的文件名，也可以配置文件名的绝对路径。
+logging.path :配置日志的路径。如果没有配置logging.file,Spring Boot 将默认使用spring.log作为文件名；当logging.file与logging.path同时存在时，springboot按照logging.file定义的路径输出日志文件
+logging.pattern.console :定义console中logging的样式。
+logging.pattern.file :定义文件中日志的样式。
+logging.pattern.level :定义渲染不同级别日志的格式。默认是%5p.
+logging.exception-conversion-word :.定义当日志发生异常时的转换字
+PID :定义当前进程的ID
+
+根据不同的日志系统，springboot中你可以按如下规则组织配置文件名，就能被正确加载：
+    Logback：logback-spring.xml, logback-spring.groovy, logback.xml, logback.groovy
+    Log4j：log4j-spring.properties, log4j-spring.xml, log4j.properties, log4j.xml
+    Log4j2：log4j2-spring.xml, log4j2.xml
+    JDK (Java Util Logging)：logging.properties
+    
+引入自定义的logback.xml文件,在properties文件夹中进行如下声明
+	logging.config=classpath:logging-test.xml
+	
+springboot集成log4j：
+    方式一：
+        第一步：将log4j对应的中间日志框架log4j-over-slf4j.jar依赖清除掉；
+        第二步：将logback的依赖清除掉；
+        第三步：引入log4j及其适配层日志框架的依赖，最后log4j就能成功运行了。
+   方式二：
+       第一步：移除spring-boot-starter-logging依赖包；
+       第二步：添加spring-boot-starter-log4j依赖包，ok。
+       
+springboot的logback.xml配置内容：
+如果我们觉得springboot默认的配置内容满足不了我们的需求，我们也可以自定义logback日志的xml对logback日志进行重新配置；
+
+注意:springboot官方推荐使用logback-spring.xml,相对于 logback.xml它的配置功能更加齐全，比如logback-spring.xml可以配置profile多环境日志，logback.xml则不能实现此功能
+
+logback.xml语法结构请参考：	https://www.jianshu.com/p/f67c721eea1b
+```
+
+
+
+```
+日志输出格式：
+    %d表示日期时间，
+    %thread表示线程名，
+    %-5level：级别从左显示5个字符宽度
+    %logger{50} 表示logger名字最长50个字符，否则按照句点分割。 
+    %msg：日志消息，
+    %n是换行符
+```
+
+
 
 # Spring Mvc
 

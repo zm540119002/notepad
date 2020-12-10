@@ -131,3 +131,17 @@ select distinct C.SERVICE_ID, C.SERVICE_NAME, C.BIZ_DOMAIN, C.SEQU
 ```
 
 ```
+
+# 现场部署
+
+```
+全局替换：
+    172.16.7.55 -> 替换为现场数据库ip
+    172.16.7.71 -> 替换为现场清洗接口ip
+惠州要求不要公司logo：
+    inc_chk/new_index/index.php文件：
+        注释：<img src="images/logo.png" />
+    inc_chk/login_html.php文件：
+        注释：<img src="./app/images/ht-logo.png" class="ht-logo" alt="汇通国信" />
+```
+
