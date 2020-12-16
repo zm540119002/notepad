@@ -101,17 +101,17 @@ autovacuum_vacuum_cost_delay = 0    # default vacuum cost delay for  ， 垃圾�
     6、使用新的编译器，优化编译后的可执行程序质量。
 ```
 
-# 常用命令
+# 语法
 
 ```
 #查看版本
 	pg_ctl -V
-template1=# \l 查看系统中现存的数据库
-template1=# \q 退出客户端程序psql
-template1=# \c 从一个数据库中转到另一个数据库中，如template1=# \c sales 从template1转到sales
-template1=# \dt 查看表
-template1=# \d 查看表结构
-template1=# \di 查看索引
+    template1=# \l 查看系统中现存的数据库
+    template1=# \q 退出客户端程序psql
+    template1=# \c 从一个数据库中转到另一个数据库中，如template1=# \c sales 从template1转到sales
+    template1=# \dt 查看表
+    template1=# \d 查看表结构
+    template1=# \di 查看索引
 ```
 
 ```
@@ -156,11 +156,14 @@ template1=# \di 查看索引
 查看所有序列：
 	select *  from pg_class where relkind='S' ;（r =普通表， i =索引，S =序列，v =视图，m =物化视图， c =复合类型，t = TOAST表，f =外部表）
 
-查看当前序列的值：select currval('table_id_seq')
+查看当前序列的值：
+	select currval('table_id_seq')
 
-查看下一个序列：select nextval('table_id_seq')
+查看下一个序列：
+	select nextval('table_id_seq')
 
-设置序列：select setval('table_id_seq',1,false)
+设置序列：
+	select setval('table_id_seq',1,false)
 
 创建序列：
     CREATE SEQUENCE public.user_id_seq
@@ -177,5 +180,46 @@ template1=# \di 查看索引
 修改序列初始值：alter sequence public.user_id_seq restart with 7;
 ```
 
+```
+查询所有的数据库：
+	select * from pg_database;
+查询指定名字的数据库：
+	select * from pg_database where datname='myDB'; 
+查询所有表信息：
+	select * from pg_tables;
+查询指定数据表信息：
+    select * from pg_tables where schemaname='public';
+    select * from pg_tables where tablename='myTableName';
+查询指定表结构（包含字段名称，字段类型，是否可空等）：
+	SELECT 
+        col_description(a.attrelid,a.attnum) as comment,
+        format_type(a.atttypid,a.atttypmod) as type,
+        a.attname as name,
+        a.attnotnull as notnull
+	FROM pg_class as c,pg_attribute as a
+	where c.relname ='myTableName' and a.attrelid = c.oid and a.attnum>0;
+```
 
+## insert
+
+参考：https://www.yiibai.com/postgresql/postgresql-insert.html
+
+```
+INSERT INTO TABLE_NAME (column1, column2, column3,...columnN)  
+VALUES (value1, value2, value3,...valueN);
+```
+
+## update
+
+```
+UPDATE table_name  
+SET column1 = value1, column2 = value2...., columnN = valueN  
+WHERE [condition];
+```
+
+## Update 根据B表更新A表
+
+```
+参考：	https://www.cnblogs.com/xuenb/p/8385973.html
+```
 

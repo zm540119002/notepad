@@ -122,3 +122,24 @@ SQL> startup
 SQL> shutdown
 ```
 
+# 语法
+
+## merge into
+
+```
+merge into的形式：
+
+MERGE INTO [target-table] A USING [source-table sql] B ON([conditional expression] and [...]...)
+WHEN MATCHED THEN
+[UPDATE sql]
+WHEN NOT MATCHED THEN
+[INSERT sql]
+
+作用:判断Ｂ表和Ａ表是否满足ON中条件，如果满足则用B表去更新A表，如果不满足，则将B表数据插入A表但是有很多可选项，如下:
+    1.正常模式
+    2.只update或者只insert
+    3.带条件的update或带条件的insert
+    4.全插入insert实现
+    5.带delete的update(觉得可以用3来实现)
+```
+

@@ -776,15 +776,15 @@ SSH 服务配置文件位置
 2) .ssh/authorized_keys文件权限必须是600
 示例：
 方法一：
-root 登陆到172.16.6.35
-cd ~/.ssh
-touch authorized_keys
-chmod 600 authorized_keys
-vim authorized_keys
-添加其他机器~/.ssh下的id_rsa.pub的内容
+    root 登陆到172.16.6.35
+    cd ~/.ssh
+    touch authorized_keys
+    chmod 600 authorized_keys
+    vim authorized_keys
+    添加其他机器~/.ssh下的id_rsa.pub的内容
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCfn+AXJHXAv7y3VFOpfGCWX2Wlst5MJRq9eQ8bfuHiy8dBM38i3p3GW7T68VDMMVpWVv8gvJKMdcnYGMAgDbHPPUNGwjQgM1VadbqO69EX+j92uNm5IQitupzG+XiXFRLTNMpAGbdA5zt8eMj/XT8xXa3J+7Gnw85zltbextDl6ji0gljJSuJ3qz/AKNKomjXHA1cDsJSypz1a0b+fJP5V/xr5wd1DQTzJcVRV3SwdP43kEscht/2Hpb3ZrpSycih1Idx4OzNsN6HEaGJx0kGO3/OwkcRFIJugvdWAUdv00mpKymwtuiuQWG2c0UAPy3jddpla8MKJ6XTHXJtRXzxZ lqh@huitone.com
 方法二：
-ssh-copy-id -i ~/.ssh/id_rsa.pub root@172.16.6.35
+	ssh-copy-id -i ~/.ssh/id_rsa.pub root@172.16.6.35
 ```
 ## ftp & sftp
 
