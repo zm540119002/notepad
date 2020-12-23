@@ -100,6 +100,59 @@ select to_date('2011-03-21 10:10:10','YYYY-MM-DD HH24:MI:SS') from dual;
 
 ```
 
+## 乱码
+
+```
+配置前端（php）服务器的环境变量：
+	vim ~/.bash_profile
+	export NLS_LANG="SIMPLIFIED CHINESE_CHINA.ZHS16GBK"
+	source ~/.bash_profile
+重启apache（注意：不能restart，需先stop，再start）：
+```
+
+# 环境变量(linux)
+
+```
+export ORACLE_HOME=/usr/lib/oracle/11.2/client64
+export LD_LIBRARY_PATH=/usr/lib/oracle/11.2/client64/lib
+
+env：
+LANG=zh_CN.UTF-8
+NLS_LANG=SIMPLIFIED CHINESE_CHINA.ZHS16GBK
+
+export NLS_LANG=AMERICAN_AMERICA.ZHS16GBK
+export NLS_LANG=SIMPLIFIED CHINESE_CHINA.ZHS16GBK
+```
+
+
+
+# 字符集
+
+```
+查看数据库字符集，涉及三方面的字符集，
+    1. oracel server端的字符集;
+    2. oracle client端的字符集（比如：apache所在服务器）;
+    3. dmp文件的字符集。
+    
+查询oracle server端的字符集
+	select userenv('language') from dual;
+	
+修改server端字符集(不建议使用)
+
+客户端字符集设置方法
+     1)UNIX环境
+         $NLS_LANG="SIMPLIFIED CHINESE_CHINA.ZHS16GBK"
+         $export NLS_LANG
+         编辑oracle用户的profile文件
+    2)Windows环境
+        编辑注册表
+        Regedit.exe ---》 HKEY_LOCAL_MACHINE ---》SOFTWARE ---》 ORACLE-HOME
+  		或者在窗口设置：
+        set nls_lang=AMERICAN_AMERICA.ZHS16GBK
+        
+LANG是针对Linux系统的语言、地区、字符集的设置,对linux下的应用程序有效，如date；NLS_LANG是针对Oracle语言、地区、字符集的设置，对oracle中的工具有效
+```
+
 
 
 # linux 启动oracle

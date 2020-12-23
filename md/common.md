@@ -191,6 +191,7 @@ vim /usr/local/pgsql/data/postgresql.conf
     
 vim /usr/local/pgsql/data/pg_hba.conf
 启动：
+	su - postgresql
 	/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l /usr/local/pgsql/log/pgsql.log start | stop | status
 登陆：
 	psql -h 127.0.0.1 -p 5432 -U postgre -d dev
@@ -272,6 +273,15 @@ export LD_LIBRARY_PATH=/data/dmdbms/bin
 ```
 1，数据同步新增字段
 ```
+
+### 可优化
+
+```
+1、插入数据节点
+	添加字段后字段表达式应该自动匹配
+```
+
+
 
 ### sql备份
 

@@ -202,9 +202,8 @@ autovacuum_vacuum_cost_delay = 0    # default vacuum cost delay for  ， 垃圾�
 
 ## insert
 
-参考：https://www.yiibai.com/postgresql/postgresql-insert.html
-
 ```
+参考：	https://www.yiibai.com/postgresql/postgresql-insert.html
 INSERT INTO TABLE_NAME (column1, column2, column3,...columnN)  
 VALUES (value1, value2, value3,...valueN);
 ```
@@ -221,5 +220,68 @@ WHERE [condition];
 
 ```
 参考：	https://www.cnblogs.com/xuenb/p/8385973.html
+```
+
+## merge
+
+```
+参考：	https://blog.csdn.net/qq_43303221/article/details/84951300
+WITH upsert AS (
+		UPDATE test1
+		SET col1 = test2.col1
+		FROM test2
+		WHERE test1.id = test2.id
+		RETURNING test1.*
+	)
+INSERT INTO test01
+SELECT *
+FROM test2
+WHERE NOT EXISTS (
+	SELECT 1
+	FROM upsert b
+	WHERE test2.id = b.id
+);
+
+示例：
+drop table if exists test1;
+create table test1(
+	id int,
+	name varchar(20)
+);
+insert into test1 values (1,'a');
+insert into test1 values (2,'b');
+insert into test1 values (3,'c');
+insert into test1 values (4,'d');
+insert into test1 values (5,'e');
+
+drop table if exists test2;
+create table test2(
+	id int,
+	name varchar(20)
+);
+insert into test2 values (1,'001');
+insert into test2 values (2,'002');
+insert into test2 values (3,'003');
+insert into test2 values (6,'006');
+insert into test2 values (7,'007');
+
+select * from test1 order by id
+select * from test2
+
+WITH upsert AS (
+		UPDATE test1 a
+		SET name = b.name
+		FROM test2 b
+		WHERE a.id = b.id
+		RETURNING a.*
+	)
+INSERT INTO test1
+SELECT *
+FROM test2 c
+WHERE NOT EXISTS (
+	SELECT 1
+	FROM upsert d
+	WHERE c.id = d.id
+)
 ```
 

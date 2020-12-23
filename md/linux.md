@@ -642,33 +642,38 @@ TOP
 env|grep LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/dm7client/bin/:/usr/local/dm7client/drivers/odbc/
 -------------------------------------PATH
+
+LANG是针对Linux系统的语言、地区、字符集的设置,对linux下的应用程序有效，如date；NLS_LANG是针对Oracle语言、地区、字符集的设置，对oracle中的工具有效
 ```
 
 ## 磁盘
 
 ```
+1、查看未挂载磁盘命令：
+	fdisk -l |grep '/dev'
+2、查看磁盘挂载情况：
+	df -h
+3、挂载命令：
+	mount /dev/sdb1 /home   #将磁盘sdb1挂载到/home文件夹上
+4、卸载命令：
+	umount /dev/sdb1    #卸载磁盘sdb1
+
 /*看硬盘占用率*/
 df -h
-
 df -hl 查看磁盘剩余空间
- 
 du -sh [目录名] 返回该目录的大小
- 
 du -sm [文件夹] 返回该文件夹总M数
- 
 du -h [目录名] 查看指定文件夹下的所有文件大小（包含子文件夹）
-
 查看硬盘的分区 #sudo fdisk -l
-
 查看IDE硬盘信息 #sudo hdparm -i /dev/hda
-
 查看STAT硬盘信息 #sudo hdparm -I /dev/sda 或 #sudo apt-get install blktool #sudo blktool /dev/sda id
-
 查看硬盘剩余空间 #df -h #df -H
-
 查看目录占用空间 #du -hs 目录名
-
 优盘没法卸载 #sync fuser -km /media/usbdisk
+
+du -sh *
+du -sh /var/* | sort -nr
+du -sm *|grep -n
 ```
 
 ## date
