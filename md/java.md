@@ -696,6 +696,8 @@ JAVA中try、catch、finally带return的执行顺序：
     1、finally中的代码总会被执行。
     2、当try、catch中有return时，也会执行finally。return的时候，要注意返回值的类型，是否受到finally中代码的影响。
     3、finally中有return时，会直接在finally中退出，导致try、catch中的return失效。
+    
+使用标志位终止线程，变量要声明为volatile，让其它线程可见
 ```
 # Spring中Bean的单例和多例
 
@@ -1329,5 +1331,30 @@ public void testMap() {
     String v1 = map.compute("c", (k, v) -> "v"); // 输出 v
     System.out.println(v1);
 }
+```
+
+# Java内存模型
+
+```
+参考：	
+	https://www.cnblogs.com/zhengbin/p/6407137.html
+	https://www.jianshu.com/p/15106e9c4bf3
+
+java内存模型(Java Memory Model，JMM)是java虚拟机规范定义的，用来屏蔽掉java程序在各种不同的硬件和操作系统对内存的访问的差异，这样就可以实现java程序在各种不同的平台上都能达到内存访问的一致性。
+```
+
+# Java内存结构
+
+```
+参考：	https://www.jianshu.com/p/15106e9c4bf3
+```
+
+# java内存管理
+
+```
+参考：	
+	http://blog.itpub.net/69904796/viewspace-2565255/
+	https://www.cnblogs.com/steffen/p/11368018.html
+	https://blog.csdn.net/qq_29078329/article/details/78929457
 ```
 
