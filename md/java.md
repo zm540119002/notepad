@@ -128,7 +128,7 @@ base64(Header).base64(Payload).Signature
 HttpServletRequest对象代表客户端的请求，当客户端通过HTTP协议访问服务器时，HTTP请求头中的所有信息都封装在这个对象中，通过这个对象提供的方法，可以获得客户端请求的所有信息。
 ```
 
-## ttpServletRequest类的常用方法
+## 常用方法
 
 ```
 getRequestURI()
@@ -344,38 +344,20 @@ logback.xml语法结构请参考：	https://www.jianshu.com/p/f67c721eea1b
 
 # Spring
 
-
-
 ```
-ExceptionUtil.throwError(aliasPrefix.returnCode, aliasPrefix.errMsg);
-
-@Slf4j
-
-private Logger logger = LoggerFactory.getLogger(GvnXxlJobConfig.class);
-
-H_api_key:Huitone@2214
-H_sign:RoW1EOIN9Lsd2GzhoHitqQhxunqiPaGuEG0tqsF6wCxy99kl2EPhXJJgE4ICsedR0HnGFNx/wN39Sq4tGbPWR8o4jnh4RXgZ60vG0MTnFGVdRFLbft+QS5CjDKUdDziPD7UvhUcJSasUEz1YcyXH1k1upSrQcdMvgf2zaVaUNj0=
-H_timestamp:1595836849999
-H_token:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHBpcmVUaW1lIjoxNTk1ODM4NjQ5OTQ0LCJ1c2VySXAiOiIxNzIuMTYuMTYuOTIiLCJ1c2VySWQiOjMwMywiYWNjb3VudCI6Inp4In0.zF6XoMx2RljYHaPpHuqsz7QzwpEzBIC8U9S9v7v9yxI
+参考：
+	https://www.w3cschool.cn/wkspring/dcu91icn.html
 ```
 
-# **概念解析**
-
-## spring 
-
-## spring ioc
+![img](https://atts.w3cschool.cn/attachments/image/wk/wkspring/arch1.png)
 
 ```
-pring IOC容器是框架的核心，IOC是控制反转的意思，可以用来降低程序代码之间的耦合度。把强耦合的代码依赖从代码中移出去，放到统一的XML配置文件中，将程序对组件的主要控制权交给IOC，由IOC统一加载和管理。例如，可以把本案例中的JavaBean组件的创建、实体类的创建、以及JavaBean组件的属性注入等代码从Principal类移出，放入到Spring的XML配置文件中。这样就实现了Principal类与JavaBean组件的代码解耦，也解决了项目案例技术架构所存在的问题。
-
-Spring IOC容器的核心是把程序业务代码与事物（组件、POJO类）代码进行分离，程序有关事物的创建、属性和依赖对象的注入、以及生命周期交由容器进行加载和管理。业务代码只需从容器中获取组件或POJO实例对象即可，无需再考虑组件之间、组件与POJO之间的依赖关系以及属性的注入。
+Bean 与 Spring 容器之间的关系：
 ```
 
-## spring mvc
+![img](https://atts.w3cschool.cn/attachments/image/20201030/1604037368126454.png)
 
-## spring boot
 
-## spring cloud
 
 # 注解
 
@@ -709,9 +691,7 @@ JAVA中try、catch、finally带return的执行顺序：
 
 ```
 
-
-
-# **Future机制**
+# Future机制
 
 ```
 常见的两种创建线程的方式。一种是直接继承Thread，另外一种就是实现Runnable接口。
@@ -719,7 +699,41 @@ JAVA中try、catch、finally带return的执行顺序：
 从Java 1.5开始，就提供了Callable和Future，通过它们可以在任务执行完毕之后得到任务执行结果。
 Future模式的核心思想是能够让主线程将原来需要同步等待的这段时间用来做其他的事情。（因为可以异步获得执行结果，所以不用一直同步等待去获得执行结果）
 ```
-#  **泛型**
+# ThreadLocal
+
+```
+1、ThreadLocal是什么
+2、ThreadLocal怎么用
+3、ThreadLocal源码分析
+4、ThreadLocal内存泄漏问题
+
+一、ThreadLocal是什么
+    从名字我们就可以看到ThreadLocal叫做线程变量，意思是ThreadLocal中填充的变量属于当前线程，该变量对其他线程而言是隔离的。
+    ThreadLocal为变量在每个线程中都创建了一个副本，那么每个线程可以访问自己内部的副本变量。
+
+    从字面意思来看非常容易理解，但是从实际使用的角度来看，就没那么容易了，作为一个面试常问的点，使用场景那也是相当的丰富：
+
+    1、在进行对象跨层传递的时候，使用ThreadLocal可以避免多次传递，打破层次间的约束。
+    2、线程间数据隔离
+    3、进行事务操作，用于存储线程事务信息。
+    4、数据库连接，Session会话管理。
+```
+
+```
+非线程安全：
+    ArrayList
+    HashMap
+    StringBuilder
+	LinkedList
+线程安全的：
+    Vector
+    HashTable
+    StringBuffer
+```
+
+
+
+#  泛型
 
 ```
 顾名思义，就是将类型由原来的具体的类型参数化，类似于方法中的变量参数，此时类型也定义成参数形式（可以称之为类型形参），
@@ -938,46 +952,41 @@ mvn clean install -P dev -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
   </profiles>
 </settings>
 ```
-#  ****ThreadLocal****
+# 语法
 
 ```
-1、ThreadLocal是什么
-2、ThreadLocal怎么用
-3、ThreadLocal源码分析
-4、ThreadLocal内存泄漏问题
-
-参考： https://www.jianshu.com/p/98b68c97df9b
-```
-```
-一、ThreadLocal是什么
-
-从名字我们就可以看到ThreadLocal叫做线程变量，意思是ThreadLocal中填充的变量属于当前线程，该变量对其他线程而言是隔离的。ThreadLocal为变量在每个线程中都创建了一个副本，那么每个线程可以访问自己内部的副本变量。
-
-从字面意思来看非常容易理解，但是从实际使用的角度来看，就没那么容易了，作为一个面试常问的点，使用场景那也是相当的丰富：
-
-1、在进行对象跨层传递的时候，使用ThreadLocal可以避免多次传递，打破层次间的约束。
-2、线程间数据隔离
-3、进行事务操作，用于存储线程事务信息。
-4、数据库连接，Session会话管理。
-```
-
-# 线程安全
+参考：
+	https://www.runoob.com/java/java-data-structures.html
 
 ```
-非线程安全：
-    ArrayList
-    HashMap
-    StringBuilder
-	LinkedList
-线程安全的：
-    Vector
-    HashTable
-    StringBuffer
+
+## 集合框架
+
 ```
+Java 集合框架主要包括两种类型的容器，一种是集合（Collection），存储一个元素集合，另一种是图（Map），存储键/值对映射。
+Collection 接口又有 3 种子类型，List、Set 和 Queue，再下面是一些抽象类，
+最后是具体实现类，常用的有 ArrayList、LinkedList、HashSet、LinkedHashSet、HashMap、LinkedHashMap 等等。
+如下图：
+```
+
+![img](https://www.runoob.com/wp-content/uploads/2014/01/2243690-9cd9c896e0d512ed.gif)
 
 
 
 # 常用示例
+
+```
+ExceptionUtil.throwError(aliasPrefix.returnCode, aliasPrefix.errMsg);
+
+@Slf4j
+
+private Logger logger = LoggerFactory.getLogger(GvnXxlJobConfig.class);
+
+H_api_key:Huitone@2214
+H_sign:RoW1EOIN9Lsd2GzhoHitqQhxunqiPaGuEG0tqsF6wCxy99kl2EPhXJJgE4ICsedR0HnGFNx/wN39Sq4tGbPWR8o4jnh4RXgZ60vG0MTnFGVdRFLbft+QS5CjDKUdDziPD7UvhUcJSasUEz1YcyXH1k1upSrQcdMvgf2zaVaUNj0=
+H_timestamp:1595836849999
+H_token:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHBpcmVUaW1lIjoxNTk1ODM4NjQ5OTQ0LCJ1c2VySXAiOiIxNzIuMTYuMTYuOTIiLCJ1c2VySWQiOjMwMywiYWNjb3VudCI6Inp4In0.zF6XoMx2RljYHaPpHuqsz7QzwpEzBIC8U9S9v7v9yxI
+```
 
 ## list对象集合中获取某一列的集合数据
 
@@ -1198,7 +1207,7 @@ List转换为Array可以这样处理：
     throw：通常用在方法体中或者用来抛出用户自定义异常，并且抛出一个异常对象。程序在执行到throw语句时立即停止，如果要捕捉throw抛出的异常，
     则必须使用try-catch语句块或者try-catch-finally语句。
 
-例1：throws方法抛出异常
+例：throws方法抛出异常
 public class Shoot {
     static void pop()throws NegativeArraySizeException{
     	int[] arr = new int[-3];
