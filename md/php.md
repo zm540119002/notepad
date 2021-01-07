@@ -69,10 +69,10 @@ vim /etc/hosts
 ## 访问慢
 
 ```
-数据库服务器
-vim /etc/resolv.conf
-注释掉dns配置
-
+数据库(oracle)所在服务器
+    vim /etc/resolv.conf
+    注释掉dns配置
+    原因：oracle安全机制，需要用计算机名去访问数据库，会根据ip去所配dns服务器解析
 ```
 
 

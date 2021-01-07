@@ -20,6 +20,20 @@ git fetch
 git checkout -b local-name origin/remote-name
 ```
 
+## 解决git pull --rebase产生的冲突方法
+
+```
+1 git rebase --abort (放弃本次拉取，会退出到自己最后一次本地提交的状态)
+
+2 查询日志，看自己最后一次修改的文件有哪些。备份起来。
+
+3 git reset --hard HEAD~1 回退到上一次提交前状态
+
+4 git pull --rebase 重新拉远程更新
+```
+
+
+
 # 分支
 
 ```
@@ -69,7 +83,9 @@ git checkout -b local-name origin/remote-name
 
 # 工作流
 
+```
 参考：	https://blog.csdn.net/qq_35865125/article/details/80049655
+```
 
 # 常用命令
 
