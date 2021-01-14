@@ -54,6 +54,7 @@ git checkout -b local-name origin/remote-name
 本地：
 	git checkout -b dm8
 	git push origin dm8:dm8
+	git push origin v0.8:v0.8
 其他git：
 	git checout -b dm8
 ```

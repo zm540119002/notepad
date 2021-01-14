@@ -3,7 +3,7 @@
 ```
 广州汇通国信科技有限公司OA系统正式上线，网址是公司内网
 http://157.122.61.228:2019/login/Login.jsp?logintype=1
-账户名为大家各自的手机号，密码是：	HTGX100。
+账户名为大家各自的手机号，密码是：	HTGX100
 同时下载手机app端进行考勤签到，OA手机端服务器为157.122.61.228:89。
 
 公司邮箱网址：
@@ -30,10 +30,21 @@ http://157.122.61.228:2019/login/Login.jsp?logintype=1
 ## 172.16.6.35
 
 ```
+---------------------------------------------------------------
 username:	root
 password:	oracle
 ---------------------------------------------------------------mysql
-
+su - mysql
+/bin/sh /home/mysql/bin/mysqld_safe --datadir=/home/mysql/data/mysql --pid-file=/home/mysql/data/mysql/mysqldb.pid
+---------------------------------------------------------------redis
+cd /usr/local/redis-2.8.17/src
+./redis-server ../redis.conf
+---------------------------------------------------------------postgresql
+su - postgresql
+/usr/local/postgresql-10.1/bin/pg_ctl -D /usr/local/postgresql-10.1/data -l /usr/local/postgresql-10.1/log/pgsql.log start 
+---------------------------------------------------------------可能问题
+防火墙
+---------------------------------------------------------------
 ---------------------------------------------------------------
 ```
 ## 172.16.6.44
@@ -127,6 +138,8 @@ cd /usr/local/lib/php/extensions/no-debug-non-zts-20170718/
 ```
 username:	root
 password:	huitone2214
+username:	dev
+password:	huitonedev
 username:	oracle
 password:	huitone2214
 --------------------------------------------------------------nginx
@@ -282,39 +295,4 @@ export LD_LIBRARY_PATH=/data/dmdbms/bin
 ```
 
 
-
-### sql备份
-
-```
-##################################################治理点
-select * from dev.tc_gvn_sub_service_type  where service_id = 1502437164957696
-select * from dev.tc_gvn_sub_service_type where sub_service_id = 1532847642566656
-select * from dev.tc_gvn_sub_service_type where sub_service_id = 1535082045325312
-##################################################数据标准配置
-#数据标准配置表字段从下表拿
-select * from dev.tc_gvn_stored_object where table_name like 't_stu_class'
-select * from dev.tc_gvn_stored_column where stored_object_id = 1535694487584768
-select * from dev.tc_gvn_stored_column where stored_object_id = 1535694487592960
-##################################################
-select * from tb_uc_cfg_ds where name = '源系统班级信息'
-select * from tb_uc_cfg_ds where name = '班级信息统计表'
-select * from tb_uc_cfg_ds where name like '%图书%'
-select * from tb_uc_cfg_ds where service_id = 1502437164957696
-##################################################引用数据表
-select * from tb_uc_cfg_quote_ds where sub_service_id = 1535082045325312
-select * from tb_uc_cfg_ds_column  where ds_id = 1535725379862528
-select * from tb_uc_cfg_ds_table   where ds_id = 1535725379862528
-##################################################生成新数据
-select * from tb_uc_cfg_etl_task where sub_service_id = 1532847642566656 ##and name = 'zm_new_data_1'
-select * from tb_uc_cfg_etl_column where etl_task_id = 1511546854416384
-select * from tb_uc_cfg_etl_join where etl_task_id = 1511546854416384
-select * from tb_uc_cfg_etl_filter where etl_task_id = 1511546854416384
-select * from tb_uc_task where source_id = 1511546854416384
-select * from tb_uc_task_param where task_id in (select task_id from tb_uc_task  where source_id = 1511546854416384)
-
-##################################################
-select * from dev.tc_gvn_ds_db where source_id = 1471313880965120
-##################################################
-
-```
 
