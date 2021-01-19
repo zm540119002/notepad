@@ -746,6 +746,37 @@ $ command >> file 2>&1
 管道是将前一个命令的输出作为后一个命令的输入
 ```
 
+## ulimit
+
+```
+ulimit -n
+ulimit -a
+注意：
+    root用户没有限制
+    当前会话只能降
+```
+
+## lsof
+
+```
+查看当前系统打开的文件数量: 
+	lsof | wc -l  
+	lsof -n|grep dev|wc
+	
+查看当前进程的打开文件数量：
+	lsof -p pid | wc -l      （lsof -p 1234 | wc -l  ）
+
+查看当前进程的最大可以打开的文件数：
+	cat /proc/PID/limits 
+    (如果通过ulimit -n 设置或者修改/etc/security/limits.conf，看看进程是否生效)  
+
+查看系统总限制打开文件的最大数量：
+	cat /proc/sys/fs/file-max
+
+lsof只能以root权限执行。
+在终端下输入lsof即可显示系统打开的文件,因为 lsof 需要访问核心内存和各种文件,所以必须以 root 用户的身份运行它才能够充分地发挥其功能。
+```
+
 
 
 # 常用工具

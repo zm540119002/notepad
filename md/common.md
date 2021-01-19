@@ -3,7 +3,7 @@
 ```
 广州汇通国信科技有限公司OA系统正式上线，网址是公司内网
 http://157.122.61.228:2019/login/Login.jsp?logintype=1
-账户名为大家各自的手机号，密码是：	HTGX100
+账户名为大家各自的手机号，密码是：	HTGX100。
 同时下载手机app端进行考勤签到，OA手机端服务器为157.122.61.228:89。
 
 公司邮箱网址：
@@ -43,7 +43,7 @@ cd /usr/local/redis-2.8.17/src
 su - postgresql
 /usr/local/postgresql-10.1/bin/pg_ctl -D /usr/local/postgresql-10.1/data -l /usr/local/postgresql-10.1/log/pgsql.log start 
 ---------------------------------------------------------------可能问题
-防火墙
+
 ---------------------------------------------------------------
 ---------------------------------------------------------------
 ```
@@ -154,8 +154,7 @@ web目录：	 cd /www/wwwroot/front/
 	强制停止： pkill -9 nginx
 --------------------------------------------------------------redis
 #启动
-	cd /usr/local/redis/bin/
-	/usr/local/bin/redis-server redis.conf
+	/usr/local/redis/bin/redis-server /usr/local/redis/bin/redis.conf
 --------------------------------------------------------------mongoDB
 #启动
 	/usr/local/mongodb/bin/mongod --config /usr/local/mongodb/bin/mongodb.conf

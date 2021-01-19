@@ -1,41 +1,4 @@
-=============================================
-netstat -anp|grep LIS
-ls -lrt /proc/14720
-ps -ef|grep 14720
-cat  /usr/local/nginx/conf/nginx.conf
-=============================================内存
-free -m
-echo 3 > /proc/sys/vm/drop_caches 
-=============================================环境变量
--------------------------------------
-1、查看某一个环境变量（PATH）
-     echo $PATH
-	 env|grep PATH
-2、查看所有的环境变量
-    env
--------------------------------------
-1、当前shell有效，临时设置
-	# PATH=$PATH:/usr/local/php7/bin
-	使用这种方法,只对当前会话有效，也就是说每当登出或注销系统以后，PATH设置就会失效。
-2、所有用户有效
-	# vim /etc/profile
-	export PATH="$PATH:/usr/local/php7/bin"
-	使环境变量生效：
-	# source /etc/profile
-	注：＝ 等号两边不能有任何空格。这种方法最好，除非手动强制修改PATH的值,否则将不会被改变。
-3、当前用户有效
-	# vim ~/.bash_profile
-	export PATH="$PATH:/usr/local/php7/bin"
-	使环境变量生效：
-	# source ~/.bash_profile
--------------------------------------
- ~/.bashrc			当前用户有效
-/etc/bashrc			所有用户有效
-/etc/environment	所有用户有效
--------------------------------------LD_LIBRARY_PATH
-env|grep LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/dm7client/bin/:/usr/local/dm7client/drivers/odbc/
--------------------------------------PATH
+
 =============================================tar
 解压：tar -xzvf FileName.tar.gz -C /usr/local/
 -C 选项的作用是：指定需要解压到的目录。
@@ -46,93 +9,11 @@ split -d -b 20m dmdbms.tgz dmdbms.tgz_new_
 cat dmdbms.tgz_new_* > dmdbms_new.tgz
 tar -xzvf dmdbms_new.tgz
 tar -czvf 139.tgz 139*
-=============================================磁盘
-df -hl 查看磁盘剩余空间
- 
-df -h 查看每个根路径的分区大小
- 
-du -sh [目录名] 返回该目录的大小
- 
-du -sm [文件夹] 返回该文件夹总M数
- 
-du -h [目录名] 查看指定文件夹下的所有文件大小（包含子文件夹）
-
-查看硬盘的分区 #sudo fdisk -l
-
-查看IDE硬盘信息 #sudo hdparm -i /dev/hda
-
-查看STAT硬盘信息 #sudo hdparm -I /dev/sda 或 #sudo apt-get install blktool #sudo blktool /dev/sda id
-
-查看硬盘剩余空间 #df -h #df -H
-
-查看目录占用空间 #du -hs 目录名
-
-优盘没法卸载 #sync fuser -km /media/usbdisk
 =============================================
 man
 tldr（命令手册）、tree（树形命令）、rlwrap（历史命令）、script（记录会话输出）、autojump（一键直达）
 =============================================
 find . -name *~HEAD*  | xargs -n 1000 rm -f
-=============================================进程
-查看内存占用前五的进程：	ps auxw | head -1;ps auxw|sort -rn -k4|head -5
-查看CPU占用前三的进程：		ps auxw | head -1;ps auxw|sort -rn -k3|head -3
-=============================================
-查看Linux系统版本的命令
-	lsb_release -a（适用于所有的Linux发行版本）
-	cat /proc/version
-	uname -a
-	uname -r
-有些系统中默认并没有安装lsb_release，需要进行安装，以CentOS为例：
-首先查找lsb_release安装包：	yum provides lsb_release
-安装：	yum install -y redhat-lsb-core
-查看已安装的CentOS版本信息：
-	cat /proc/version
-	uname -a
-	cat /etc/issue
-	cat /etc/redhat-release
-	cat  /etc/*release*
-查看系统是64位还是32位:
-	getconf LONG_BIT
-查看cpu相关信息，包括型号、主频、内核信息等
-	cat /proc/cpuinfo
-查看端口：
-	netstat 	-ntpl	portno
-	netstat   -anp   |   grep  portno
-	kill 进程PID
-查看用户：		cat /etc/passwd
-查看用户组：  	cat /etc/group
-查看用户所属组：groups user1
-	新建用户和用户组：useradd和groupadd
-	useradd [-d home] [-s shell] [-c comment] [-m [-k template]] [-f inactive] [-e expire ] [-p passwd] [-r] name
-	useradd git -g nginx -p git_20181016
-	passwd zhangmin
-	usermod -g group
-	usermod
-查看监听端口：	netstat -an | grep LISTEN
-查看php-fpm是否启动了：	netstat -nlp|grep php-fpm
-=============================================
-查看服务：
-	chkconfig --list       			# 列出所有系统服务
-	chkconfig --list | grep on    	# 列出所有启动的系统服务
-=============================================
-查看应用程序用户：
-	ps -ef|grep http
-=============================================
-查看已安装软件信息
-	rpm -qal  | grep httpd        	# 查看apache安装的软件包
-=============================================
-查看软件文件安装路径：
-	whereis oracle	# 查看文件安装路径
-	which oracle	# 查询运行文件所在路径
-=============================================
-查看端口：
-	cat /etc/services 		# 查看所有服务默认的端口列表信息。
-=============================================
-查看运行用户信息：
-	ps aux |grep nginx 		# 查看nginx运行用户信息
-	ps aux |grep php-fpm	# 查看php-fpm运行用户信息
-查看进程号：	pgrep php-fpm
-追踪进程号：	strace -f -e connect  -p 你的进程编号
 =============================================
 文件操作：
 文件权限：

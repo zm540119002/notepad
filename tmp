@@ -18,105 +18,20 @@ recOperateLog($_SESSION['ses_opt_id'],"999020201","1","0","主机配置");
 public static final long   TOKEN_EXPIRE_TIME                 = 30 * 60 * 1000L;                // H_TOKENE有效时间
 public static final long   SERVER_PUBLIC_KEY_EXPIRE_TIME     = 1 * 60 * 60 * 1000L;            // 服务器公钥有效时间
 public static final long   TIMESTAMP_EXPIRE_TIME             = 3 * 60 * 1000L;                 // 时间序号过期时间
-============================================
-D:\gitlab\inc_chk\audit_config\adt_rpt_getdata.php
-D:\gitlab\inc_chk\audit_config\adt_rpt_show.php
+============================================               
+连接错误：null 执行错误：[/tmp/psql_7166452135906653313.sql:15: ERROR:  non-integer constant in GROUP BY]
+
+连接错误：null 执行错误：[/tmp/psql_7795435390146019556.sql:17: ERROR:  syntax error at or near "$"]
+
+连接错误：null 执行错误：[/tmp/psql_8569101819427438509.sql:15: ERROR:  column "tmp1_manual_book_info.uc$ds_id" must appear in the GROUP BY clause or be used in an aggregate function]
+============================================    
+<dependency>
+	<groupId>commons-io</groupId>
+	<artifactId>commons-io</artifactId>
+	<version>2.6</version>
+</dependency>
 ============================================
 
 ============================================
-$domain_arr = getSingleDomainByArr($all_arr);
-    $all_array1 = array();
-    $checked_arr = array();
-    $a = 0;
-    $i = 0;
-    foreach($domain_arr as $kkk=>$vvv){
-        $b = 0;
-        $array2 = array();
-        $service_arr = getSingleServiceByArr($all_arr,$vvv[0]['CODE']) ;
-        foreach($service_arr as $kk=>$vv){
-            $c = 0;
-            $array1 = array();
-            $sub_service_arr = getSingleSubServiceByArr($all_arr,$vv[0]['SERVICE_ID']) ;
-            foreach($sub_service_arr as $k=>$v){
-                if($v[1]){
-                    $checked_arr[$i] = $v[0]['SUB_SERVICE_ID'];
-                    $i++;
-                }
-                $array1[$c]= array(
-                    "id" => $v[0]['SUB_SERVICE_ID'],
-                    "label" => $v[0]['SUB_SERVICE_NAME']
-                );
-                $c++;
-            }
-            /*print($bool);exit;*/
-            $array2[$b] = array(
-                "id" => $vv[0]['SERVICE_ID'],
-                "label" => $vv[0]['SERVICE_NAME'],
-                "children" => $array1
-            );
-            $b++;
-        }
-        $array3[$a] = array(
-            "id" => $vvv[0]['CODE'],
-            "label" => $vvv[0]['NAME_CN'],
-            "children" => $array2
-        );
-        $a++;
-    }
-    $config['all_array1'] = $array3;
-    $config['checked_arr'] = $checked_arr;
-    $config = json_encode($config);
-    echo $config;
+
 ============================================
-$domain_arr = getSingleDomainByArr($all_arr) ;
-    $all_array1 = array();
-    $checked_arr = array();
-    $a = 0;
-    $i = 0;
-    foreach($domain_arr as $kkkk=>$vvvv){
-        $b = 0;
-        $array2 = array();
-        $service_arr = getSingleServiceByArr($all_arr,$vvvv[0]['CODE']) ;
-        foreach($service_arr as $kkk=>$vvv){
-            $c = 0;
-            $array3 = array();
-            $sub_service_arr = getSingleSubServiceByArr($all_arr,$vvv[0]['SERVICE_ID']) ;
-            foreach($sub_service_arr as $kk=>$vv){
-                $d = 0;
-                $array4 = array();
-                $rpt_arr = getSingeRptByArr($all_arr,$vv[0]['SUB_SERVICE_ID']) ;
-                foreach($rpt_arr as $k=>$v){
-                    if($v[1]){
-                        $checked_arr[$i] = $v[0]['REPORT_ID'];
-                        $i++;
-                    }
-                    $array4[$d]= array(
-                        "id" => $v[0]['REPORT_ID'],
-                        "label" => $v[0]['NAME']
-                    );
-                    $d++;
-                }
-                $array3[$c]= array(
-                    "id" => $vv[0]['SUB_SERVICE_ID'],
-                    "label" => $vv[0]['SUB_SERVICE_NAME'],
-                    "children" => $array4
-                );
-                $c++;
-            }
-            $array2[$b]= array(
-                "id" => $vvv[0]['SERVICE_ID'],
-                "label" => $vvv[0]['SERVICE_NAME'],
-                "children" => $array3
-            );
-            $b++;
-        }
-        $array1[$a]= array(
-            "id" => $vvvv[0]['CODE'],
-            "label" => $vvvv[0]['NAME_CN'],
-            "children" => $array2
-        );
-        $a++;
-    }
-    $config['all_array1'] = $array1;
-    $config['checked_arr'] = $checked_arr;
-    $config =  json_encode($config);

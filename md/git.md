@@ -90,7 +90,26 @@ git checkout -b local-name origin/remote-name
 
 # 常用命令
 
+## git checkout
+
 ```
 git checkout --patch master audit_config
+
+这时分两种情况。一种情况是，你需要另一个分支的所有代码变动，那么就采用合并（git merge）。另一种情况是，你只需要部分代码变动（某几个提交），这时可以采用 Cherry pick。
+
+git cherry-pick命令的作用，就是将指定的提交（commit）应用于其他分支。
+
+
+$ git cherry-pick <commitHash>
+上面命令就会将指定的提交commitHash，应用于当前分支。这会在当前分支产生一个新的提交，当然它们的哈希值会不一样。
+
+举例来说，代码仓库有master和feature两个分支。
+```
+
+## git tag 
+
+```
+git tag -d v1.0
+git push origin --delete v1.0
 ```
 

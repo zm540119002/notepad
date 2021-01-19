@@ -1,15 +1,17 @@
 ============================================================================
 广州汇通国信科技有限公司OA系统正式上线，网址是公司内网
 http://157.122.61.228:2019/login/Login.jsp?logintype=1
-账户名为大家各自的手机号，密码是：	HTGX100。
+账户名为大家各自的手机号，密码是：	HTGX100
 同时下载手机app端进行考勤签到，OA手机端服务器为157.122.61.228:89。
 
 https://lanhuapp.com/web/#/item/project/product?pid=529b32a9-5bbd-48a6-bb82-ddd59c4f4d12&docId=019f83d6-89e9-4dc6-9ef6-75a83ed12925&docType=axure&pageId=3dc0fcc78faa4aba9892a9098d13f0bf&image_id=019f83d6-89e9-4dc6-9ef6-75a83ed12925
 ============================================================================
 公司邮箱网址：
 	http://mail.huitone.com/webmail7.5/webmail.php?r=site/index/domain/huitone.com
-登录账户：	zm@huitone.com
-登录密码：	HTGX100
+登录账户：	
+	zm@huitone.com
+登录密码：	
+	HTGX100
 ============================================================================
 中标oracle环境：
 172.16.7.162 =

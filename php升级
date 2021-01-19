@@ -1,6 +1,10 @@
 =================================================================================调试
 	https://blog.csdn.net/greatchina01/article/details/12832717
 =================================================================================
+Note: 处理 register_globals 
+如果已经弃用的 register_globals 指令被设置为 on 那么局部变量也将在脚本的全局作用域中可用。例如， $_POST['foo']   也将以 $foo  的形式存在。 
+php.ini
+register_globals = On
 $act = $_REQUEST['act'];
 =================================================================================
 encodeChar("utf-8","gbk",$val);
@@ -139,67 +143,23 @@ httpd.conf:
 php.ini：
 	session.cookie_httponly = true
 	session.cookie_secure = true
-=================================================================================
-html：
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self';script-src 'self'">
-	<meta http-equiv="X-Content-Type-Options" content="nosniff" />
-	<meta http-equiv="X-XSS-Protection" content="1; mode=block" />
 
-php:
-	header("Content-Security-Policy: script-src 'self';");
-
-httpd.conf:
-	<IfModule headers_module>
-	Header always set X-Frame-Options "SAMEORIGIN"
-	Header always set X-Xss-Protection "1; mode=block"
-	Header always set X-Content-Type-Options "nosniff"
-	Header always set Referrer-Policy  "no-referrer-when-downgrade"
-
-	#CSP HSTS HPKP单独设置每个域名
-	Header always edit Set-Cookie ^(.*)$ "$1;HttpOnly;Secure"
-	Header always set Content-Security-Policy "default-src https: data: blob: 'unsafe-inline' 'unsafe-eval'"
-	Header always set Strict-Transport-Security "max-age=31536000"
-	Header always set Public-Key-Pins "pin-sha256=\"amMeV6gb9QNx0Zf7FtJ19Wa/t2B7KpCF/1n2Js3UuSU=\";pin-sha256=\"YLh1dUR9y6Kja30RrAn7JKnbQG/uEtLMkBgFF2Fuihg=\"; max-age=2592000;includeSubdomains"
-	</IfModule>
-	Header always set Content-Security-Policy "default-src https: data: blob: 'unsafe-inline' 'unsafe-eval'"
-	Header always set X-Content-Type-Options "nosniff"
-	Header always set X-Xss-Protection "1; mode=block"
-	Header always set X-Frame-Options "SAMEORIGIN"
-	Header always edit Set-Cookie ^(.*)$ "$1;HttpOnly;Secure"
-	
-
-nginx:
-	add_header  X-Frame-Options "SAMEORIGIN" always;
-	add_header  X-Xss-Protection "1; mode=block" always;
-	add_header  X-Content-Type-Options "nosniff" always;
-	add_header  Referrer-Policy  "no-referrer-when-downgrade" always;
-	add_header Content-Security-Policy "default-src https: data: blob: 'unsafe-inline' 'unsafe-eval'" always;
-	add_header Strict-Transport-Security "max-age=31536000; " always; 
-
-java：
-
-httpServletResponse.setHeader("strict-transport-security","max-age=16070400; includeSubDomains");//简称为HSTS。它允许一个HTTPS网站，要求浏览器总是通过HTTPS来访问它
-httpServletResponse.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self'; frame-ancestors 'self'; object-src 'none'");//这个响应头主要是用来定义页面可以加载哪些资源，减少XSS的发生
-httpServletResponse.setHeader("X-Content-Type-Options", "nosniff");//互联网上的资源有各种类型，通常浏览器会根据响应头的Content-Type字段来分辨它们的类型。通过这个响应头可以禁用浏览器的类型猜测行为
-httpServletResponse.setHeader("X-XSS-Protection", "1; mode=block");//1; mode=block：启用XSS保护，并在检查到XSS攻击时，停止渲染页面
-httpServletResponse.setHeader("X-Frame-Options", "SAMEORIGIN");//SAMEORIGIN：不允许被本域以外的页面嵌入
-        
 =================================================================================
 删除inc_chk下面的：test.php文件和bak目录
 =================================================================================
 //tb_uc_task-任务2
-		TbUcTask task1 = new TbUcTask();
-		task1.setSubServiceId(dsUpdateSaveInVo.getSubServiceId());
-		task1.setSourceStep("ETL");
-		task1.setType("SQL_EXEC");
-		task1.setSourceId(tbUcCfgEtlTask.getEtlTaskId());
-		task1.setSourceTaskName(tbUcCfgEtlTask.getName());
-		task1.setPurpose("UPDATE");
-		task1.setAutoManual(dsUpdateSaveInVo.getSubsManual());
-		task1.setDispatchVar(tbUcCfgEtlTask.getDispatchVar());
-		task1.setDispatchVarStmt(tbUcCfgEtlTask.getDispatchVarStmt());
+TbUcTask task1 = new TbUcTask();
+task1.setSubServiceId(dsUpdateSaveInVo.getSubServiceId());
+task1.setSourceStep("ETL");
+task1.setType("SQL_EXEC");
+task1.setSourceId(tbUcCfgEtlTask.getEtlTaskId());
+task1.setSourceTaskName(tbUcCfgEtlTask.getName());
+task1.setPurpose("UPDATE");
+task1.setAutoManual(dsUpdateSaveInVo.getSubsManual());
+task1.setDispatchVar(tbUcCfgEtlTask.getDispatchVar());
+task1.setDispatchVarStmt(tbUcCfgEtlTask.getDispatchVarStmt());
 
-		taskService.saveTaskBySourceId(dsUpdateSaveInVo.getEtlTaskId(),task1);
+taskService.saveTaskBySourceId(dsUpdateSaveInVo.getEtlTaskId(),task1);
 
 =================================================================================
 
