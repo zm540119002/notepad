@@ -276,6 +276,37 @@ export LD_LIBRARY_PATH=/data/dmdbms/bin
 5 数据输出（提供清洗或者打标的数据给其他系统）
 6 增加实时数据采集，微批处理
 7 运维优化（一键部署 一键启停 健康检查 绿灯测试 链路跟踪 报错日志优化）
+
+其他通用变量：
+	PROC_DATE：处理日期，指稽核点任务日期，不一定是实际执行的日期，比如11-2日重跑11-1日的稽核点，那么PROC_DATE为11-1日，而实际执行日期为11-2日。
+	DATA_DATE：数据周期
+	SCHED_ID：任务调度ID，对应TB_UC_TASK_SCHED.SCHED_ID
+	SUB_SVC_RUN_ID：稽核点运行记录ID，对应TB_UA_SUB_SVC_RUN_LOG.SUB_SVC_RUN_ID
+	DATA_BATCH_ID：数据批次ID，用于产生新数据时，标记本次产生的数据，目前等于SCHED_ID
+	UC_DS_ID：产生结果数据源是，结果数据源的DS_ID
+
+
+把系统从root用户迁移到dev的经验
+
+1）修改/etc/security/limits.d/90-nproc.conf,将npoc设置最大。修改后，内容如下：
+    cat /etc/security/limits.d/90-nproc.conf
+    *          soft    nproc     65535
+    root       soft    nproc     unlimited
+
+2）修改/etc/security/limits.conf，增加nofile。修改方法如下：
+    # echo "* - nofile 65535" >> /etc/security/limits.conf
+    # echo "* - nproc 65535" >> /etc/security/limits.conf
+
+3）将以下代码目录属主赋值给dev
+    maven目录
+    jdk目录
+    jar部署的目录
+    日志目录
+    git代码目录
+    
+4）把root下面两个文件（目录）复制过来
+    .bash_profile
+    ~/sbin
 ```
 
 ## 流程配置

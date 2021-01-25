@@ -191,3 +191,15 @@ set names utf8;将连接设置成指定的字符集编码.
 ```
 select version();
 ```
+
+## 判断表是否存在
+
+```
+1、判断数据库是否存在
+	select * from information_schema.SCHEMATA where SCHEMA_NAME = '需要查找的数据库名'; 
+	select * from information_schema.SCHEMATA where SCHEMA_NAME like '%需要查询的数据库名的部分名称%'; 
+
+2、判断数据表是否存在
+	select * from information_schema.TABLES where TABLE_NAME = '需要查询的数据表名';
+```
+
