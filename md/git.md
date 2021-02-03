@@ -37,6 +37,22 @@ git checkout -b local-name origin/remote-name
 # 分支
 
 ```
+同步远程分支
+    git fetch 将本地分支与远程保持同步
+    git checkout -b 本地分支名x origin/远程分支名x 拉取远程分支并同时创建对应的本地分支
+首先同步所有远程分支，如下：
+	git branch -r | grep -v '\->' | while read remote; do git branch --track "${remote#origin/}" "$remote"; done
+
+将本地所有分支与远程保持同步 
+	git fetch --all
+
+最后拉取所有分支代码 
+	git pull --all
+```
+
+
+
+```
 1.查看一下本地分支
     git branch;
     查看本地和远程的所有分支
@@ -76,16 +92,26 @@ git checkout -b local-name origin/remote-name
 ## 删除分支
 
 ```
-删除本地分支：
-	git branch -D dm8
-删除远程分支：
-	git push origin --delete hz
+1、快速创建分支并切换分支 (dev 分支)
+	git checkout -b dev
+	
+2、删除分支 ： 如分支名为dev
+    git branch -d dev 会在删除前检查merge状态（其与上游分支或者与head）。
+    git branch -D dev 它会直接删除,不检查
+
+3、删除远程分支
+	git push origin --delete dev
+
+4、清理本地不存在的远程分支，如别人删除了dev,但是你本地查看还有，就可以执行该条命令
+	git remote prune origin
 ```
 
-# 工作流
+# 工作流（分支管理策略）
 
 ```
-参考：	https://blog.csdn.net/qq_35865125/article/details/80049655
+参考：	
+	https://blog.csdn.net/qq_35865125/article/details/80049655
+	https://blog.csdn.net/qq_32452623/article/details/78905181
 ```
 
 # 常用命令
@@ -127,12 +153,20 @@ git push <远程主机名> <本地分支名>  <远程分支名>
 
 1.5 git push 的其他命令
 	这几个常见的用法已足以满足我们日常开发的使用了，还有几个扩展的用法，如下：
-	（1） git push -u origin master 如果当前分支与多个主机存在追踪关系，则可以使用 -u 参数指定一个默认主机，这样后面就可以不加任何参数使用git push，
-不带任何参数的git push，默认只推送当前分支，这叫做simple方式，还有一种matching方式，会推送所有有对应的远程分支的本地分支， Git 2.0之前默认使用matching，现在改为simple方式
-如果想更改设置，可以使用git config命令。git config --global push.default matching OR git config --global push.default simple；可以使用git config -l 查看配置
-	（2） git push --all origin 当遇到这种情况就是不管是否存在对应的远程分支，将本地的所有分支都推送到远程主机，这时需要 -all 选项
-	（3） git push --force origin git push的时候需要本地先git pull更新到跟服务器版本一致，如果本地版本库比远程服务器上的低，那么一般会提示你git pull更新，如果一定要提交，那么可以使用这个命令。
-	（4） git push origin --tags //git push 的时候不会推送标签，如果一定要推送标签的话那么可以使用这个命令
+	（1） git push -u origin master 
+        如果当前分支与多个主机存在追踪关系，则可以使用 -u 参数指定一个默认主机，这样后面就可以不加任何参数使用git push，
+        不带任何参数的git push，默认只推送当前分支，这叫做simple方式，还有一种matching方式，会推送所有有对应的远程分支的本地分支， 
+        Git 2.0之前默认使用matching，现在改为simple方式
+        如果想更改设置，可以使用git config命令。
+        git config --global push.default matching OR git config --global push.default simple；
+        可以使用git config -l 查看配置
+	（2） git push --all origin 
+		当遇到这种情况就是不管是否存在对应的远程分支，将本地的所有分支都推送到远程主机，这时需要 -all 选项
+	（3） git push --force origin 
+		git push的时候需要本地先git pull更新到跟服务器版本一致，如果本地版本库比远程服务器上的低，
+		那么一般会提示你git pull更新，如果一定要提交，那么可以使用这个命令。
+	（4） git push origin --tags 
+		//git push 的时候不会推送标签，如果一定要推送标签的话那么可以使用这个命令
 
 1.6 关于 refs/for
 	// refs/for 的意义在于我们提交代码到服务器之后是需要经过code review 之后才能进行merge的，而refs/heads 不需要
@@ -183,6 +217,22 @@ $ git reset --hard [commit]
 
 # 重置当前HEAD为指定commit，但保持暂存区和工作区不变
 $ git reset --keep [commit]
+
+---------------------
+git reset --hard HEAD
+    修改了代码，但不想提交，（或者遴选提交点出现冲突），要全部还原 可以用这个命令
+
+    解决git pull --rebase产生的冲突方法：
+
+    1 git rebase --abort (放弃本次拉取，会退出到自己最后一次本地提交的状态)
+
+    2 查询日志，看自己最后一次修改的文件有哪些。备份起来。
+
+    3 git reset --hard HEAD~1 回退到上一次提交前状态
+
+    4 git pull --rebase 重新拉远程更新
+
+    5 使用beyond compare，比较备份的文件和现在工程文件，增量修改
 ```
 
 ## git stash

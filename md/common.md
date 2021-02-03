@@ -42,10 +42,10 @@ cd /usr/local/redis-2.8.17/src
 ---------------------------------------------------------------postgresql
 su - postgresql
 /usr/local/postgresql-10.1/bin/pg_ctl -D /usr/local/postgresql-10.1/data -l /usr/local/postgresql-10.1/log/pgsql.log start 
----------------------------------------------------------------可能问题
-
+---------------------------------------------------------------java
+vim /usr/local/sbin/restart-java.sh
 ---------------------------------------------------------------
----------------------------------------------------------------
+---------------------------------------------------------------可能问题java
 ```
 ## 172.16.6.44
 
@@ -97,12 +97,16 @@ password:	huitone2214
 ua_dbg/ua_dbgrica
 ltdba/ltdbarica
 ---------------------------------------------------------------mysql
+用户：	dev
+密码：	abc123!
+
 /home/mysql/bin/mysqld --basedir=/home/mysql --datadir=/home/mysql/data/mysql --plugin-dir=/home/mysql/lib/plugin --log-error=/home/mysql/data/mysql/error.log --open-files-limit=65535 --pid-file=/home/mysql/data/mysql/mysqldb.pid --socket=/tmp/mysql.sock --port=3306
 
 /bin/sh /home/mysql/bin/mysqld_safe --datadir=/home/mysql/data/mysql --pid-file=/home/mysql/data/mysql/mysqldb.pid
 
 /home/mysql/bin/mysqld stop
 /home/mysql/bin/mysqld start
+---------------------------------------------------------------
 ```
 
 ## 172.16.7.56
@@ -160,6 +164,99 @@ web目录：	 cd /www/wwwroot/front/
 	/usr/local/mongodb/bin/mongod --config /usr/local/mongodb/bin/mongodb.conf
 #关闭
 	/usr/local/mongodb/bin/mongod --config /usr/local/mongodb/bin/mongodb.conf --shutdown
+--------------------------------------------------------------java
+57用dev用户启动java程序：	
+	su - dev
+	
+vim /home/dev/sbin/restart-govern.sh
+
+ps -ef|grep data_govern|grep java | awk '{print "kill " $2}'|sh
+sleep 10
+ps -ef|grep data_govern|grep java | awk '{print "kill " $2}'|sh
+
+# 所有服务启动脚本 
+nohup java  -jar  /www/data_govern/jars/databank-eurekaserver.jar >> /www/data_govern/logs/eurekaserver.log 2>&1 &
+sleep 10
+# xxl-job
+nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48888,server=y,suspend=n -Dspring.profiles.active=dev -jar /www/data_govern/jars/xxl-job-admin-2.2.1-SNAPSHOT.jar   >>  /www/data_govern/logs/xxl-job-admin-2.2.1-SNAPSHOT.log 2>&1 &
+sleep 10
+nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48001,server=y,suspend=n  -Dspring.profiles.active=dev   -jar /www/data_govern/jars/baop-dbserver-1.0.0-SNAPSHOT.jar >> /www/data_govern/logs/baop-dbserver-1.0.0-SNAPSHOT.log 2>&1 &
+nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48762,server=y,suspend=n  -Dspring.profiles.active=dev   -jar /www/data_govern/jars/baop-authapi-1.0.0-SNAPSHOT.jar >> /www/data_govern/logs/baop-authapi-1.0.0-SNAPSHOT.log 2>&1 &
+nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=49001,server=y,suspend=n  -Dspring.profiles.active=dev  -jar  /www/data_govern/jars/baop-gateway-1.0.1-SNAPSHOT.jar >> /www/data_govern/logs/baop-gateway-1.0.1-SNAPSHOT.log 2>&1 &
+sleep 10
+nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48089,server=y,suspend=n   -Dspring.profiles.active=dev  -jar   /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.jar  >>  /www/data_govern/logs/data-govern-0.0.1-SNAPSHOT.log 2>&1 &
+nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48889,server=y,suspend=n   -Dspring.profiles.active=dev  -jar   /www/data_govern/jars/convert-0.0.1-SNAPSHOT.jar  >>  /www/data_govern/logs/convert-0.0.1-SNAPSHOT.log 2>&1 &
+ nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48891,server=y,suspend=n -Dspring.profiles.active=dev -jar /www/data_govern/jars/data-clean-0.0.1-SNAPSHOT.jar  >>  /www/data_govern/logs/data-clean-0.0.1-SNAPSHOT.log 2>&1 &
+sleep 10
+nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48890,server=y,suspend=n  -Dspring.profiles.active=dev   -jar /www/data_govern/jars/task-sched-0.0.1-SNAPSHOT.jar  >>  /www/data_govern/logs/task-sched-0.0.1-SNAPSHOT.log 2>&1 &
+sleep 5
+nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48099,server=y,suspend=n  -Dspring.profiles.active=dev   -jar /www/data_govern/jars/data-report-0.0.1-SNAPSHOT.jar  >>  /www/data_govern/logs/data-report-0.0.1-SNAPSHOT.log 2>&1 &
+sleep 15
+ps -ef|grep data_govern|grep java
+ps -ef|grep data_govern|grep java|wc -l
+--------------------------------------------------------------启动单个服务
+cd /usr/local/web/data-govern/
+git pull 
+mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true 
+runjar.sh
+
+cat /home/dev/sbin/runjar.sh
+#! /bin/sh
+
+# 询问用户需要启动哪个
+v_jar_list="databank-eurekaserver.jar
+xxl-job-admin-2.2.1-SNAPSHOT.jar
+baop-dbserver-1.0.0-SNAPSHOT.jar
+baop-authapi-1.0.0-SNAPSHOT.jar
+baop-gateway-1.0.1-SNAPSHOT.jar
+data-govern-0.0.1-SNAPSHOT.jar
+convert-0.0.1-SNAPSHOT.jar
+data-clean-0.0.1-SNAPSHOT.jar
+task-sched-0.0.1-SNAPSHOT.jar
+data-report-0.0.1-SNAPSHOT.jar"
+
+
+echo "------------目前系统支持的jar包有-----------"
+cat <<< "${v_jar_list}"
+echo "-----------------------"
+
+echo "请输入启动哪个jar包名（从上面复制粘贴）:"
+
+read v_jar
+v_file=$(find /usr/local/web/data-govern/ -name ${v_jar})
+
+if [ "${v_file}" == "" ]
+then
+    echo "查找不到jar包"
+    exit 1
+fi
+
+# v_file是文件全路径 v_file_name是文件名
+v_file_name=$(echo ${v_file} | awk -F / '{print $NF}')
+
+# 如果文件更新则需要复制一份
+if [  ${v_file} -nt  /www/data_govern/jars/${v_file_name}  ]
+ then
+    # \cp避免alias干扰  -p代表保持时间一致
+    \cp -p ${v_file} /www/data_govern/jars/
+fi
+
+# 如果进程在 则一直循环杀进程
+while [ "$(ps -ef|grep ${v_file_name}|grep -v grep)"  != "" ] 
+do
+    echo "to kill proc $(ps -ef|grep ${v_file_name}|grep -v grep)"
+    ps -ef|grep ${v_file_name}|grep -v grep | awk '{print "kill "$2}'|sh
+    sleep 2
+done
+
+# 获取启动命令并执行
+v_cmd=$(grep  ${v_file_name} ${HOME}/sbin/restart-govern.sh)
+echo ${v_cmd} | sh
+
+sleep 2
+ps -ef|grep ${v_file}|grep -v grep
+
+--------------------------------------------------------------
 ```
 
 ## 172.16.7.58

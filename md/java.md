@@ -338,6 +338,16 @@ logback.xml语法结构请参考：	https://www.jianshu.com/p/f67c721eea1b
     %n是换行符
 ```
 
+```
+Class path contains multiple SLF4J bindings.警告的解决
+参考：	https://blog.csdn.net/wohaqiyi/article/details/81009689
+
+原因分析：
+  上边的大概意思是说logback-classic 包和slf4j-log4j12 包，关于org/slf4j/impl/StaticLoggerBinder.class 这个类发生了冲突。
+  发生这个错误的原因，首先logback 日志的开发者和log4j 的开发者据说是一波人，而springboot 默认日志是，较新的logback 日志。但是在以前流行的日志却是log4j ，而且很多的第三方工具都含有log4j 得引入。
+  而我们在项目开发中，难免会引入各种各样的工具包，所以，基本上springboot 项目，如果不注意，肯定会出现这种冲突的。
+```
+
 
 
 # Spring Mvc

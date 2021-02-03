@@ -1,3 +1,14 @@
+# 常用
+
+```
+select usename, count(*) from pg_stat_activity group by usename order by count(*) desc;
+select count(*) , a.client_addr from  pg_stat_activity a group by a.client_addr;
+-- 杀掉pg空闲
+SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state='idle';
+```
+
+
+
 # 配置
 
 ## 配置优化
