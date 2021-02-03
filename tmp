@@ -19,17 +19,9 @@ public static final long   TOKEN_EXPIRE_TIME                 = 30 * 60 * 1000L; 
 public static final long   SERVER_PUBLIC_KEY_EXPIRE_TIME     = 1 * 60 * 60 * 1000L;            // 服务器公钥有效时间
 public static final long   TIMESTAMP_EXPIRE_TIME             = 3 * 60 * 1000L;                 // 时间序号过期时间
 ============================================               
-连接错误：null 执行错误：[/tmp/psql_7166452135906653313.sql:15: ERROR:  non-integer constant in GROUP BY]
 
-连接错误：null 执行错误：[/tmp/psql_7795435390146019556.sql:17: ERROR:  syntax error at or near "$"]
-
-连接错误：null 执行错误：[/tmp/psql_8569101819427438509.sql:15: ERROR:  column "tmp1_manual_book_info.uc$ds_id" must appear in the GROUP BY clause or be used in an aggregate function]
 ============================================    
-<dependency>
-	<groupId>commons-io</groupId>
-	<artifactId>commons-io</artifactId>
-	<version>2.6</version>
-</dependency>
+
 ============================================
 
 ============================================
