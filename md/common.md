@@ -35,15 +35,20 @@ username:	root
 password:	oracle
 ---------------------------------------------------------------mysql
 su - mysql
+启动守护进程：
 /bin/sh /home/mysql/bin/mysqld_safe --datadir=/home/mysql/data/mysql --pid-file=/home/mysql/data/mysql/mysqldb.pid
+启动mysql服务：
+sh /home/mysql/support-files/mysql.server start
 ---------------------------------------------------------------redis
 cd /usr/local/redis-2.8.17/src
 ./redis-server ../redis.conf
+/usr/local/redis-2.8.17/src/redis-server /usr/local/redis-2.8.17/redis.conf
 ---------------------------------------------------------------postgresql
 su - postgresql
 /usr/local/postgresql-10.1/bin/pg_ctl -D /usr/local/postgresql-10.1/data -l /usr/local/postgresql-10.1/log/pgsql.log start 
 ---------------------------------------------------------------java
 vim /usr/local/sbin/restart-java.sh
+重启防火墙之后要检查9001端口有没有放开
 ---------------------------------------------------------------
 ---------------------------------------------------------------可能问题java
 ```
@@ -71,6 +76,7 @@ error_log=/usr/local/php/php_error.log
 /usr/local/php/bin/phpize
 php已安装扩展：
 cd /usr/local/php/lib/php/extensions/no-debug-non-zts-20060613
+---------------------------------------------------------------
 ```
 
 ## 172.16.7.54
@@ -97,15 +103,10 @@ password:	huitone2214
 ua_dbg/ua_dbgrica
 ltdba/ltdbarica
 ---------------------------------------------------------------mysql
-用户：	dev
-密码：	abc123!
-
-/home/mysql/bin/mysqld --basedir=/home/mysql --datadir=/home/mysql/data/mysql --plugin-dir=/home/mysql/lib/plugin --log-error=/home/mysql/data/mysql/error.log --open-files-limit=65535 --pid-file=/home/mysql/data/mysql/mysqldb.pid --socket=/tmp/mysql.sock --port=3306
-
-/bin/sh /home/mysql/bin/mysqld_safe --datadir=/home/mysql/data/mysql --pid-file=/home/mysql/data/mysql/mysqldb.pid
-
-/home/mysql/bin/mysqld stop
-/home/mysql/bin/mysqld start
+数据库用户：			 dev
+数据库用户密码：		abc123!
+su - mysql
+sh /home/mysql/support-files/mysql.server start
 ---------------------------------------------------------------
 ```
 
@@ -118,9 +119,10 @@ password:	huitone2214
 vim /etc/apache2.4/httpd.conf
 vim /etc/apache2.4/extra/httpd-vhosts.conf
 vim /etc/apache2.4/extra/httpd-ssl.conf
-/usr/local/apache2.4/bin/apachectl restart
+/usr/local/apache2.4/bin/apachectl start
 tail -f /usr/local/apache2.4/logs/access_log
 tail -f /usr/local/apache2.4/logs/error_log
+注意防火墙问题！！
 ---------------------------------------------------------------php-7.2.26
 扩展库路径：	cd /usr/local/php7/lib/php/extensions/no-debug-zts-20170718
 配置文件：	vim /usr/local/php7/etc/php.ini
@@ -159,6 +161,7 @@ web目录：	 cd /www/wwwroot/front/
 --------------------------------------------------------------redis
 #启动
 	/usr/local/redis/bin/redis-server /usr/local/redis/bin/redis.conf
+	sudo /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
 --------------------------------------------------------------mongoDB
 #启动
 	/usr/local/mongodb/bin/mongod --config /usr/local/mongodb/bin/mongodb.conf
@@ -268,6 +271,8 @@ username:	oracle
 password:	huitone2214
 ---------------------------------------------------------------mysql
 service mysqld start
+注意ONLY_FULL_GROUP_BY问题
+---------------------------------------------------------------
 ```
 
 ## 172.16.7.60 

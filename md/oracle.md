@@ -171,6 +171,7 @@ lsnrctl start
 ```
 以system用户身份登陆oracle：	sqlplus /nolog
 SQL> conn as sysdba
+ua_dbg	/ ua_dbgrica
 SQL> startup
 SQL> shutdown
 ```

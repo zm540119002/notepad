@@ -646,6 +646,22 @@ ${}:用于获取配置文件中的属性值，通常用于获取写在applicatio
     springMVC的Dispatcherservlet接收到请求时初始化springMVC的配置文件。
 ```
 
+### @ControllerAdvice 
+
+```
+@ControllerAdvice ，很多初学者可能都没有听说过这个注解，实际上，这是一个非常有用的注解，顾名思义，这是一个增强的 Controller。
+使用这个 Controller ，可以实现三个方面的功能：
+    全局异常处理
+    全局数据绑定
+    全局数据预处理
+
+灵活使用这三个功能，可以帮助我们简化很多工作，需要注意的是，这是 SpringMVC 提供的功能，在 Spring Boot 中可以直接使用，下面分别来看。
+参考：	
+	https://www.cnblogs.com/lenve/p/10748453.html
+```
+
+
+
 ## spring boot
 
 ```
