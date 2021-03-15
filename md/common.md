@@ -409,6 +409,11 @@ export LD_LIBRARY_PATH=/data/dmdbms/bin
 4）把root下面两个文件（目录）复制过来
     .bash_profile
     ~/sbin
+    
+selec case when (b. check_id  is null) then 1 else 0 end  
+from a left join (select id, 1  as check_id from b) b on (a.id = b.id)
+
+专题数据配置-增加系统记录
 ```
 
 ## 流程配置

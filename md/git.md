@@ -20,16 +20,23 @@ git fetch
 git checkout -b local-name origin/remote-name
 ```
 
-## 解决git pull --rebase产生的冲突方法
+## git pull --rebase产生的冲突解决方法
 
 ```
-1 git rebase --abort (放弃本次拉取，会退出到自己最后一次本地提交的状态)
+解决方案一：
+    1 git rebase --abort (放弃本次拉取，会退出到自己最后一次本地提交的状态)
+    2 查询日志，看自己最后一次修改的文件有哪些。备份起来。
+    3 git reset --hard HEAD~1 回退到上一次提交前状态（注意：自己本次修改全部丢失，小心！）
+    4 git pull --rebase 重新拉远程更新
+    5 使用beyond compare，比较备份的文件和现在工程文件，增量修改
 
-2 查询日志，看自己最后一次修改的文件有哪些。备份起来。
-
-3 git reset --hard HEAD~1 回退到上一次提交前状态
-
-4 git pull --rebase 重新拉远程更新
+解决方案二：（未实践）
+    定位到冲突文件
+    手动解决冲突
+    执行git add .
+    执行git rebase --continue
+    此时执行git status 看下当前在那个分支上，如果在临时分支上，则需要执行git branch
+    执行git push即可完成
 ```
 
 

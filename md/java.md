@@ -1001,6 +1001,14 @@ Collection 接口又有 3 种子类型，List、Set 和 Queue，再下面是一�
 
 # 常用示例
 
+## 常用
+
+```
+AutoKeyGet.GetKeyId()
+```
+
+
+
 ```
 ExceptionUtil.throwError(aliasPrefix.returnCode, aliasPrefix.errMsg);
 
@@ -1098,20 +1106,49 @@ sql.deleteCharAt(sql.length()-2).
 tbUcTaskParam.setValue(sql.toString());
 ```
 
+## stream
+
+```
+示例：
+ boolean isRepeat = (saveVo.getDiffItemList().size())
+ != (saveVo.getDiffItemList().stream().mapToLong(t -> t.getResultStore()).distinct().count());
+ if (isRepeat) {
+ 	ExceptionUtil.throwError(LogicConvertEtlErr.INVALID_PARAM.getCode(), "比较结果存储字段不能重复！");
+ }
+ 
+ List<String> diffMethodList = list.stream().map(t->t.getDiffMethod()).distinct().collect(Collectors.toList());
+ 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+ 
+/**
+ * 通过简单的代码判断List中是否包含相同元素
+ * @author wei 2017年7月10日 下午8:34:47
+ */
+public class ListHaveRepeat {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<String>();
+        list.add("1");
+        list.add("2");
+        list.add("2");
+        // 通过去重之后的HashSet长度来判断原list是否包含重复元素
+        boolean isRepeat = list.size() != new HashSet<String>(list).size();
+        System.out.println("list中包含重复元素：" + isRepeat);
+    }
+}
+```
+
+
+
 ## selectByExample
 
 ```
-Example exampleUpdateColumn = new Example(TbUcCfgEtlUpdColumn.class);
-Example.Criteria criteriaUpdateColumn  = exampleUpdateColumn.createCriteria();
-criteriaUpdateColumn.andEqualTo("etlTaskId", tbUcCfgEtlTask.getEtlTaskId());
-List<TbUcCfgEtlUpdColumn> updateColumns = tbUcCfgEtlUpdColumnService.selectByExample(example);
-
-Example exampleParam = new Example(TbUcTaskParam.class);
-Example.Criteria criteriaParam = exampleParam.createCriteria();
-criteriaParam.andIn("taskId", oldTaskIdList);
-if(tbUcTaskParamService.deleteByExample(exampleParam) <1 ){
-	ExceptionUtil.throwError(StatusCode.FAILURE.getCode(),StatusCode.FAILURE.getMessage());
-}
+Example exampleEtlJoin = new Example(TbUcCfgEtlJoin.class);
+Example.Criteria criteriaEtlJoin  = exampleEtlJoin.createCriteria();
+criteriaEtlJoin.andEqualTo("etlTaskId", tbUcCfgAdtRule.getAdtId());
+exampleEtlJoin.orderBy("sequ");
+List<TbUcCfgEtlJoin> etlJoinList = tbUcCfgEtlJoinService.selectByExample(exampleEtlJoin);
 ```
 
 ## selectOneByExample
@@ -1121,6 +1158,61 @@ Example example = new Example(TbUcCfgQuoteDs.class);
 Example.Criteria criteria = example.createCriteria();
 criteria.andEqualTo("dsId", dsId);
 int count = this.selectCountByExample(example);
+```
+
+## updateByExampleSelective
+
+```
+首先：updateByExampleSelective(@Param(“record”) Xxx record, @Param(“example”) XxxExample example);
+
+第一个参数 是要修改的部分值组成的对象，其中有些属性为null则表示该项不修改。
+
+第二个参数 是一个对应的查询条件的类， 通过这个类可以实现 order by 和一部分的where 条件。
+
+使用方法大概如下：
+
+public void edit(Long id, String name) {
+    Example example = new Example(Category.class);
+    Example.Criteria criteria = example.createCriteria();
+    criteria.andEqualTo("id",id);
+    Category category = new Category();
+    category.setName(name);
+    categoryMapper.updateByExampleSelective(category,example);
+}
+
+updateByExampleSelective是更新一条数据中的某些属性，而不是更新整条数据。
+而updateByExample需要将表的条件全部给出，也就是要给出一个对象，以下给出代码：
+
+Example example = new Example(TbUcCfgEtlFilter.class);
+Example.Criteria criteria = example.createCriteria();
+criteria.andEqualTo("etlTaskId", tbUcCfgEtlTask.getEtlTaskId());
+if (tbUcCfgEtlFilterService.updateByExampleSelective(tbUcCfgEtlFilter,example) < 1) {
+	ExceptionUtil.throwError(LogicConvertEtlErr.OPERATE_FAIL.getCode(),"修改etl过滤表达式失败");
+}
+
+//修改-一致性规则表
+Example exampleDiff = new Example(TbUcCfgDiff.class);
+Example.Criteria criteriaDiff = exampleDiff.createCriteria();
+criteriaDiff.andEqualTo("adtId", saveVo.getDiff().getAdtId());
+tbUcCfgDiffService.updateByExampleSelective(saveVo.getDiff(),exampleDiff);
+```
+
+## deleteByExample
+
+```
+//删除etl任务 - tb_uc_cfg_etl_task
+Example exampleEtlTask = new Example(TbUcCfgEtlTask.class);
+Example.Criteria criteriaEtlTask = exampleEtlTask.createCriteria();
+criteriaEtlTask.andEqualTo("etlTaskId", nodeId);
+tbUcCfgEtlTaskService.deleteByExample(exampleEtlTask)
+```
+
+## For
+
+```
+for (TbUcCfgDiffItem cur : diffItems) {
+
+}
 ```
 
 
@@ -1213,6 +1305,23 @@ List转换为Array可以这样处理：
     1)   ArrayList始终比HashSet性能要高
     2)   HashSet每次添加总要判断hashcode导致效率低
     3)   HashSet两种循环中iterator 方式不稳定，不过总是比foreach要快一点
+```
+
+## map
+
+```
+参考：
+	https://blog.csdn.net/weixin_39723544/article/details/97976604
+public static void main(String[] args) throws Exception {
+    // 将集合中的所有的小写字母转为大写字母
+    List<String> list = new ArrayList<>();
+    list.add("hello");
+    list.add("world");
+    list.add("java");
+    list.add("python");
+    List<String> result = list.stream().map(String::toUpperCase).collect(Collectors.toList());
+    System.out.println(result);
+}
 ```
 
 
