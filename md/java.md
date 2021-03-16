@@ -762,6 +762,17 @@ Future模式的核心思想是能够让主线程将原来需要同步等待的�
 #  泛型
 
 ```
+Java泛型中的各标记符含义： 
+    E - Element (在集合中使用，因为集合中存放的是元素)
+    T - Type（Java 类）
+    K - Key（键）
+    V - Value（值）
+    N - Number（数值类型）
+    R - Result （返回结果，多用于函数式编程）
+    ？ -  表示不确定的java类型
+
+PS: 其实以上这些对于java编译器来说作用都一样，都是作为一个占位作用，要在使用时就能确定类型，也就是说A,B,C...Z等大写字母都可以表示泛型，只不过以上泛型的定义，更多是我们程序员间约定俗成的命名方式，一种规范，从而达到“见其名则知其意”的目的，罢了。
+
 顾名思义，就是将类型由原来的具体的类型参数化，类似于方法中的变量参数，此时类型也定义成参数形式（可以称之为类型形参），
 然后在使用/调用时传入具体的类型（类型实参）。
 泛型的本质是为了参数化类型（在不创建新的类型的情况下，通过泛型指定的不同类型来控制形参具体限制的类型）。也就是说在泛型使用过程中，
@@ -805,8 +816,326 @@ if(classStringArrayList.equals(classIntegerArrayList)){
     泛型的类型参数只能是类类型，不能是简单类型。
     不能对确切的泛型类型使用instanceof操作。如下面的操作是非法的，编译时会出错。
     	if(ex_num instanceof Generic<Number>){ }
-参考：	https://www.cnblogs.com/coprince/p/8603492.html
+参考：	
+	https://www.cnblogs.com/coprince/p/8603492.html
 ```
+# 接口
+
+```
+接口并不是类，编写接口的方式和类很相似，但是它们属于不同的概念。类描述对象的属性和方法。接口则包含类要实现的方法。
+
+除非实现接口的类是抽象类，否则该类要定义接口中的所有方法。
+
+接口无法被实例化，但是可以被实现。一个实现接口的类，必须实现接口内所描述的所有方法，否则就必须声明为抽象类。另外，在 Java 中，接口类型可用来声明一个变量，他们可以成为一个空指针，或是被绑定在一个以此接口实现的对象。
+
+接口与类相似点：
+    一个接口可以有多个方法。
+    接口文件保存在 .java 结尾的文件中，文件名使用接口名。
+    接口的字节码文件保存在 .class 结尾的文件中。
+    接口相应的字节码文件必须在与包名称相匹配的目录结构中。
+接口与类的区别：
+    接口不能用于实例化对象。
+    接口没有构造方法。
+    接口中所有的方法必须是抽象方法。
+    接口不能包含成员变量，除了 static 和 final 变量。
+    接口不是被类继承了，而是要被类实现。
+    接口支持多继承。
+接口特性
+    接口中每一个方法也是隐式抽象的,接口中的方法会被隐式的指定为 public abstract（只能是 public abstract，其他修饰符都会报错）。
+    接口中可以含有变量，但是接口中的变量会被隐式的指定为 public static final 变量（并且只能是 public，用 private 修饰会报编译错误）。
+    接口中的方法是不能在接口中实现的，只能由实现接口的类来实现接口中的方法。
+抽象类和接口的区别
+    1. 抽象类中的方法可以有方法体，就是能实现方法的具体功能，但是接口中的方法不行。
+    2. 抽象类中的成员变量可以是各种类型的，而接口中的成员变量只能是 public static final 类型的。
+    3. 接口中不能含有静态代码块以及静态方法(用 static 修饰的方法)，而抽象类是可以有静态代码块和静态方法。
+    4. 一个类只能继承一个抽象类，而一个类却可以实现多个接口。
+注：JDK 1.8 以后，接口里可以有静态方法和方法体了。
+
+接口的声明语法格式如下：
+[可见度] interface 接口名称 [extends 其他的接口名] {
+        // 声明变量
+        // 抽象方法
+}
+
+接口有以下特性：
+    接口是隐式抽象的，当声明一个接口的时候，不必使用abstract关键字。
+    接口中每一个方法也是隐式抽象的，声明时同样不需要abstract关键字。
+    接口中的方法都是公有的。
+    
+接口的实现
+    当类实现接口的时候，类要实现接口中所有的方法。否则，类必须声明为抽象的类。
+    类使用implements关键字实现接口。在类声明中，Implements关键字放在class声明后面。
+    
+重写接口中声明的方法时，需要注意以下规则：
+    类在实现接口的方法时，不能抛出强制性异常，只能在接口中，或者继承接口的抽象类中抛出该强制性异常。
+    类在重写方法时要保持一致的方法名，并且应该保持相同或者相兼容的返回值类型。
+    如果实现接口的类是抽象类，那么就没必要实现该接口的方法。
+    
+在实现接口的时候，也要注意一些规则：
+    一个类可以同时实现多个接口。
+    一个类只能继承一个类，但是能实现多个接口。
+    一个接口能继承另一个接口，这和类之间的继承比较相似。
+```
+
+# 接口的作用
+
+```
+接口的作用就是把使用接口的人和实现接口的人分开，实现接口的人不必要关心谁去使用，而使用接口的人也不用关心谁实现的接口，由接口将他们联系在一起。
+以上像一段绕口令，那么通过下面的几段程序解释： 
+1、以生产和使用一台计算机为例，首先，我们定义了一个显卡的接口，他里面有显示功能和获取显卡名称的功能： 
+    interface VidioCard { 
+        void display(); 
+        String getName(); 
+    } 
+    
+2、显卡的生产者来了，他必须实现接口中定义的所有方法，也可以自己增添若干方法： 
+    class HaolongVidio implements VidioCard { 
+        String name="Haolong's vidiocard"; 
+        
+        void setName(String name){ 
+            this.name=name; 
+        } 
+        
+        public void display(){ 
+            System.out.println("The Haolong's vidiocard is running!!"); 
+        } 
+
+        public String getName(){ 
+            return name; 
+        } 
+	}; 
+	显卡制造商生产出了显卡，并且通过setName方法贴上了自己的商标，而通过getName方法可以让使用者知道这块显卡的制造商。 
+	
+3、现在显卡已经生产出来了，但是我们还需要一块主板，把生产出来的显卡插到主板上才能够使用，那么我们去买主板： 
+    class MainBorad { 
+        String cpuname; 
+        VidioCard vc; 
+
+        void setCPU(String cpuname){ 
+            this.cpuname=cpuname; 
+        } 
+
+        void setVidioCard(VidioCard vc){ 
+            this.vc=vc; 
+        } 
+
+        void run(){ 
+            System.out.println("wudi-mainbord!"); 
+            System.out.println(vc.getName()); 
+            vc.display(); 
+            System.out.println("mainbord is running successful!"); 
+        } 
+    }; 
+这是主板厂商生产的主板，这也就是我们所说的接口的使用者，在他生产主板的时候并不知道用户使用的是哪块显卡（程序中这样理解：Mainborad这个类只知道接口VidioCard中有哪些方法，但是并不知道接口的实现类HaolongVidio是怎么去实现接口的，也就是生产主板的厂商并没有必要考虑显卡是哪个厂商的，他要做的只是根据接口把显卡插槽做好，接口里没有实现的方法相当于插槽），但是他留出来了显卡的插槽（插槽就是接口），也就是他不关心谁实现的接口，但是他可以使用接口，预留出显卡的插槽让用户去选购显卡。 
+4、现在我们用户开始组装计算机了： 
+    public class ChengDuActor { 
+        public static void main(String [] args){ 
+
+            HaolongVidio hv=new HaolongVidio();//买了一块HaolongVidio显卡 
+            MainBorad mb=new MainBorad();//买了一块主板 
+
+            mb.setCPU("Intel");//买的是Inter主板 
+            mb.setVidioCard(hv);//把HaolongVidio插到主板上（通过主板上setVidio方法） 
+
+            //System.out.println(hv.getName()); 
+            mb.run();//开电脑运行 
+            System.out.println("success"); 
+        } 
+    }; 
+以上看出接口的作用就是大力实现了java的开源性，使软件开发过程优化，接口重要的特征是实现了多样性，能够很好地解决C++中遗留的多继承中出现的问题。
+```
+
+# 为什么要用接口_为什么要使用接口
+
+```
+日常生活中，两个实体之间进行连接的部分称为接口。
+如电脑和 U 盘连接的标准 USB 接口。接口可以确保不同实体之间的顺利连接。如不同的电脑厂家和 U 盘厂家只要按照相同的 USB 接口进行生产，那么所有的电脑和 U 盘就可以顺利的连接起来。
+
+(1)Java 编程领域中，接口可以为不同类顺利交互提供标准。
+例如：老师让学生张三和李四一起完成，java 程序来模拟营业员和计算器的行为。张三和李四进行工作分工，张三写计算机器，李四写营业员类。
+
+张三和李四没有定义接口会出现的问题如下：
+
+张三先定义了一个计算器类 Calculator 类并提供计算的方法, 注方法的名称
+public class Calculator{
+    public double count(double salary,double bonus){
+        return salary+bonus;
+    }
+}
+
+李四定义了代表营业员的 Seller 类：注意这里计算器的方法
+
+class Seller{
+	String name;// 营业员的名称
+	Calculator calculator;
+
+    public Seller(String name, Calculator calculator) {
+        super();
+        this.name = name;
+        this.calculator = calculator;
+    }
+
+	// 计算的方法
+	public void quote(double salary,double bonus){
+		System.out.println(name+"说：您好：请支付"+calculator.countMoney(salary, bonus)+"元。");
+	}
+}
+
+我们看到李四开发的时候想使用张三已经写好的计算器的类，李四想当然的认为计算钱的方法是 countMoney, 但是张三写计算器的时候使用的方法是 count, 那么李四的写的 Seller 类是错误的。
+
+实现接口的好处如下：
+
+为了保证张三和李四的书写的类可以正确的完成交互，李四定义了一个接口，并要求张三必须实现这个接口，接口的代码如下：
+
+interface Icount{
+	public double countMoney(double salary,double bonus);
+}
+
+那么张三在写计算器 Calculator；类的时候，实现 Icount 接口必须重写接口中的抽象方法。
+
+这里要注意，这里说明了，接口不是写实现类的程序员写的，而是需要这个实现类的功能、把写实现类的任务交给其他人的程序员写的
+
+那么张三的代买就应该是如下的：
+
+public class Calculator implemenets Icount{
+	public double countMoney(double salary,double bonus){
+        return salary+bonus;
+    }
+}
+
+这样就李四的代码就可以正常的执行了。
+
+(2)接口可以降低类的依赖性，提高彼此的独立性
+
+张三现在觉得计算器类的名字改成 SuperCalculator 更合适那么张三写的类代码就应该如下：
+
+public class SuperCalculator implements Icount{
+    public double countMoney(double salary,double bonus){
+        return salary+bonus;
+    }
+}
+
+李四的代码如下注意这里计算的使用接口来声明：
+
+class Seller{
+    String name;// 营业员的名称
+    Icount calculator; // 这里使用接口声明
+
+    public Seller(String name, Calculator calculator) {
+        super();
+        this.name = name;
+        this.calculator = calculator;
+    }
+
+    // 计算的方法
+    public void quote(double salary,double bonus){
+        System.out.println(name+"说：您好：请支付"+calculator.countMoney(salary, bonus)+"元。");
+    }
+}
+
+由以上的代码来看张三的类无论命名成什么李四的代码都不需要改，所以代码的依赖性降低，便于程序的维护。
+
+这一点很关键，为了避免实现类的类型修改对调用的影响，声明的时候应该只声明接口的类型，相应的也只使用接口中定义的方法
+
+(3)接口在使用的时候需要注意一下几点：
+	1)接口是系统中最高层次的抽象类型
+	2)接口本身必须十分稳定，接口一旦定制，就不允许随意修改，否则对接口实现类以及接口访问都会造成影响。(接口是需求的体现)
+```
+
+
+
+# 静态代码块、构造代码块、构造函数、普通代码块
+
+```
+一、静态代码块
+1.在java类中(方法中不能存在静态代码块)使用static关键字和{}声明的代码块：
+public class CodeBlock{
+    static{
+    	System.out.println("静态代码块");  
+    }      
+}
+
+2.执行时机
+	静态代码块在类被加载的时候就运行了，而且只运行一次，并且优先于各种代码块以及构造函数。如果一个类中有多个静态代码块，就会按照书写的顺序执行。
+
+3.静态代码块的作用：
+	一般情况下，如果有些代码需要在项目启动的时候执行，这时就需要静态代码快，比如一个项目启动需要加载很多配置文件等资源，就可以都放在静态代码块中。
+
+4.静态代码块不能存在于任何方法体中
+	这个很好理解，首先要明确静态代码块是在类加载的时候就运行了，我们分情况进行讨论：
+    (1)对于普通方法，由于普通方法是通过加载类，然后new出实例化对象，通过对象才能运行这个方法，而静态代码块只需要加载类之后就能运行了。
+    (2)对于静态方法，在类加载的时候，静态方法就已经加载了，但是我们必须通过类名或者对象名才能进行访问，也就是说相对于静态代码块，静态代码块是主动运行的，而静态方法是被动运行的。
+    (3)不管哪种方法，我们需要明确的是静态代码块的存在在类加载的时候就自动运行了，而放在不管是普通方法中还是静态方法中，都是不能自动运行的。
+
+5.静态代码块不能访问普通代变量
+	(1)这个理解思维同上，普通代码块只能通过对象来进行调用，而不能防砸静态代码块中。
+	
+二、构造代码块
+	1.格式：java类中使用{}声明的代码块(和静态代码块的区别是少了static关键字)　
+    public class codeBlock {
+        static {
+            System.out.println("静态代码块");
+        }
+        {
+            System.out.println("构造代码块");
+        }
+    }
+
+	2.执行时机
+	构造代码块在创建对象的时候被调用，每创建一次对象都会调用一次，但是优先于构造函数执行，需要注意的是，
+	听名字我们就知道，构造代码块不是优先于构造函数执行的，而是依托于构造函数，
+	也就是说，如果你不实例化对象，构造代码块是不会执行的。怎么理解呢？先看看下面的代码段：
+	public class codeBlock {
+        static {
+            System.out.println("静态代码块");
+        }
+        {
+            System.out.println("构造代码块");
+        }
+        public codeBlock(){
+            System.out.println("无参构造函数");
+        }
+        public codeBlock(String str){
+            System.out.println("有参构造函数");
+        }
+    }
+    我们反编译生成的.class文件:
+    public class codeBlock {
+        public codeBlock(){
+        	System.out.println("构造代码块");
+            System.out.println("无参构造函数");
+        }
+        public codeBlock(String str){
+        	System.out.println("构造代码块");
+            System.out.println("有参构造函数");
+        }
+    }
+    3.构造代码块的作用：
+		(1)和构造函数的作用类似，都能够对象记性初始化，并且只要创建一个对象，构造代码块都会执行一次。
+		但是反过来，构造函数则不会再每个对象创建的时候都执行(多个构造函数的情况下，建立对象时传入的参数不同则初始化使用对应的构造函数)
+		(2)利用每次创建对象的时候都会提前调用一次构造代码块特性，我们做诸如统计创建对象的次数等功能。
+		
+三、构造函数
+　　1.构造函数必须和类名完全相同。在java中，普通函数可以和构造函数同名，但是必须带有返回值。
+
+　　2.构造函数的功能主要用于在类创建时定义初始化的状态。没有返回值，也不能用void来进行修饰。这就保证额它不仅什么也不用自动返回，而且根本不能有任何选择，而其他方法都有返回值，尽管方法体本身不会自动返回什么，但是仍然可以返回一些东西，而这些东西可能是不安全的；
+
+　　3.构造函数不能被直接调用，必须通过New运算符在创建对象的时才会自动调用；而一般的方法是在程序执行到它的时候被调用的
+
+　　4.当定义一个类的时候，通常情况下都会现实该类的构造函数，并在函数中指定初始化的工作也可省略，不过Java编译期会提供一个默认的构造函数，此默认的构造函数是不带参数的，即空参构造。而一般的方法不存在这一特点。
+　　
+四、普通代码块
+　　1.普通代码块和构造代码块的区别是，构造代码块是在类中定义的，而普通代码块是在方法体重定义的。并且普通代码块的执行顺序和书写顺序是一致的
+　　public class sayHelllo {
+      System.out.println("普通代码块");
+   }
+   
+五、执行顺序
+　　1.静态代码块>构造代码块>构造函数>普通代码块
+```
+
+
+
 # *IntelliJ IDEA-2020.1*
 
 ```
