@@ -1,10 +1,23 @@
 ============================================================================
 广州汇通国信科技有限公司OA系统正式上线，网址是公司内网
 http://157.122.61.228:2019/login/Login.jsp?logintype=1
+黄词辉 9:44:33
+http://oa.huitone.com:2019/login/Login.jsp?logintype=1
+
+陈峰 9:45:30
+http://172.16.7.120:2019/login/Login.jsp?logintype=1
+内网
+
 账户名为大家各自的手机号，密码是：	HTGX100
 同时下载手机app端进行考勤签到，OA手机端服务器为157.122.61.228:89。
 
 https://lanhuapp.com/web/#/item/project/product?pid=529b32a9-5bbd-48a6-bb82-ddd59c4f4d12&docId=019f83d6-89e9-4dc6-9ef6-75a83ed12925&docType=axure&pageId=3dc0fcc78faa4aba9892a9098d13f0bf&image_id=019f83d6-89e9-4dc6-9ef6-75a83ed12925
+
+各位同事：由于网络升级，相关访问地址变更说明：
+1.公司ＯＡ公网地址：http://oa.huitone.com:2019/，互联网推荐使用
+2.公司ＯＡ内网地址：http://172.16.7.120:2019/，在公司（广报中心）办公推荐使用，网速快
+3.ＯＡ移动端使用方法，打开ａｐｐ－点击“我”－＞“设置”->注销->将“http://157.122.61.228:89/”改为http://oa.huitone.com:89/即可
+4.使用VPN的小伙伴将157.122.61.228改为 112.94.38.62
 ============================================================================
 公司邮箱网址：
 	http://mail.huitone.com/webmail7.5/webmail.php?r=site/index/domain/huitone.com
@@ -85,9 +98,7 @@ https://172.16.6.45/api/rest/ruleRels/getTables/50
 	password:	huitone2214
 	username:	git
 	password:	huitone2214
-参考：
-	https://www.jianshu.com/p/80d9a656d6c6?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
----------------------------------------------------------------
+
 ============================================================================172.16.7.55
 username:	root
 password:	huitone2214
@@ -148,7 +159,7 @@ password:	huitone2214
 username:	root
 password:	htgx@123456
 ---------------------------------------------------------------nginx
-vi /usr/local/nginx/conf/nginx_2c.conf
+vim /usr/local/nginx/conf/nginx_2c.conf
 ps -ef|grep nginx
 启动： /usr/local/nginx/sbin]$ /usr/local/nginx/sbin/nginx -c conf/nginx_2c.conf
 重启： /usr/local/nginx/sbin/nginx -s reload  
@@ -180,6 +191,7 @@ vim /etc/apache2.4/extra/httpd-vhosts.conf
 /app/apache2.4/bin/apachectl stop
 ----------------------------------------php
 vim /app/php7.2/etc/php.ini
+ssssaadsfadsfadsfdsafdsf
 ============================================================================172.16.96.60（华为-私有云-后端）
 username:	root
 password:	LLYSC@#1S1KR

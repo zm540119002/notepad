@@ -258,6 +258,15 @@ public class FilterConfig {
 		zuul.IpFilter.pre.disable=true
 ```
 
+## SpringCloud获取Eureka中服务的注册信息
+
+```
+参考：
+	https://blog.csdn.net/ZZY1078689276/article/details/88647051?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&dist_request_id=1328741.50950.16170906332807269&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
+```
+
+
+
 # Spring Boot
 
 ## 连接池
@@ -348,6 +357,12 @@ Class path contains multiple SLF4J bindings.警告的解决
   而我们在项目开发中，难免会引入各种各样的工具包，所以，基本上springboot 项目，如果不注意，肯定会出现这种冲突的。
 ```
 
+## 配置文件
+
+```
+
+```
+
 
 
 # Spring Mvc
@@ -372,7 +387,10 @@ Bean 与 Spring 容器之间的关系：
 # 注解
 
 ```
-参考： https://blog.csdn.net/yuzongtao/article/details/84314103
+参考： 
+	https://blog.csdn.net/yuzongtao/article/details/84314103
+	
+AnnotationConfigApplicationContext
 ```
 
 ## 元注解
@@ -568,7 +586,9 @@ RetentionPolicy的取值包含以下三种：
 
 ### @Configuration
 
-参考：	https://www.jianshu.com/p/21f3e074e91a
+参考：	
+
+​	https://www.jianshu.com/p/21f3e074e91a
 
 ```
 用于定义配置类，可替换XML配置文件，被注解的类内部包含一个或多个@Bean注解方法。可以被AnnotationConfigApplicationContext或者AnnotationConfigWebApplicationContext 进行扫描。用于构建bean定义以及初始化Spring容器。
@@ -629,8 +649,6 @@ SpringIOC 容器管理一个或者多个bean，这些bean都需要在@Configurat
 	如果@Profile({"p1","!p2"}) 标识两个属性，那么p1 是启用状态 而p2 是非启用状态的。
 ```
 
-## spring mvc
-
 ### @Value
 
 ```
@@ -644,7 +662,12 @@ ${}:用于获取配置文件中的属性值，通常用于获取写在applicatio
 注意事项
     将配置文件交给sping加载,最好不要交给springMVC加载 避免出现错误,因为web.xml配置时spring的监听先启动,
     springMVC的Dispatcherservlet接收到请求时初始化springMVC的配置文件。
+    
+参考：
+	https://segmentfault.com/a/1190000021415142?utm_source=tag-newest
 ```
+
+## spring mvc
 
 ### @ControllerAdvice 
 
@@ -674,7 +697,25 @@ ${}:用于获取配置文件中的属性值，通常用于获取写在applicatio
     全局异常处理
     全局数据绑定
     全局数据预处理
+    
+参考：
+	https://blog.csdn.net/yitian_66/article/details/80866571?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-1.control
 ```
+### @PropertySource
+
+```
+
+```
+
+
+
+# 注解原理与实战
+
+```
+参考：
+	https://blog.csdn.net/yanluandai1985/article/details/99446060
+```
+
 # **注意事项**
 
 ```
@@ -707,6 +748,240 @@ JAVA中try、catch、finally带return的执行顺序：
     
 使用标志位终止线程，变量要声明为volatile，让其它线程可见
 ```
+
+
+
+# 设计模式
+
+## 代理模式
+
+```
+代理模式：提供了对目标对象另外的访问方式；即通过代理对象访问目标对象。
+代理模式的关键点是：代理对象与目标对象，代理对象是对目标对象的扩展，并会调用目标对象；
+代理模式优点：在目标对象已经实现的功能操作的基础上，增加额外的功能操作，拓展目标对象的功能；(不修改已经写好的代码，运用代理模式实现新功能)
+　　
+(1)静态代理模式：代理对象需要与目标对象实现一样的接口
+// 接口
+interface IUserDao {
+	void save();
+}
+
+/**
+ * 接口实现, 目标对象
+ */
+class UserDao implements IUserDao {
+	public void save() {
+		System.out.println("----已经保存数据!----");
+	}
+}
+
+/**
+ * 代理对象,静态代理
+ */
+class UserDaoProxy implements IUserDao{
+	//接收保存目标对象
+	private IUserDao target;
+	public UserDaoProxy(IUserDao target){
+		this.target=target;
+	}
+
+	public void save() {
+		System.out.println("开始事务...");
+		target.save();//执行目标对象的方法
+		System.out.println("提交事务...");
+	}
+}
+
+/**
+ * 测试类
+ */
+public class TestAopStatic {
+	public static void main(String[] args) {
+		//目标对象
+		UserDao target = new UserDao();
+
+		//代理对象,把目标对象传给代理对象,建立代理关系
+		UserDaoProxy proxy = new UserDaoProxy(target);
+
+		proxy.save();//执行的是代理的方法
+	}
+}
+
+(2)JDK动态代理模式：代理对象不需要实现接口，但目标对象必须实现接口
+	static Object newProxyInstance(ClassLoader loader, Class<?>[] interfaces,InvocationHandler h )
+    其中，在Proxy类中是静态方法,且接收的三个参数依次为：
+    ClassLoader loader：指定当前目标对象使用类加载器，获取加载器的方法是固定的；
+    Class<?>[] interfaces：目标对象实现的接口的类型，使用泛型方式确认类型；
+    InvocationHandler h：事件处理，执行目标对象的方法时，会触发事件处理器的方法，会把当前执行目标对象的方法作为参数传入；
+    
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+/**
+ * 创建动态代理对象
+ * 动态代理不需要实现接口,但是需要指定接口类型
+ */
+class ProxyFactory{
+	//维护一个目标对象
+	private Object target;
+	public ProxyFactory(Object target){
+		this.target=target;
+	}
+
+	//给目标对象生成代理对象
+	public Object getProxyInstance(){
+		return Proxy.newProxyInstance(
+			target.getClass().getClassLoader(),
+			target.getClass().getInterfaces(),
+			new InvocationHandler() {
+				@Override
+				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+					System.out.println("开始事务2");
+					//执行目标对象方法
+					Object returnValue = method.invoke(target, args);
+					System.out.println("提交事务2");
+					return returnValue;
+				}
+			}
+		);
+	}
+}
+
+/**
+ * 测试类
+ */
+public class TestAopJdk {
+	public static void main(String[] args) {
+		// 目标对象
+		IUserDao target = new UserDao();
+		// 【原始的类型 class cn.itcast.b_dynamic.UserDao】
+		System.out.println(target.getClass());
+
+		// 给目标对象，创建代理对象
+		IUserDao proxy = (IUserDao) new ProxyFactory(target).getProxyInstance();
+		// class $Proxy0   内存中动态生成的代理对象
+		System.out.println(proxy.getClass());
+
+		// 执行方法   【代理对象】
+		proxy.save();
+	}
+}
+
+(3)Cglib动态代理：子类代理，目标对象不需要实现接口，根据目标对象构建一个子类对象从而实现对目标对象功能的扩展；
+import org.junit.Test;
+import org.springframework.cglib.proxy.Enhancer;
+import org.springframework.cglib.proxy.MethodInterceptor;
+import org.springframework.cglib.proxy.MethodProxy;
+
+import java.lang.reflect.Method;
+
+/**
+ * Cglib子类代理工厂
+ * 对UserDao在内存中动态构建一个子类对象
+ */
+class ProxyFactory2 implements MethodInterceptor {
+	//维护目标对象
+	private Object target;
+
+	public ProxyFactory2(Object target) {
+		this.target = target;
+	}
+
+	//给目标对象创建一个代理对象
+	public Object getProxyInstance(){
+		//1.工具类
+		Enhancer en = new Enhancer();
+		//2.设置父类
+		en.setSuperclass(target.getClass());
+		//3.设置回调函数
+		en.setCallback(this);
+		//4.创建子类(代理对象)
+		return en.create();
+	}
+
+	@Override
+	public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+		System.out.println("开始事务...");
+		//执行目标对象的方法
+		Object returnValue = method.invoke(target, args);
+		System.out.println("提交事务...");
+		return returnValue;
+	}
+}
+/**
+ * 测试类
+ */
+public class TestAopCglib {
+	@Test
+	public void test(){
+		//目标对象
+		UserDao target = new UserDao();
+		//代理对象
+		UserDao proxy = (UserDao)new ProxyFactory2(target).getProxyInstance();
+		//执行代理对象的方法
+		proxy.save();
+	}
+}
+
+在Spring的AOP编程中：如果加入容器的目标对象有实现接口，用JDK代理；如果目标对象没有实现接口，用Cglib代理；
+```
+
+
+
+# AOP
+
+```
+（Aspect Oriented Programming），即面向切面编程
+概念
+	切面：与业务无关，却被业务模块共同调用的逻辑，封装起来，提高代码复用，利于维护等；
+　　连接点：被拦截的方法；(拦截哪些方法，增加哪些功能)
+　　切入点：对连接点进行拦截的定义；
+　　通知：拦截到连接点后要执行操作或处理，如前置before、后置after-returning、异常after-throwing、最终after、环绕around通知五类；
+　　引入：在不修改代码的前提下，为类添加新的属性或者方法；
+　　织入：将切面应用于目标对象并且导致代理对象的创建；
+　　
+使用场景　
+　　Authentication 权限
+　　Caching 缓存
+　　Context passing 内容传递
+　　Error handling 错误处理
+　　Lazy loading　懒加载
+　　Debugging　　调试
+　　logging, tracing, profiling and monitoring　记录跟踪　优化　校准
+　　Performance optimization　性能优化
+　　Persistence　　持久化
+　　Resource pooling　资源池
+　　Synchronization　同步
+　　Transactions 事务
+　　
+实现方式--基础XML配置AOP、基于注解配置AOP
+    1、定义普通业务组件
+    2、定义切入点，一个切入点可能横切多个业务组件
+    3、定义增强处理，增强处理就是在AOP框架为普通业务组件织入的处理动作
+    
+
+```
+
+
+
+# Bean
+
+```
+Bean 的标识 (id 和 name)，Id 属性具有唯一性，name 属性可以指定一个或者多个名称，第一名称默认为标识；
+Bean 的 class属性，具体实现类(注意是实现类，不能是接口)的全路径包名.类名，在 Spring 配置文件中 class 属性指明 Bean 的来源，也就是 Bean 的实际路径，它指向一个实体类；
+Bean 的作用域 scope，
+　　Singleton( 单例 )：表示Spring IoC容器中只会存在一个共享的bean实例；
+　　non-Singleton(也称 prototype)：每次对该bean请求（将其注入到另一个bean中，或者调用getBean()）时都会创建一个新的bean实例；
+       仅在基于web的Spring ApplicationContext情形下有效：request：针对每一个 HTTP 请求都会产生一个新的 Bean，请求结束时销毁；
+　　仅在基于web的Spring ApplicationContext情形下有效：session ：针对某个HTTP Session都会产生一个新的 Bean，HTTP Session最终被废弃时销毁；
+　　仅在基于web的Spring ApplicationContext情形下有效：global session ：全局的HTTP Session中(基于portlet的web应用)，一个bean定义对应一个实例；
+　　
+
+```
+
+
+
 # Spring中Bean的单例和多例
 
 ```
@@ -1134,60 +1409,21 @@ public class CodeBlock{
 　　1.静态代码块>构造代码块>构造函数>普通代码块
 ```
 
-
-
-# *IntelliJ IDEA-2020.1*
+# static
 
 ```
-参考： https://www.jianshu.com/p/6b705a286be7
-```
-## *常用插件（plugin）*
-
-```
-Lombok
-	开发神器，可以简化你的实体类，让你i不再写get/set方法，还能快速的实现builder模式，以及链式调用方法，总之就是为了简化实体类而生的插件。
-CamelCase
-	将不是驼峰格式的名称，快速转成驼峰格式，安装好后，选中要修改的名称，按快捷键shift+alt+u
-GsonFormat 
-	把 JSON 字符串直接实例化成类
-Grep console
-	自定义日志颜色，idea控制台可以彩色显示各种级别的log，安装完成后，在console中右键就能打开，
-	并且可以设置不同的日志级别的显示样式，可以直接根据关键字搜索你想要的，搜索条件是支持正则表达式的
-MyBatis Log Plugin
-	Mybatis现在是java中操作数据库的首选，在开发的时候，我们都会把Mybatis的脚本直接输出在console中，但是默认的情况下，输出的脚本不是一个可以直接执行的。
-	如果我们想直接执行，还需要在手动转化一下。MyBatis Log Plugin 这款插件是直接将Mybatis执行的sql脚本显示出来，无需处理，可以直接复制出来执行的。
-String Manipulation
-	强大的字符串转换工具。使用快捷键，Alt+m。
-Maven Helper
-	一键查看maven依赖，查看冲突的依赖，一键进行exclude依赖
-Restfultookit
-	Spring MVC网页开发的时候，我们都是通过requestmapping的方式来定义页面的URL地址的，为了找到这个地址我们一般都是cmd+shift+F的方式进行查找，
-	大家都知道，我们URL的命名一个是类requestmapping+方法requestmapping，查找的时候还是有那么一点不方便的，restfultookit就能很方便的帮忙进行查找。
-POJO To Json
-```
-
-*Cannot resolve method "XX" 问题解决*
-
-```
-1、安装lombok插件，点击菜单栏中的【File】->【Setting】->【Plugins】-> 输入 lombok ，【install】-> 【Ok】
-2、允许插件运行， 点击菜单栏中的【File】->【Setting】->搜索框直接输入【Annotation Processors】-> 
-	将 Enable Annotation Processors 打勾，重启软件即可。
-```
-
-## 常见错误
-
-### shorten command line
-
-```
-如果类路径太长，或者有许多VM参数，程序就无法启动。原因是大多数操作系统都有命令行长度限制。在这种情况下，IntelliJIDEA将试图缩短类路径。
-shorten command line 选项提供三种选项缩短类路径。
-    none：这是默认选项，idea不会缩短命令行。如果命令行超出了OS限制，这个想法将无法运行您的应用程序，但是工具提示将建议配置缩短器。
-    JAR manifest：idea 通过临时的classpath.jar传递长的类路径。原始类路径在MANIFEST.MF中定义为classpath.jar中的类路径属性。
-    classpath file：idea 将一个长类路径写入文本文件中。
-建议使用JAR manifest
+参考：
+	https://www.cnblogs.com/dolphin0520/p/3799052.html
 ```
 
 
+
+# Java8的流Stream
+
+```
+参考：
+	https://blog.csdn.net/yitian_66/article/details/80651921
+```
 
 #  **maven**
 
@@ -1334,6 +1570,28 @@ Collection 接口又有 3 种子类型，List、Set 和 Queue，再下面是一�
 
 ```
 AutoKeyGet.GetKeyId()
+
+String H_token = RequestContextHolderUtil.getRequest().getHeader("H_token");
+try{
+    if(StringUtils.isNotEmpty(H_token)){
+        String account = JwtUtil.getAccount(H_token);
+        if(Const.TOKEN_FAIL_ACCOUNT.equals(account)){
+        	//todo 用户异常
+        }
+        vo.setIndbStaff(account);
+        vo.setModifyStaff(account);
+    }
+    ret = tbUcCfgReportService.saveReportConfig(vo);
+}catch (Exception e){
+    msg = e.getMessage();
+    if (e.getCause() != null) {
+    	msg = e.getCause().getMessage();
+    }
+    if(msg==null){
+    	msg = e.toString();
+    }
+    log.error("addAllConfig error! msg:{},error:{}",msg, e);
+}
 ```
 
 
@@ -1586,6 +1844,41 @@ List转换为Array可以这样处理：
             }
         }
     }	
+    
+
+// 交集
+List<String> intersection = list1.stream().filter(item -> list2.contains(item)).collect(toList());
+System.out.println("---交集 intersection---");
+intersection.parallelStream().forEach(System.out :: println);
+
+// 差集 (list1 - list2)
+List<String> reduce1 = list1.stream().filter(item -> !list2.contains(item)).collect(toList());
+System.out.println("---差集 reduce1 (list1 - list2)---");
+reduce1.parallelStream().forEach(System.out :: println);
+
+// 差集 (list2 - list1)
+List<String> reduce2 = list2.stream().filter(item -> !list1.contains(item)).collect(toList());
+System.out.println("---差集 reduce2 (list2 - list1)---");
+reduce2.parallelStream().forEach(System.out :: println);
+
+// 并集
+List<String> listAll = list1.parallelStream().collect(toList());
+List<String> listAll2 = list2.parallelStream().collect(toList());
+listAll.addAll(listAll2);
+System.out.println("---并集 listAll---");
+listAll.parallelStream().forEachOrdered(System.out :: println);
+
+// 去重并集
+List<String> listAllDistinct = listAll.stream().distinct().collect(toList());
+System.out.println("---得到去重并集 listAllDistinct---");
+listAllDistinct.parallelStream().forEachOrdered(System.out :: println);
+
+System.out.println("---原来的List1---");
+list1.parallelStream().forEachOrdered(System.out :: println);
+System.out.println("---原来的List2---");
+list2.parallelStream().forEachOrdered(System.out :: println);
+
+
 ```
 
 
@@ -1651,6 +1944,53 @@ public static void main(String[] args) throws Exception {
     List<String> result = list.stream().map(String::toUpperCase).collect(Collectors.toList());
     System.out.println(result);
 }
+```
+
+## validation
+
+```
+@NotEmpty 用在集合类上面
+@NotBlank 用在String上面
+@NotNull    用在基本类型上
+对于Long  类型判空 需要用@NotNull 而不是 @NotBlank或者@NotEmpty 否则会报错误
+
+示例：
+	@ApiOperation(value = "工单配置页面-删除")
+	@PostMapping(value = "/work-order/del")
+	public R del(@RequestBody @Valid WorkOrderInVo inVo, BindingResult bindingResult) {
+		// 参数校验
+		if (bindingResult.hasErrors()) {
+			String messages = bindingResult.getAllErrors()
+					.stream()
+					.map(ObjectError::getDefaultMessage)
+					.reduce((m1, m2) -> m1 + "；" + m2)
+					.orElse("参数输入有误！");
+			throw new IllegalArgumentException(messages);
+		}
+		return  R.ok("成功");
+	}
+	
+	@ApiModelProperty(value = "工单ID", name = "id")
+    @NotNull(message = "id不能为null")
+    private Long id;
+```
+
+## ListUtils
+
+```
+package com.htgx.govern.common.core.tools;
+
+import java.util.List;
+import java.util.function.Function;
+
+public class ListUtils {
+    public static <T, K>
+    boolean contain(List<? extends T> list, Function<? super T, ? extends K> function, K modifyStaff) {
+        return list.stream().filter(t -> modifyStaff.equals(function.apply(t))).count() != 0;
+    }
+}
+
+示例：contain(oldWorkOrder.getWorkOrderReceiverList(),WorkOrderReceiver::getStaffId,saveVo.getWorkOrder().getModifyStaff())
 ```
 
 
@@ -1829,5 +2169,27 @@ java内存模型(Java Memory Model，JMM)是java虚拟机规范定义的，用�
 	http://blog.itpub.net/69904796/viewspace-2565255/
 	https://www.cnblogs.com/steffen/p/11368018.html
 	https://blog.csdn.net/qq_29078329/article/details/78929457
+```
+
+# 面试常问
+
+```
+1、最常用的BeanFactory 实现是XmlBeanFactory 类，它根据XML文件中的定义加载beans。该容器从XML 文件读取配置元数据并用它去创建一个完全配置的系统或应用。
+
+2、bean 装配是指在Spring 容器中把bean组装到一起，前提是容器需要知道bean的依赖关系，如何通过依赖注入来把它们装配到一起。
+
+3、Spring 容器能够自动装配相互合作的bean，这意味着容器不需要<constructor-arg>和<property>配置，能通过Bean工厂自动处理bean之间的协作。
+
+4、有五种自动装配的方式，可以用来指导Spring容器用自动装配方式来进行依赖注入。
+    no：默认的方式是不进行自动装配，通过显式设置ref 属性来进行装配。
+    byName：通过参数名 自动装配，Spring容器在配置文件中发现bean的autowire属性被设置成byname，之后容器试图匹配、装配和该bean的属性具有相同名字的bean。
+    byType:：通过参数类型自动装配，Spring容器在配置文件中发现bean的autowire属性被设置成byType，之后容器试图匹配、装配和该bean的属性具有相同类型的bean。如果有多个bean符合条件，则抛出错误。
+    constructor：这个方式类似于byType， 但是要提供给构造器参数，如果没有确定的带参数的构造器参数类型，将会抛出异常。
+    autodetect：首先尝试使用constructor来自动装配，如果无法工作，则使用byType方式。
+    
+5、自动装配的局限性是：
+    重写： 你仍需用 <constructor-arg>和 <property> 配置来定义依赖，意味着总要重写自动装配。
+    基本数据类型：你不能自动装配简单的属性，如基本数据类型，String字符串，和类。
+    模糊特性：自动装配不如显式装配精确，如果有可能，建议使用显式装配。
 ```
 

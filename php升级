@@ -147,19 +147,7 @@ php.ini：
 =================================================================================
 删除inc_chk下面的：test.php文件和bak目录
 =================================================================================
-//tb_uc_task-任务2
-TbUcTask task1 = new TbUcTask();
-task1.setSubServiceId(dsUpdateSaveInVo.getSubServiceId());
-task1.setSourceStep("ETL");
-task1.setType("SQL_EXEC");
-task1.setSourceId(tbUcCfgEtlTask.getEtlTaskId());
-task1.setSourceTaskName(tbUcCfgEtlTask.getName());
-task1.setPurpose("UPDATE");
-task1.setAutoManual(dsUpdateSaveInVo.getSubsManual());
-task1.setDispatchVar(tbUcCfgEtlTask.getDispatchVar());
-task1.setDispatchVarStmt(tbUcCfgEtlTask.getDispatchVarStmt());
 
-taskService.saveTaskBySourceId(dsUpdateSaveInVo.getEtlTaskId(),task1);
 
 =================================================================================
 
