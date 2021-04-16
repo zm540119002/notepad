@@ -32,7 +32,7 @@ http://157.122.61.228:2019/login/Login.jsp?logintype=1
 ```
 ---------------------------------------------------------------
 username:	root
-password:	oracle
+password:	huitone2215#
 ---------------------------------------------------------------mysql
 su - mysql
 启动守护进程：
@@ -79,6 +79,15 @@ cd /usr/local/php/lib/php/extensions/no-debug-non-zts-20060613
 ---------------------------------------------------------------
 ```
 
+## 172.16.6.45
+
+```
+username:	root
+password:	huitone2214
+```
+
+
+
 ## 172.16.7.54
 
 ```
@@ -98,7 +107,7 @@ http://172.16.7.54:9090
 
 ```
 username:	root
-password:	huitone2214
+password:	htgx@123456&
 ---------------------------------------------------------------oracle
 ua_dbg/ua_dbgrica
 ltdba/ltdbarica
@@ -114,7 +123,7 @@ sh /home/mysql/support-files/mysql.server start
 
 ```
 username:	root
-password:	huitone2214
+password:	huitone2214$
 ---------------------------------------------------------------apache
 vim /etc/apache2.4/httpd.conf
 vim /etc/apache2.4/extra/httpd-vhosts.conf
@@ -143,7 +152,7 @@ cd /usr/local/lib/php/extensions/no-debug-non-zts-20170718/
 
 ```
 username:	root
-password:	huitone2214
+password:	huitone2215!
 username:	dev
 password:	huitonedev
 username:	oracle
@@ -266,7 +275,7 @@ ps -ef|grep ${v_file}|grep -v grep
 
 ```
 username:	root
-password:	huitone2214
+password:	huitone2214@
 username:	oracle
 password:	huitone2214
 ---------------------------------------------------------------mysql
@@ -287,7 +296,7 @@ password:	huitone2214
 ```
 ---------------------------------------------------------------
 username:	root
-password:	htgx@123456
+password:	htgx@123456%
 ---------------------------------------------------------------nginx
 vi /usr/local/nginx/conf/nginx_2c.conf
 ps -ef|grep nginx

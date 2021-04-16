@@ -57,3 +57,11 @@ shorten command line 选项提供三种选项缩短类路径。
 生成.iml文件: mvn idea:module
 ```
 
+## 快捷键
+
+```
+iter
+var
+
+```
+

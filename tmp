@@ -117,89 +117,16 @@ zm123456
 　　　　· 阶段处理	第47页
 　　　　· 归档	第47-48页
 　　· 运行结果与分析
-CREATE TABLE `work_order` (
-  `id` bigint NOT NULL COMMENT 'ID',
-  `title` varchar(256) NOT NULL DEFAULT '' COMMENT '标题',
-	
-	`type` tinyint NOT NULL DEFAULT 1 COMMENT '类型:1 提醒 2 核查 3 督办',
-  `status` tinyint NOT NULL DEFAULT 1 COMMENT '状态:1 开启 2 关闭',
-	`solve_status` tinyint NOT NULL DEFAULT 1 COMMENT '解决状态:1 解决中 2 已解决 3 未解决',
-	`priority` tinyint not null default 1 comment '优先级：1 普通 2 重要 3 紧急 4 紧急&重要',
-	`classify` tinyint NOT NULL DEFAULT 1 COMMENT '归类:1 手动 2 自动',
-	
-	`is_audit` tinyint not null default 1 comment '是否审核：0 是 1 否',
-	`is_flow` tinyint not null default 1 comment '是否流转：0 是 1 否',
-	`is_dispense` tinyint not null default 1 comment '是否分发：0 是 1 否',
-	
-	`content` varchar(2000) NOT NULL DEFAULT '' COMMENT '内容',
-	`attachment_path` varchar(512) not null default '' comment '附件',
-	`skip_url` varchar(512) not null default '' comment '跳转链接',
-	
-	`feedback_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '要求反馈时间',
-	
-  `indb_staff` varchar(32) DEFAULT NULL COMMENT '记录生成员工/发起人',
-  `indb_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录生成时间/发起时间',
-	
-  `modify_staff` varchar(32) DEFAULT NULL COMMENT '记录修改员工',
-  `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录修改时间',
-	
-  `remark` varchar(2000) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='工单表';
-
-CREATE TABLE `work_order_flow` (
-  `id` bigint NOT NULL COMMENT 'ID',
-  `work_order_id` bigint NOT NULL COMMENT '工单ID',
-	
-	`reply_msg` varchar(2000) NOT NULL DEFAULT '' COMMENT '回复信息',
-	`attachment` varchar(512) not null default '' comment '附件',
-	
-  `indb_staff` varchar(32) DEFAULT NULL COMMENT '记录生成员工',
-  `indb_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '记录生成时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='工单流转表';
-
-CREATE TABLE `work_order_follower` (
-  `id` bigint NOT NULL COMMENT 'ID',
-  `work_order_id` bigint NOT NULL COMMENT '工单ID',
-	`staff_id` bigint NOT NULL COMMENT '关注人ID',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='工单-关注人';
-
-CREATE TABLE `work_order_receiver` (
-  `id` bigint NOT NULL COMMENT 'ID',
-  `work_order_id` bigint NOT NULL COMMENT '工单ID',
-	`staff_id` bigint NOT NULL COMMENT '受理人ID',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='工单-受理人';
-============================================
-INSERT/*+ append */ INTO ua_dbg.UCR_DETAIL_TMP_8118100 (
-	result_2,	result_3,	result_4,	result_1) 
-SELECT 
-
-	CASE WHEN expr THEN '0' ELSE '1' END result_2,
-
-	CASE WHEN A3.ROWID IS NOT NULL AND A2.ROWID IS NULL 
-	THEN '1' ELSE '0' END result_3,
-
-	CASE WHEN A3.ROWID IS NOT NULL AND A2.ROWID IS NULL 
-	THEN '1' ELSE '0' END result_4,
-
-	CASE WHEN A3.rowid is not null and A2.rowid is not null 
-	and A3.cust_name != A2.cust_name THEN '1' ELSE '0' END result_1
-
-FROM ua_dbg.TF_F_CUST_GROUP A2,ua_dbg.TF_F_CUST_GROUP_ETL A3
-
-WHERE (A3.cust_id = A2.cust_id(+));
 ============================================
 
-insert into hch_class_copy_r(class_name, uc$ds_id, uc$data_date, uc$data_batch_id, uc$tag_1500934484123648)
-select  case when !( 1=1 ) then 1 else 0 end , ${UC_DS_ID}, ${DATA_DATE}, ${DATA_BATCH_ID}, null
- from t_stu_class D1
-join hch_class_copy as D2 on ( 1=2 )
-where  1=3 
-;
 
 
 
-============================================
+
+
+
+
+
+
+
+

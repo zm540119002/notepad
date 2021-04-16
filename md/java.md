@@ -1093,7 +1093,48 @@ if(classStringArrayList.equals(classIntegerArrayList)){
     	if(ex_num instanceof Generic<Number>){ }
 参考：	
 	https://www.cnblogs.com/coprince/p/8603492.html
+	
+	private <T> PageInfo<T> copyPageInfo(Page<?> sourceList, List<T> targetList) {
+		//这里主要是要把Page的信息拷贝出来 否则前台分页会有异常
+		Page<T> sourcePageList = (Page<T>) sourceList;
+		Page<T> resultList = new Page<T>(sourcePageList.getPageNum(), sourcePageList.getPageSize(), sourcePageList.isCount());
+
+		resultList.setTotal(sourcePageList.getTotal());
+		resultList.addAll(targetList);
+
+		return new PageInfo<T>(resultList);
+	}
+	
+	private <T> Page<T> copyPageInfo(Page<?> sourceList, List<T> targetList) {
+		Page<T> resultList = new Page<>(sourceList.getPageNum(), sourceList.getPageSize(), sourceList.isCount());
+		resultList.setTotal(sourceList.getTotal());
+		resultList.addAll(targetList);
+
+		return resultList;
+	}
+	
+	private <T> PageInfo<T> copyPageInfo(Page<?> sourceList, List<T> targetList, Class<T> targetClass) {
+		if (sourceList != null) {
+			//这里主要是要把Page的信息拷贝出来 否则前台分页会有异常
+			List<T> tList = WrapperBeanCopier.clonePropertiesOfPageList(sourceList, targetClass);
+			tList.clear();
+			tList.addAll(targetList);
+			targetList = tList;
+		}
+		return new PageInfo<>(targetList);
+	}
 ```
+# 泛型中的上界(extend)和下界(super)
+
+```
+参考：
+	https://blog.csdn.net/yangguanghaozi/article/details/54632477?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&dist_request_id=&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
+	
+
+```
+
+
+
 # 接口
 
 ```
@@ -1697,33 +1738,57 @@ tbUcTaskParam.setValue(sql.toString());
 
 ```
 示例：
- boolean isRepeat = (saveVo.getDiffItemList().size())
- != (saveVo.getDiffItemList().stream().mapToLong(t -> t.getResultStore()).distinct().count());
- if (isRepeat) {
- 	ExceptionUtil.throwError(LogicConvertEtlErr.INVALID_PARAM.getCode(), "比较结果存储字段不能重复！");
- }
- 
- List<String> diffMethodList = list.stream().map(t->t.getDiffMethod()).distinct().collect(Collectors.toList());
- 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
- 
-/**
- * 通过简单的代码判断List中是否包含相同元素
- * @author wei 2017年7月10日 下午8:34:47
- */
-public class ListHaveRepeat {
-    public static void main(String[] args) {
-        List<String> list = new ArrayList<String>();
-        list.add("1");
-        list.add("2");
-        list.add("2");
-        // 通过去重之后的HashSet长度来判断原list是否包含重复元素
-        boolean isRepeat = list.size() != new HashSet<String>(list).size();
-        System.out.println("list中包含重复元素：" + isRepeat);
+    boolean isRepeat = (saveVo.getDiffItemList().size())
+    != (saveVo.getDiffItemList().stream().mapToLong(t -> t.getResultStore()).distinct().count());
+    if (isRepeat) {
+    	ExceptionUtil.throwError(LogicConvertEtlErr.INVALID_PARAM.getCode(), "比较结果存储字段不能重复！");
     }
-}
+
+    List<String> diffMethodList = list.stream().map(t->t.getDiffMethod()).distinct().collect(Collectors.toList());
+ 
+    import java.util.ArrayList;
+    import java.util.HashSet;
+    import java.util.List;
+
+    /**
+     * 通过简单的代码判断List中是否包含相同元素
+     * @author wei 2017年7月10日 下午8:34:47
+     */
+    public class ListHaveRepeat {
+        public static void main(String[] args) {
+            List<String> list = new ArrayList<String>();
+            list.add("1");
+            list.add("2");
+            list.add("2");
+            // 通过去重之后的HashSet长度来判断原list是否包含重复元素
+            boolean isRepeat = list.size() != new HashSet<String>(list).size();
+            System.out.println("list中包含重复元素：" + isRepeat);
+        }
+    }
+
+	@Override
+	public List<WorkOrderCfgGetOutVo> getMyReceivedList(BasePageVo<WorkOrderCfgGetVo> getVo) {
+		WorkOrderReceiver workOrderReceiverWhere = new WorkOrderReceiver();
+		workOrderReceiverWhere.setStaffId(UserUtil.getAccount());
+
+		List<Long> workOrderIds =
+			workOrderReceiverService.select(workOrderReceiverWhere)
+			.stream().map(WorkOrderReceiver::getWorkOrderId).collect(Collectors.toList());
+
+		int pageNum = (getVo.getPageNo() == null) ? DbConstants.PAGE_NO_DEFAULT : getVo.getPageNo();
+		int pageSize = (getVo.getPageSize() == null) ? DbConstants.PAGE_SIZE_DEFAULT : getVo.getPageSize();
+		PageHelper.startPage(pageNum, pageSize, DbConstants.ORDER_BY_INDB_TIME);
+
+		WorkOrder workOrderWhere = new WorkOrder();
+		workOrderWhere.copyProperty(getVo.getObj().getWorkOrder());
+		List<WorkOrder> workOrders = workOrderService.select(workOrderWhere);
+
+		List<Long> workOrderIdsOfWorkOrder = workOrders.stream().map(WorkOrder::getId).collect(Collectors.toList());
+
+		workOrderIds = workOrderIds.stream().filter(workOrderIdsOfWorkOrder::contains).collect(Collectors.toList());
+
+		return this.getListByWorkOrderIds(workOrderIds);
+	}
 ```
 
 
@@ -2056,6 +2121,25 @@ public class TestException {
       关闭CPU。
 
 ```
+
+# 三大器
+
+## 拦截器
+
+```
+参考：
+	https://www.cnblogs.com/riches/p/12638551.html
+	
+概念：java里的拦截器是动态拦截Action调用的对象，它提供了一种机制可以使开发者在一个Action执行的前后执行一段代码，也可以在一个Action执行前阻止其执行，同时也提供了一种可以提取Action中可重用部分代码的方式。
+
+　　作用域：动态拦截Action调用的对象（也就是我们的controller层）
+1、使用AOP切面功能来实现
+2、使用Spring的拦截器相关接口来自定义拦截器
+    实现WebMvcConfigurer接口，重写addCorsMappings()方法和addInterceptors()方法【配置拦截器】
+    实现HandlerInterceptor接口或者继承HandlerInterceptorAdapter，重写preHandle()方法【自定义拦截器】
+```
+
+
 
 # Java 8 新特性
 
