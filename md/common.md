@@ -21,6 +21,12 @@ http://157.122.61.228:2019/login/Login.jsp?logintype=1
     (2)域名:http://domain.cnolnic.com
     账号: huitone.com 
     密码: OTEzZjgzNTBjMWFiNGQ0
+    
+oa系统：
+	http://oa.huitone.com:2019/login/Login.jsp?logintype=1
+	账号：	手机号码
+	密码： 20210421
+
 ```
 
 
@@ -107,7 +113,9 @@ http://172.16.7.54:9090
 
 ```
 username:	root
-password:	htgx@123456&
+password:	htgx@test&
+username:	dev
+password:	abc123!
 ---------------------------------------------------------------oracle
 ua_dbg/ua_dbgrica
 ltdba/ltdbarica
@@ -344,6 +352,13 @@ username:	root
 password:	123456
 ```
 
+## 172.16.8.231
+
+```
+username:	root
+password:	 Huitone369!@#
+```
+
 ## 124.71.112.70
 
 ```
@@ -423,6 +438,13 @@ selec case when (b. check_id  is null) then 1 else 0 end
 from a left join (select id, 1  as check_id from b) b on (a.id = b.id)
 
 专题数据配置-增加系统记录
+
+修改bug流程：
+
+1 复现bug
+2 在master修改并测试，确定bug修复
+3 把代码提交到0.81分支
+4 使用0.81版本程序测试，确定bug在0.81版本也修复了
 ```
 
 ## 流程配置

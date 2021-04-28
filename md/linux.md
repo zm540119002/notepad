@@ -836,6 +836,53 @@ id  空闲 CPU时间，一般来说，id + us + sy = 100,一般我认为id是空
 wt 等待IO CPU时间
 ```
 
+## 用户
+
+```
+参考：
+	https://www.runoob.com/linux/linux-user-manage.html
+	
+1、添加新的用户账号使用useradd命令，其语法如下：
+useradd 选项 用户名
+参数说明：
+选项:
+    -c comment 指定一段注释性描述。
+    -d 目录 指定用户主目录，如果此目录不存在，则同时使用-m选项，可以创建主目录。
+    -g 用户组 指定用户所属的用户组。
+    -G 用户组，用户组 指定用户所属的附加组。
+    -s Shell文件 指定用户的登录Shell。
+    -u 用户号 指定用户的用户号，如果同时有-o选项，则可以重复使用其他用户的标识号。
+用户名:
+	指定新账号的登录名。
+实例1
+# useradd -s /sbin/nologin -d /home/ftp ftp
+# useradd -d  /home/sam -m sam
+此命令创建了一个用户sam，其中-d和-m选项用来为登录名sam产生一个主目录 /home/sam（/home为默认的用户主目录所在的父目录）。
+
+实例2
+# useradd -s /bin/sh -g group –G adm,root gem
+此命令新建了一个用户gem，该用户的登录Shell是 /bin/sh，它属于group用户组，同时又属于adm和root用户组，其中group用户组是其主组。
+
+这里可能新建组：#groupadd group及groupadd adm
+
+增加用户账号就是在/etc/passwd文件中为新用户增加一条记录，同时更新其他系统文件如/etc/shadow, /etc/group等。
+
+Linux提供了集成的系统管理工具userconf，它可以用来对用户账号进行统一管理。
+
+2、删除帐号
+如果一个用户的账号不再使用，可以从系统中删除。删除用户账号就是要将/etc/passwd等系统文件中的该用户记录删除，必要时还删除用户的主目录。
+
+删除一个已有的用户账号使用userdel命令，其格式如下：
+
+userdel 选项 用户名
+常用的选项是 -r，它的作用是把用户的主目录一起删除。
+
+例如：
+
+# userdel -r sam
+此命令删除用户sam在系统文件中（主要是/etc/passwd, /etc/shadow, /etc/group等）的记录，同时删除用户的主目录。
+```
+
 
 
 # 常用工具

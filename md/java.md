@@ -33,6 +33,34 @@ user					UserFilter							需要已登录或“记住我”的用户才能访问
 
 
 
+# JVM
+
+## 参考
+
+```
+https://www.cnblogs.com/whhjava/p/9916626.html
+```
+
+## 概念
+
+```
+JVM即 Java Virtual Machine ，Java虚拟机。它是由软件技术模拟出计算机运行的一个虚拟的计算机。
+Java虚拟机主要由字节码指令集、寄存器、栈、垃圾回收堆和存储方法域等构成。
+```
+
+## 周期
+
+```
+JVM在Java程序开始执行的时候，它才运行，程序结束的时它就停止。
+一个Java程序会开启一个JVM进程，如果一台机器上运行三个程序，那么就会有三个运行中的JVM进程。
+JVM中的线程分为两种：守护线程和普通线程
+守护线程是JVM自己使用的线程，比如垃圾回收（GC）就是一个守护线程。
+普通线程一般是Java程序的线程，只要JVM中有普通线程在执行，那么JVM就不会停止。
+权限足够的话，可以调用exit()方法终止程序。
+```
+
+
+
 # JWT
 
 ## 介绍
@@ -747,6 +775,8 @@ JAVA中try、catch、finally带return的执行顺序：
     3、finally中有return时，会直接在finally中退出，导致try、catch中的return失效。
     
 使用标志位终止线程，变量要声明为volatile，让其它线程可见
+
+synchronized
 ```
 
 
