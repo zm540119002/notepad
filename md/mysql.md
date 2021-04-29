@@ -189,6 +189,38 @@ https://www.cnblogs.com/dogtwo0214/p/10472405.html
 set names utf8;将连接设置成指定的字符集编码.
 ```
 
+## **definer**
+
+```
+在mysql创建view、trigger、function、procedure、event时都会定义一个Definer=‘xxx’,类似如下：
+CREATE
+    ALGORITHM = UNDEFINED
+    DEFINER = `root`@`%`
+    SQL SECURITY DEFINER
+VIEW `v_ questions` AS
+    SELECT
+        `q`.`id` AS `id`,
+        `q`.`title` AS `title`
+    FROM
+         Test q;
+或者像这样的：
+
+CREATE DEFINER=`root`@`%` PROCEDURE `user_count`()
+  LANGUAGE SQL
+  NOT DETERMINISTIC
+  CONTAINS SQL
+  SQL SECURITY DEFINER
+  COMMENT ''
+BEGIN
+    select count(*) from mysql.user;
+END
+加红的部分SQL SECURITY 其实后面有两个选项，一个为DEFINER，一个为INVOKER
+
+SQL SECURITY { DEFINER | INVOKER } ：指明谁有权限来执行。DEFINER 表示按定义者拥有的权限来执行
+
+INVOKER 表示用调用者的权限来执行。默认情况下，系统指定为DEFINER 
+```
+
 
 
 # 常用命令
@@ -209,6 +241,147 @@ select version();
 2、判断数据表是否存在
 	select * from information_schema.TABLES where TABLE_NAME = '需要查询的数据表名';
 ```
+
+## 用户权限
+
+### 示例
+
+```
+select version()
+SELECT @@VERSION
+
+show databases;
+show tables;
+
+select * from mysql.user
+select * from performance_schema.accounts
+select * from information_schema.SCHEMATA
+
+#锁定|解锁用户
+alter user 'dev'@'%' account lock;
+alter user 'dev'@'%' account unlock;
+
+#root的权限收回
+update user set host='localhost' where user='root'
+#修改root密码
+alter user 'root'@'localhost' identified with mysql_native_password by 'htgx#!1024';
+
+#查询当前mysql8中有什么角色:
+select * from mysql.user
+select * from mysql.role_edges
+select distinct 
+	user 'role name', 
+	if(from_user is null,0, 1) active
+from mysql.user left join mysql.role_edges on from_user=user
+where account_locked='y' and password_expired='y' and authentication_string='';
+
+#权限查询
+show grants;
+show grants for 'dev'@'%'
+
+#用户创建&赋权
+create user zm_test identified by 'htgx#!1024';
+grant all privileges on *.* to 'zm_test'@'%' identified by 'htgx#!1024';
+flush privileges;
+
+#角色和用户同一个？
+select * from mysql.user
+select current_user()
+select current_role()
+create role zm_test_role1,zm_test_role2,zm_test_role3
+drop user zm_test_role2
+drop role zm_test_role3
+set password for 'zm_test_role1'@'%'='12345678'
+alter user 'zm_test_role1'@'%' identified with mysql_native_password by '123456';
+
+#需要有grant_priv权限的用户
+grant all on *.* to 'zm_test_role1'@'%' identified by '123456' with grant option;
+grant all privileges on *.* to 'zm_test_role1'@'%' identified by '123456' ;
+revoke all privileges on *.* to 'zm_test_role1'@'%' identified by '123456';
+
+create user 'root'@'%' identified by '123456';
+grant all privileges on *.* to 'root'@'%' ;
+
+```
+
+### 摘抄
+
+```
+grant 权限列表 on 数据库 to '用户名'@'访问主机' identified by '密码'; 
+
+grant all privileges *.* to '要创建的用户'@'localhost' identified by '自定义密码';
+flush privileges;刷新权限
+    其中localhost指本地才可连接
+    可以将其换成%指任意ip都能连接
+    也可以指定ip连接
+
+# 授权
+    grant all privileges on dbname.tablename to 'username'@'ip';
+    grant all privileges on *.* to 'test1'@'localhost' with grant option;
+    grant SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP, INDEX, CREATE VIEW, SHOW VIEW, CREATE TEMPORARY TABLES 
+    on dbname.tablename to 'username'@'ip';
+
+    with gran option表示该用户可给其它用户赋予权限，但不可能超过该用户已有的权限
+    比如a用户有select,insert权限，也可给其它用户赋权，但它不可能给其它用户赋delete权限，除了select,insert以外的都不能
+    这句话可加可不加，视情况而定。
+
+	all privileges 可换成select,update,insert,delete,drop,create等操作
+	如：grant select,insert,update,delete on *.* to 'test1'@'localhost';
+
+    第一个*表示通配数据库，可指定新建用户只可操作的数据库
+        如：grant all privileges on 数据库.* to 'test1'@'localhost';
+    第二个*表示通配表，可指定新建用户只可操作的数据库下的某个表
+        如：grant all privileges on 数据库.指定表名 to 'test1'@'localhost';
+	
+# 查看权限
+	show GRANTS;
+# 查看指定用户权限
+	show GRANTS for 'username'@'ip';
+	show grants for 'test1'@'localhost';
+	示例：show grants for 'dev'@'%'
+	
+# 撤销权限
+	revoke all on *.* from 'username'@'ip';
+	revoke all privileges on *.* from 'test1'@'localhost';
+
+# 删除用户
+	drop user 'test1'@'localhost';
+	drop user 'username'@'ip';
+# 删除以后要刷新权限
+	FLUSH PRIVILEGES;
+	
+# 创建用户，ip填'%'表示允许所有ip
+	create user 'username'@'ip' IDENTIFIED by 'password';
+
+# 允许远程客户端通过密码访问
+	alter user 'username'@'ip' IDENTIFIED WITH mysql_native_password by 'password';
+
+# 直接创建能够通过远程客户端访问的账户
+	create user 'username'@'ip' IDENTIFIED WITH mysql_native_password by 'password';
+
+# 修改用户
+	rename user 'username'@'ip' to 'new_username'@'new_ip';
+
+# 修改密码
+	set password for 'username'@'ip'='new_password';
+	or
+    alter user 'test1'@'localhost' identified by '新密码';
+    flush privileges;
+```
+
+### 注意
+
+```
+MySQL 8.0已经不支持下面这种命令写法
+	grant all privileges on *.* to root@"%" identified by ".";
+
+正确的写法是先创建用户
+	create user 'root'@'%' identified by '123456';
+再给用户授权
+	grant all privileges on *.* to 'root'@'%' ;
+```
+
+
 
 # 启动
 

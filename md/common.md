@@ -289,6 +289,10 @@ password:	huitone2214
 ---------------------------------------------------------------mysql
 service mysqld start
 注意ONLY_FULL_GROUP_BY问题
+
+jdbc-url: jdbc:mysql://172.16.7.58:3306/api_platform?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+username: root
+password: Huitone2214!
 ---------------------------------------------------------------
 ```
 
