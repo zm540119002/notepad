@@ -374,6 +374,26 @@ iptables通过控制端口来控制服务，而firewalld则是通过控制协议
     ping DNS服务器地址
 ```
 
+### linux文件最大连接数问题
+
+```
+描述：
+	-bash: ulimit: open files: cannot modify limit: 不允许的操作
+原因： 
+	linux对用户有默认的ulimit限制，/etc/sysconfig/limits.conf 文件可以配置用户的硬配置和软配置，硬配置是个上限。
+	当超出上限的修改就会出“不允许的操作”这样的错误。
+解决：
+	root账号:	vim /etc/security/limits.conf
+	添加：
+	* - nofile 65535
+	* - nproc 65535
+示例：
+	oracle              soft    nproc   2047
+    oracle              hard    nproc   16384
+    oracle              soft    nofile  1024
+    oracle              hard    nofile  65536
+```
+
 
 
 ## 网卡

@@ -381,6 +381,15 @@ MySQL 8.0已经不支持下面这种命令写法
 	grant all privileges on *.* to 'root'@'%' ;
 ```
 
+# 表操作
+
+## 备份表
+
+```
+create table xxxx like data_mgr;
+insert into xxxx select *from data_mgr;
+```
+
 
 
 # 启动
