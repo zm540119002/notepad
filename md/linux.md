@@ -948,6 +948,40 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCfn+AXJHXAv7y3VFOpfGCWX2Wlst5MJRq9eQ8bfuHi
 方法二：
 	ssh-copy-id -i ~/.ssh/id_rsa.pub root@172.16.6.35
 ```
+## Jekins SSH Server配置
+
+```
+环境：A为jekins所在机器，B为需要发布应用的机器
+
+B机器执行的操作
+1、 生成rsa密钥, 会让输入保存位置，这里直接打回车，保存在/root/.ssh目录(-P 后面跟的是私钥密码)
+    cd ~
+    cd .ssh
+    ssh-keygen -t rsa -P '当前用户密码'
+    ssh-keygen -t rsa -P 'huitonedev'
+    
+2、注意下面要做的就是为上面Username处的用户配置公钥，本例中，在机器B上新建一个用户，用户名为 dev . 如果已有用户直接将id_rsa.pub追加到已有用户的authorized_keys文件中即可。
+	将公钥导入authorized_keys文件，并修改文件权限：
+	cat id_rsa.pub >> /home/dev/.ssh/authorized_keys
+	chmod 600 /home/dev/.ssh/authorized_keys
+
+3、配置 SSH Server
+    查看刚才生成的密钥：
+    cat id_rsa
+	填写SSH Server配置界面,Passphrase/Password为刚才生成密钥时的密码：huitonedev，key为上面密钥内容
+	
+#jenkins使用非交互式shell，读取不到dev的环境变量，先加载dev的环境变量
+.  /etc/profile
+.  ~/.bash_profile
+cd  /www/data_govern/jars/temp
+mv */*/*.jar */*/*/*.jar  /www/data_govern/jars
+true  > ~/env.log
+env > ~/env.log
+which java >> ~/env.log
+```
+
+
+
 ## ftp & sftp
 
 ```

@@ -1496,125 +1496,7 @@ public class CodeBlock{
 	https://blog.csdn.net/yitian_66/article/details/80651921
 ```
 
-#  **maven**
-
-## *Linux版*
-
-### 安装配置
-
-```
-cd /usr/local/src
-	wget https://zysd-shanghai.oss-cn-shanghai.aliyuncs.com/software/linux/maven/apache-maven-3.6.1-bin.tar.gz
-	tar -zxvf apache-maven-3.6.1-bin.tar.gz -C /usr/local
-	cd ../apache-maven-3.6.1
-	
-环境变量
-	1. 编辑环境变量
-	vim /etc/profile
-
-	2. 添加Maven的M2_HOME地址
-	export M2_HOME=/usr/local/apache-maven-3.6.1
-	export PATH=$PATH:$M2_HOME/bin
-
-	3. 保存配置文件
-	source /etc/profile
-验证是否成功安装
-	mvn -version
-	
-配置maven的镜像仓库
-	vim  conf/settings.xml 
-	<!-- 指定b本地仓库 -->
-	<localRepository>/usr/local/apache-maven-3.6.1/repo</localRepository>
-	
-	设置镜像，在mirrors节点添加以下节点
-	<!-- 从阿里云镜像下载jar包 -->
-	<mirrors>
-		<mirror>
-			<id>alimaven</id>
-			<name>aliyun maven</name>
-			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-			<mirrorOf>central</mirrorOf>        
-		</mirror>
-	</mirrors>
-	
-	<!-- 指定jdk1.8 -->
-	 <profiles>
-		<profile>
-                <id>jdk1.8</id>
-                <activation>
-                <activeByDefault>true</activeByDefault>
-                <jdk>1.8</jdk>
-                </activation>
-                <properties>
-                        <maven.compiler.source>1.8</maven.compiler.source>
-                        <maven.compiler.target>1.8</maven.compiler.target>                        
-						<maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
-                </properties>
-        </profile>
-	</profiles>
-
-去到pom.xml 目录下
-mvn -compire
-参考： https://www.linuxidc.com/linux/2020-04/162861.htm
-```
-
-### 注意事项
-
-```
---会执行单元测试
-	mvn  -Dmaven.multiModuleProjectDirectory=M:\data-govern -Dmaven.home=E:\java\MAVEN\apache-maven-3.6.3   
-	-DskipTests=true package
-
--- 不会执行单元测试
-	mvn  -Dmaven.multiModuleProjectDirectory=M:\data-govern -Dmaven.home=E:\java\MAVEN\apache-maven-3.6.3   
-	-Dmaven.test.skip=true package
-
-maven插件选中了不执行单元测试  打包时还是会执行  原来它是加了 -DskipTests=true
-```
-
-
-
-### *可能错误*
-
-```
-报错：There are test failures
-解决：maven 打包跳过单元测试
-mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true 
-mvn clean install -P dev -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
-```
-
-## windows版
-
-*C:\Users\Administrator\.m2\settings.xml*
-
-```
-<?xml version="1.0" encoding="UTF-8"?>
- <!-- 英文注释已经被删除了，直接修改本地仓库地址用就行了。 -->
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-   <!-- 设置本地仓库的地址 -->
-  <localRepository>C:\Users\Administrator\.m2\repository</localRepository>
-  <pluginGroups>
-  </pluginGroups>
-  <proxies>
-  </proxies> 
-  <servers>  
-  </servers>
- <!-- 设置国内的镜像 -->
-    <mirrors>
-    <mirror>
-      <id>alimaven</id>
-      <name>aliyun maven</name>
-      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-      <mirrorOf>central</mirrorOf>        
-    </mirror>
-  </mirrors>
-  <profiles>
-  </profiles>
-</settings>
-```
-# 语法
+# 基础语法
 
 ```
 参考：
@@ -1637,7 +1519,7 @@ Collection 接口又有 3 种子类型，List、Set 和 Queue，再下面是一�
 
 # 常用示例
 
-## 常用
+## temp
 
 ```
 AutoKeyGet.GetKeyId()
@@ -1663,21 +1545,6 @@ try{
     }
     log.error("addAllConfig error! msg:{},error:{}",msg, e);
 }
-```
-
-
-
-```
-ExceptionUtil.throwError(aliasPrefix.returnCode, aliasPrefix.errMsg);
-
-@Slf4j
-
-private Logger logger = LoggerFactory.getLogger(GvnXxlJobConfig.class);
-
-H_api_key:Huitone@2214
-H_sign:RoW1EOIN9Lsd2GzhoHitqQhxunqiPaGuEG0tqsF6wCxy99kl2EPhXJJgE4ICsedR0HnGFNx/wN39Sq4tGbPWR8o4jnh4RXgZ60vG0MTnFGVdRFLbft+QS5CjDKUdDziPD7UvhUcJSasUEz1YcyXH1k1upSrQcdMvgf2zaVaUNj0=
-H_timestamp:1595836849999
-H_token:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHBpcmVUaW1lIjoxNTk1ODM4NjQ5OTQ0LCJ1c2VySXAiOiIxNzIuMTYuMTYuOTIiLCJ1c2VySWQiOjMwMywiYWNjb3VudCI6Inp4In0.zF6XoMx2RljYHaPpHuqsz7QzwpEzBIC8U9S9v7v9yxI
 ```
 
 ## list对象集合中获取某一列的集合数据
@@ -1889,16 +1756,6 @@ criteriaEtlTask.andEqualTo("etlTaskId", nodeId);
 tbUcCfgEtlTaskService.deleteByExample(exampleEtlTask)
 ```
 
-## For
-
-```
-for (TbUcCfgDiffItem cur : diffItems) {
-
-}
-```
-
-
-
 ## List
 
 ```
@@ -1975,8 +1832,6 @@ list2.parallelStream().forEachOrdered(System.out :: println);
 
 
 ```
-
-
 
 ## ArrayList
 
@@ -2169,6 +2024,18 @@ public class TestException {
     实现HandlerInterceptor接口或者继承HandlerInterceptorAdapter，重写preHandle()方法【自定义拦截器】
 ```
 
+## 过滤器
+
+```
+
+```
+
+## 监听器
+
+```
+
+```
+
 
 
 # Java 8 新特性
@@ -2285,7 +2152,7 @@ java内存模型(Java Memory Model，JMM)是java虚拟机规范定义的，用�
 	https://blog.csdn.net/qq_29078329/article/details/78929457
 ```
 
-# 面试常问
+# 面试
 
 ```
 1、最常用的BeanFactory 实现是XmlBeanFactory 类，它根据XML文件中的定义加载beans。该容器从XML 文件读取配置元数据并用它去创建一个完全配置的系统或应用。
