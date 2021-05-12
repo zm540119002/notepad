@@ -73,3 +73,35 @@ maven插件选中了不执行单元测试  打包时还是会执行  原来它�
 mvn clean install -P dev -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 ```
 
+# windows版
+
+## *C:\Users\Administrator\.m2\settings.xml*
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- 英文注释已经被删除了，直接修改本地仓库地址用就行了。 -->
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+   <!-- 设置本地仓库的地址 -->
+  <localRepository>C:\Users\Administrator\.m2\repository</localRepository>
+  <pluginGroups>
+  </pluginGroups>
+  <proxies>
+  </proxies> 
+  <servers>  
+  </servers>
+ <!-- 设置国内的镜像 -->
+    <mirrors>
+    <mirror>
+      <id>alimaven</id>
+      <name>aliyun maven</name>
+      <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+      <mirrorOf>central</mirrorOf>        
+    </mirror>
+  </mirrors>
+  <profiles>
+  </profiles>
+</settings>
+```
+

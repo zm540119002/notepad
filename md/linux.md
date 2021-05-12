@@ -969,10 +969,16 @@ B机器执行的操作
     查看刚才生成的密钥：
     cat id_rsa
 	填写SSH Server配置界面,Passphrase/Password为刚才生成密钥时的密码：huitonedev，key为上面密钥内容
-	
-#jenkins使用非交互式shell，读取不到dev的环境变量，先加载dev的环境变量
+
+可能错误：
+	ERROR: Exception when publishing, exception message [Exec exit status not zero. Status [1]]
+	Build step 'Send files or execute commands over SSH' changed build result to UNSTABLE
+原因：
+	#jenkins使用非交互式shell，读取不到dev的环境变量，先加载dev的环境变量
+处理：
 .  /etc/profile
 .  ~/.bash_profile
+
 cd  /www/data_govern/jars/temp
 mv */*/*.jar */*/*/*.jar  /www/data_govern/jars
 true  > ~/env.log
@@ -1123,6 +1129,77 @@ scp -r root@172.16.7.56:/usr/local/apache2.4/htdocs/inc_chk/new_index/svg/* .
 你可以利用它和 -s 参数来特别指定文件的大小。要清空文件的内容，则在下面的命令中将文件的大小设定为 0:
 	# truncate -s 0 test.log
 ```
+
+# shell
+
+## 注意事项
+
+```
+SHMID=`ipcs -m | awk '$4==707 {print $2}' ` 
+=号两边不能有空格
+```
+
+## 示例
+
+```
+#!/bin/bash
+NAME="provider-integral"    #想要杀死的进程
+PORT="8081"
+PROCESS="../jars/provider-integral-0.0.1-SNAPSHOT.jar"
+LOGDIR="../log/integral.log"
+echo $NAME
+ID=`ps -ef | grep "$NAME" | grep -v "grep" | awk '{print $2}'`  #注意此shell脚本的名称，避免自杀
+if [ -z "$ID" ];then
+    echo "process id is empty, process is not existed..."
+    echo "process will start..."
+    nohup java -Dserver.port=$PORT -jar $PROCESS  > $LOGDIR 2>&1 &
+    echo "process has start..."
+else
+    echo $ID
+	for id in $ID
+        do
+            kill -9 $id
+            echo "killed $id"
+        done
+    echo "process will restart..."
+    nohup java -Dserver.port=$PORT -jar $PROCESS  > $LOGDIR 2>&1 &
+    echo "process has restart..."
+fi
+```
+
+
+
+## 采集程序重启
+
+```
+172.16.7.71
+cd /root/filecollection
+vim restart-filecollection.sh
+
+#!/bin/bash
+NAME="filecollection_audit_st1"    #想要杀死的进程
+
+echo "先杀进程：" $NAME
+
+ID=`ps -ef | grep -w "$NAME" | grep -v "grep" | awk '{print $2}'`  #注意此shell脚本的名称，避免自杀
+for id in $ID
+    do
+    	kill -9 $id
+    	echo "killed $id"
+    done
+ 
+SHMID=`ipcs -m | awk '$1=="0x040566ab" {print $2}'` 
+echo "然后删共享内存：" $SHMID
+ipcrm -m $SHMID
+
+echo "最后修改Task.ini文件："
+awk '{ if ($1=="SCHEDULE_MSG_ID" || $1=="SCHEDULE_P_ID") {sub($3,0);print} else print}' ini/Task.ini > ini/Task.ini.bak$$ && mv -f ini/Task.ini.bak$$ ini/Task.ini
+
+echo "重启开始："
+./filecollection_audit_st1 start
+```
+
+
 
 # 日志
 
