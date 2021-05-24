@@ -1519,6 +1519,134 @@ Collection 接口又有 3 种子类型，List、Set 和 Queue，再下面是一�
 
 # 常用示例
 
+## 5种方式获取ApplicationContext
+
+### 1、直接注入
+
+```
+@Resource
+private ApplicationContext ctx;
+
+作者：王勇1024
+链接：https://www.jianshu.com/p/ef7739a01cb0
+来源：简书
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```
+
+### 2、实现ApplicationContextAware接口
+
+```
+创建一个实体类并实现ApplicationContextAware接口，重写接口内的setApplicationContext方法来完成获取ApplicationContext实例的方法：
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
+
+@Component
+public class ApplicationContextProvider
+    implements ApplicationContextAware
+{
+    /**
+     * 上下文对象实例
+     */
+    private ApplicationContext applicationContext;
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    /**
+     * 获取applicationContext
+     * @return
+     */
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    /**
+     * 通过name获取 Bean.
+     * @param name
+     * @return
+     */
+    public Object getBean(String name){
+        return getApplicationContext().getBean(name);
+    }
+
+    /**
+     * 通过class获取Bean.
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public <T> T getBean(Class<T> clazz){
+        return getApplicationContext().getBean(clazz);
+    }
+
+    /**
+     * 通过name,以及Clazz返回指定的Bean
+     * @param name
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public <T> T getBean(String name,Class<T> clazz){
+        return getApplicationContext().getBean(name, clazz);
+    }
+}
+
+我们拿到ApplicationContext对象实例后就可以手动获取Bean的注入实例对象，在ApplicationContextProvider类内我简单的实现了几个方法来获取指定的Bean实例，当然你可以添加更多的方法来完成更多的业务逻辑。
+如果你是想在非Spring管理的实体内使用ApplicationContext还不想采用注入ApplicationContextProvider来完成实例化，这时我们可以修改ApplicationContext实例对象为静态实例，方法改为静态方法，这样在外部同样是可以获取到指定Bean的实例。
+这里要注意ApplicationContextProvider类上的@Component注解是不可以去掉的，去掉后Spring就不会自动调用setApplicationContext方法来为我们设置上下文实例。
+```
+
+### 3、在自定义AutoConfiguration中获取
+
+```
+有时候我们需要实现自定义的Spring starter，并在自定义的AutoConfiguration中使用ApplicationContext，Spring在初始化AutoConfiguration时会自动传入ApplicationContext，这时我们就可以使用下面的方式来获取ApplicationContext：
+
+@Configuration
+@EnableFeignClients("com.yidian.data.interfaces.client")
+public class FeignAutoConfiguration {
+
+    FeignAutoConfiguration(ApplicationContext context) {
+        // 在初始化AutoConfiguration时会自动传入ApplicationContext
+         doSomething(context);
+    }
+}
+```
+
+### 4、启动时获取ApplicationContext
+
+```
+在启动Spring Boot项目时，需要调用SpringApplication.run()方法，而run()方法的返回值就是ApplicationContext，我们可以把run()方法返回的ApplicationContext对象保存下来，方便随时使用：
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+
+@SpringBootApplication
+public class WebApplication {
+
+    private static ApplicationContext applicationContext;
+
+    public static void main(String[] args) {
+        applicationContext = SpringApplication.run(WebApplication.class, args);
+        SpringBeanUtil.setApplicationContext(applicationContext);
+    }
+}
+```
+
+### 5、通过WebApplicationContextUtils获取
+
+```
+WebApplicationContextUtils.getRequiredWebApplicationContext(ServletContext sc);
+WebApplicationContextUtils.getWebApplicationContext(ServletContext sc);
+```
+
+
+
 ## temp
 
 ```
@@ -1896,6 +2024,18 @@ public static void main(String[] args) throws Exception {
 }
 ```
 
+## hashmap
+
+```
+基础了解：
+1、键不可以重复，值可以重复；
+2、底层使用哈希表实现；
+3、线程不安全；
+4、允许key为null，但只允许有一条记录为null，value也可以为null，允许多条记录为null；
+```
+
+
+
 ## validation
 
 ```
@@ -2022,6 +2162,8 @@ public class TestException {
 2、使用Spring的拦截器相关接口来自定义拦截器
     实现WebMvcConfigurer接口，重写addCorsMappings()方法和addInterceptors()方法【配置拦截器】
     实现HandlerInterceptor接口或者继承HandlerInterceptorAdapter，重写preHandle()方法【自定义拦截器】
+    
+
 ```
 
 ## 过滤器

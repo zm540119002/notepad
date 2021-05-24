@@ -286,6 +286,13 @@ ip命令常用参数
 
 ## **防火墙**
 
+```
+默认：
+    ubuntu ： ufw 
+    centos ： iptables
+    redhat :  firewall
+```
+
 ### *iptables*
 
 ```
@@ -305,6 +312,8 @@ iptables通过控制端口来控制服务，而firewalld则是通过控制协议
 	chkconfig iptables off  
 # 永久关闭后重启
 	chkconfig iptables on　　
+	
+/etc/init.d/iptables stop
 ```
 
 ```
@@ -450,187 +459,304 @@ iptables通过控制端口来控制服务，而firewalld则是通过控制协议
         IPV6_PEERROUTES=yes
 ```
 
-# 常用命令
+# 系统
 
 ```
-netstat -anp|grep LIS
-ls -lrt /proc/14720
-ps -ef|grep 14720
-```
+一般来说，linux系统采用 A.B.C.D 的版本号管理方式，A表示主版本号，B表示次版本号，C表示修订版本，D表示更新版本号。
+其中次版本号为偶数是稳定版本，为奇数表示有一些新的东西加入，是个不一定很稳定的测试版本，但是2.6版本以后，不再使用奇偶来来作为稳定和不稳定版本的判别。
 
-## 查看Linux系统
-
-```
-cat /proc/version
-uname -a
-uname -r
-lsb_release -a（适用于所有的Linux发行版本），有些系统中默认并没有安装lsb_release，需要进行安装，以CentOS为例：
-    首先查找lsb_release安装包：	yum provides lsb_release
-    安装：	yum install -y redhat-lsb-core
+适合所有 Linux 系统：
     
-CentOS版本信息：
-	cat /proc/version
-	uname -a
-	cat /etc/issue
+    cat /etc/issue
+
+只适合查看 Redhat 系的 Linux，如：CentOS：
 	cat /etc/redhat-release
-	cat  /etc/*release*
 
+适用于所有的 Linux 发行版：
+	cat /proc/version
+    uname -a
+    uname -r
+	cat /etc/issue
+	cat /etc/*release*
+    lsb_release -a 有些系统中默认并没有安装lsb_release，需要进行安装，以CentOS为例：
+        首先查找lsb_release安装包：	yum provides lsb_release
+        安装：	yum install -y redhat-lsb-core
+    
 查看系统是64位还是32位:
-	getconf LONG_BIT
-查看cpu相关信息，包括型号、主频、内核信息等
-	cat /proc/cpuinfo
-查看端口：
-	netstat -anp | grep portno
-	示例：
-	查看监听端口：	netstat -anp | grep LISTEN
-	查看php-fpm是否启动了：	netstat -nlp|grep php-fpm
-查看用户：		cat /etc/passwd
-查看用户组：  	cat /etc/group
-查看用户所属组：groups user1
-查看服务：
-	chkconfig --list       			# 列出所有系统服务
-	chkconfig --list | grep on    	# 列出所有启动的系统服务
-查看运行用户信息：
-	ps -ef|grep http
-查看进程号：	pgrep php-fpm
-追踪进程号：	strace -f -e connect  -p 你的进程编号
+	getconf LONG_BIT	      
 ```
 
-## service、systemctl 和 chkconfig
+## 包管理&安装
 
 ```
-1.service命令其实是去/etc/init.d目录下，去执行相关程序
-	# 启动、停止、重启服务等
-		service redis start|stop|restart|reload(重新加载配置文件,不终止服务)|status
-	# 直接启动redis脚本
-		/etc/init.d/redis start
-	# 开机自启动
-		update-rc.d redis defaults
+源码安装的流程一般是三部曲：
+    ./configure
+    make
+    make install  
+    
+./configure是为了检测目标安装平台的特征，并且检查依赖的软件包是否可用或者是否缺少依赖软件包，configure事实上是个脚本，最终的目的是生成Makefile。
 
-systemd是Linux系统最新的初始化系统(init),作用是提高系统的启动速度，尽可能启动较少的进程，尽可能更多进程并发启动。
-systemd对应的进程管理命令是systemctl
-2. systemctl命令兼容了service，即systemctl也会去/etc/init.d目录下，查看，执行相关程序
-	# 启动、停止、重启服务等
-		systemctl start|stop|restart|reload(重新加载配置文件,不终止服务)|status redis
-	# 开机自启动 
-		systemctl enable|disable redis
-	# 检查某个单元是否启动
-		systemctl is-enabled httpd.service 
-	# 查询服务是否激活，和配置是否开机启动
-		systemctl is-active httpd
+如果第一条指令没有报错，会生成一个Makefile，make指令就是编译这个源码包
+
+正常编译完之后如果没有报错，就生成了可执行文件，make install指令就是将可执行文件放到指定目录并配置环境变量，允许我们在任何目录下使用这个软件。
+```
+
+### yum与apt-get
+
+```
+linux系统基本上分两大类： 
+    1.RedHat系列：Redhat、Centos、Fedora等 
+    2.Debian系列：Debian、Ubuntu等 
+
+    RedHat 系列 
+        1 常见的安装包格式 rpm包,安装rpm包的命令是“rpm -参数” 
+        2 包管理工具 yum 
+        3 支持tar包 
+
+    Debian系列 
+        1 常见的安装包格式 deb包,安装deb包的命令是“
+        dpkg-参数” 
+        2 包管理工具 apt-get 
+        3 支持tar包
+
+yum是RedHat系列的高级软件包管理工具
+    主要功能是更方便的添加/删除/更新RPM包。
+    它能自动解决包的依赖性问题。
+    它能便于管理大量系统的更新问题。
+yum的特点
+    可以同时配置多个资源库(Repository)
+    简洁的配置文件(/etc/yum.conf)
+    自动解决增加或删除rpm包时遇到的倚赖性问题
+    保持与RPM数据库的一致性
+    
+apt-get是Debian系列的高级软件包管理工具
+    配置文件/etc/apt/sources.list
+    sudo apt-get install xxx
+    apt-get可以用于运作deb包，例如在Ubuntu上对某个软件的管理：
+
+    安装：apt-get install <package_name>
+    卸载：apt-get remove <package_name> 
+    更新：apt-get update <package_name>
+
+tar 只是一种压缩文件格式，所以，它只是把文件压缩打包而已。
+rpm 相当于windows中的安装文件，它会自动处理软件包之间的依赖关系。
+ 
+优缺点来说，rpm一般都是预先编译好的文件，它可能已经绑定到某种CPU或者发行版上面了。
+tar一般包括编译脚本，你可以在你的环境下编译，所以具有通用性。
+ 
+如果你的包不想开放源代码，你可以制作成rpm，如果开源，用tar更方便了。
+ 
+tar一般都是 源码打包的软件，需要自己解包，然后进行安装三部曲，./configure, make, make install.　来安装软件。
+rpm是redhat公司的一种软件包管理机制，直接通过rpm命令进行安装删除等操作，最大的优点是自己内部自动处理了各种软件包可能的依赖关系。
+```
+
+### yum&rpm
+
+```
+安装：rpm -ivh *.rpm
+卸载：rpm -e packgename 
+升级：rpm -Uvh xxx
+查询所有安装的包： rpm -qa
+查询某个包：rpm -qa | grep nginx
+查询软件的安装路径：rpm -ql nginx
+查询某个文件是那个rpm包产生：rpm -qf /etc/yum.conf
+    
+1）.用YUM安装删除软件
+装了系统添加删除软件是常事，yum同样可以胜任这一任务，只要软件是rpm安装的。
+安装的命令是yum install xxx，yum会查询数据库，有无这一软件包，如果有，则检查其依赖冲突关系，如果没有依赖冲突，那么最好，下载安装;如果有，则会给出提示，询问是否要同时安装依赖，或删除冲突的包，你可以自己作出判断。
+删除的命令是，yum remove xxx，同安装一样，yum也会查询数据库，给出解决依赖关系的提示。
+ 
+2）.用YUM安装软件包
+命令：yum install 
+ 
+3）.用YUM删除软件包
+命令：yum remove 
+用YUM查询软件信息，我们常会碰到这样的情况，想要安装一个软件，只知道它和某方面有关，但又不能确切知道它的名字。这时yum的查询功能就起作用了。你可以用 yum search keyword这样的命令来进行搜索，比如我们要则安装一个Instant Messenger，但又不知到底有哪些，这时不妨用 yum search messenger这样的指令进行搜索，yum会搜索所有可用rpm的描述，列出所有描述中和messeger有关的rpm包，于是我们可能得到 gaim，kopete等等，并从中选择。有时我们还会碰到安装了一个包，但又不知道其用途，我们可以用yum info packagename这个指令来获取信息。
+ 
+4）.使用YUM查找软件包
+命令：yum search 
+ 
+5）.列出所有可安装的软件包
+命令：yum list 
+ 
+6）.列出所有可更新的软件包
+命令：yum list updates 
+ 
+7）.列出所有已安装的软件包
+命令：yum list installed 
+ 
+8）.列出所有已安装但不在 Yum Repository 內的软件包
+命令：yum list extras 
+ 
+9）.列出所指定的软件包
+命令：yum list 
+
+```
+
+### apt-get&dpkg
+
+```
+apt-get:
+配置文件：cat /etc/apt/sources.list 
+
+（1）普通安装：apt-get install softname1 softname2 …;
+（2）修复安装：apt-get -f install softname1 softname2… ;(-f Atemp to correct broken dependencies)
+（3）重新安装：apt-get –reinstall install softname1 softname2…;
+
+要最新版本的话，不妨先apt-get update 来更新一下软件的仓库,然后再 apt-get install.
+ 
+常用的APT命令参数：
+    apt-cache search package 搜索包
+    apt-cache show package 获取包的相关信息，如说明、大小、版本等
+    apt-cache depends package 了解使用依赖
+    apt-cache rdepends package 是查看该包被哪些包依赖
+    sudo apt-get install package 安装包
+    sudo apt-get install package - - reinstall 重新安装包
+    sudo apt-get -f install 修复安装"-f = ——fix-missing"
+    sudo apt-get remove package 删除包
+    sudo apt-get remove package - - purge 删除包，包括删除配置文件等
+    sudo apt-get update 更新源
+    sudo apt-get upgrade 更新已安装的包
+    sudo apt-get dist-upgrade 升级系统
+    sudo apt-get dselect-upgrade 使用 dselect 升级
+    sudo apt-get build-dep package 安装相关的编译环境
+    sudo apt-get source package 下载该包的源代码
+    sudo apt-get clean && sudo apt-get autoclean 清理无用的包
+    sudo apt-get check 检查是否有损坏的依赖
+
+sudo apt-get install -y
+这里主要将的就是-y选项，添加这个选项就相当于不需要重复地确认安装
+
+sudo apt-get install -q
+即-quiet，静默安装，当然也不是完全静默，会将低等级的log信息屏蔽。
+
+sudo apt-get remove
+既然有安装就会有卸载，remove指令就是卸载，值得注意的是，remove仅仅卸载软件，但是并不卸载配置文件
+
+sudo apt-get purge
+卸载指令，同时卸载相应的配置文件
+
+dpkg：
+查看已经安装了的软件：dpkg -l | grep 'php' 
+
+1、dpkg -i < package.deb >
+	安装一个 Debian 软件包，如你手动下载的文件。
+
+2、dpkg -c < package.deb >
+	列出 < package.deb > 的内容。
+
+3、dpkg -I(大写i) < package.deb >
+	从 < package.deb > 中提取包裹信息。
+
+4、dpkg -r < package >
+	移除一个已安装的包裹。
+
+5、dpkg -P < package >
+	完全清除一个已安装的包裹。和 remove 不同的是，remove 只是删掉数据和可执行文件，purge 另外还删除所有的配制文件。
+
+6、dpkg -L < package >
+	列出 < package > 安装的所有文件清单。同时请看 dpkg -c 来检查一个 .deb 文件的内容。
+
+7、dpkg -s < package >
+	显示已安装包裹的信息。同时请看 apt-cache 显示 Debian 存档中的包裹信息，以及 dpkg -I 来显示从一个 .deb 文件中提取的包裹信息。
+
+8、dpkg-reconfigure < package >
+	重新配制一个已经安装的包裹，如果它使用的是 debconf (debconf 为包裹安装提供了一个统一的配制界面)。
+```
+
+## 内核
+
+```
+五大基本功能：
+    进程管理
+    内存管理
+    文件系统
+    网络协议
+    设备管理
+```
+## 进程管理
+
+```
+
+```
+
+
+
+## shell
+
+```
+常见shell类型：
+1. Bourne shell (sh)
+UNIX 最初使用，且在每种 UNIX 上都可以使用。在 shell 编程方面相当优秀，但在处理与用户的交互方面做得不如其他几种shell。
+
+2. C shell (csh)
+csh, the C shell, is a command interpreter with a syntax similar to the C programming language.一个语法上接近于C语言的shell。
+
+3. Korn shell (ksh)
+完全向上兼容 Bourne shell 并包含了 C shell 的很多特性。
+
+4. Bourne Again shell (bash)
+因为Linux 操作系统缺省的 shell。即 bash 是 Bourne shell 的扩展，与 Bourne shell 完全向后兼容。在 Bourne shell 的基础上增加、增强了很多特性。可以提供如命令补全、命令编辑和命令历史表等功能。包含了很多 C shell 和 Korn shell 中的优点，有灵活和强大的编程接口，同时又有很友好的用户界面。
+
+5. Debian Almquist Shell(dash)
+原来bash是GNU/Linux 操作系统中的 /bin/sh 的符号连接，但由于bash过于复杂，有人把 bash 从 NetBSD 移植到 Linux 并更名为 dash，且/bin/sh符号连接到dash。Dash Shell 比 Bash Shell 小的多（ubuntu16.04上，bash大概1M，dash只有150K），符合POSIX标准。Ubuntu 6.10开始默认是Dash。
+
+```
+
+### 语法
+
+```
+关于变量
+    变量赋值使用 = 等号,左右不能留有空格
+    使用变量的值用$取值符号
+例：  
+    SHMID=`ipcs -m | awk '$4==707 {print $2}' ` 
+    =号两边不能有空格
+```
+
+### 规范
+
+```
+关于首行
+	使用#!/usr/bin/env bash，当然也有 #!/bin/sh、#!/usr/bin/bash,这几种写法也都算是正确
 	
-区别：
-	systemctl命令：是一个systemd工具，主要负责控制systemd系统和服务管理器。
-    service命令：可以启动、停止、重新启动和关闭系统服务，还可以显示所有系统服务的当前状态。
-    chkconfig命令：是管理系统服务(service)的命令行工具。所谓系统服务(service)，就是随系统启动而启动，随系统关闭而关闭的程序。
-    systemctl命令是系统服务管理器指令，它实际上将 service 和 chkconfig 这两个命令组合到一起。
+关于注释
+    除脚本首行外,所有以 # 开头的语句都将成为注释。
+    函数必须有注释标识该函数的用途、入参变量、函数的返回值类型,且必须简单在一行内写完。
+    函数的注释 # 顶格写, 井号后面紧跟一个空格 ,对于该格式的要求是为了最后生成函数的帮助文档是用的(markdown语法),然后是注释的内容,注释尽量简短且在一行,最后跟的是函数的类型。
+    函数内注释 # 与缩进格式对整齐
+    变量的注释紧跟在变量的后面
+    
+关于缩进
+    使用两个空格进行缩进,不适用tab缩进
+    不在一行的时候使用 \ 进行换行,使用 \ 换行的原则是整齐美观
+    
+关于变量
+    使用变量的时候,变量名一定要用{}包裹
+    使用变量的时候一定要用 双引号 "${}"包裹
+    
+注意: 单引号和双引号的区别
+    单引号里的任何字符都会原样输出,单引号字符串中的变量是无效的,单引号字串中不能出现单引号（对单引号使用转义符后也不行）。
+    双引号中的普通字符都会原样输出,单引号中的使用$取值的变量会替换成响应变量的真实值得,然后在进行输出,双引号中可以出现单引号
 
-    systemctl是RHEL 7 的服务管理工具中主要的工具，它融合之前service和chkconfig的功能于一体。可以使用它永久性或只在当前会话中启用/禁用服务。
+    常量一定要定义成readonly,这种变量不能使用source跨shell使用
+    比如一个a.sh 中定义了一个全局的变量 readonly TURE=0,b.sh 中在一开始使用 source a.sh 引入的a.sh 的内容,则在 b.sh 中无需重复定义 readonly local TRUE=0,否则会报错
 
-    所以systemctl命令是service命令和chkconfig命令的集合和代替。
-```
-
-## cpu
-
-```
-/*CPU
-查看CPU型号*/
-	cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
-
-/*查看物理CPU个数*/
-	cat /proc/cpuinfo | grep "physical id" | sort -u | wc -l  
-
-/*查看逻辑CPU个数*/
-	cat /proc/cpuinfo | grep "processor" | wc -l  
-
-/*查看CPU内核数*/
-	cat /proc/cpuinfo | grep "cpu cores" | uniq  
-
-/*查看单个物理CPU封装的逻辑CPU数量*/
-	cat /proc/cpuinfo | grep "siblings" | uniq  
-
-/*计算是否开启超线程
-##逻辑CPU > 物理CPU x CPU核数 #开启超线程
-##逻辑CPU = 物理CPU x CPU核数 #没有开启超线程或不支持超线程*/
-
-/*查看是否超线程,如果cpu cores数量和siblings数量一致，则没有启用超线程，否则超线程被启用。*/
-	cat /proc/cpuinfo | grep -e "cpu cores"  -e "siblings" | sort | uniq
-
-
-/*查看进程相关信息占用的内存情况，(进程号可以通过ps查看)如下所示：*/
-    pmap -d 14596
-    ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid' 
-    ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid' | grep postgres |  sort -nrk5
-/*其中rsz为实际内存，上例实现按内存排序，由大到小*/
-
-/*查看IO情况*/
-	iostat -x 1 10
-/*
-如果 iostat 没有，要 yum install sysstat安装这个包，第一眼看下图红色圈圈的那个如果%util接近100%,表明I/O请求太多,I/O系统已经满负荷，磁盘可能存在瓶颈,一般%util大于70%,I/O压力就比较大，读取速度有较多的wait，然后再看其他的参数，
-内容解释:
-rrqm/s:每秒进行merge的读操作数目。即delta(rmerge)/s 
-wrqm/s:每秒进行merge的写操作数目。即delta(wmerge)/s 
-r/s:每秒完成的读I/O设备次数。即delta(rio)/s 
-w/s:每秒完成的写I/0设备次数。即delta(wio)/s 
-rsec/s:每秒读扇区数。即delta(rsect)/s 
-wsec/s:每秒写扇区数。即delta(wsect)/s 
-rKB/s:每秒读K字节数。是rsec/s的一半，因为每扇区大小为512字节 
-
-wKB/s:每秒写K字节数。是wsec/s的一半 
-avgrq-sz:平均每次设备I/O操作的数据大小(扇区)。即delta(rsect+wsect)/delta(rio+wio) 
-avgqu-sz:平均I/O队列长度。即delta(aveq)/s/1000(因为aveq的单位为毫秒) 
-await:平均每次设备I/O操作的等待时间(毫秒)。即delta(ruse+wuse)/delta(rio+wio) 
-svctm:平均每次设备I/O操作的服务时间(毫秒)。即delta(use)/delta(rio+wio) 
-%util:一秒中有百分之多少的时间用于I/O操作,或者说一秒中有多少时间I/O队列是非空的
-
-*/
-/*找到对应进程*/
-ll /proc/进程号/exe
+    函数中的变量要用local修饰,定义成局部变量,这样在外部遇到重名的变量也不会影响
+    
+    web="www.chen-shang.github.io"
+    function main(){
+      local name="chenshang" #这里使用local定义一个局部变量
+      local web="${web}"     #这里${}内的web是全局变量,之后在函数中在使用web变量都是使用的局部变量
+      local web2="${web}"    #对于全局变量,虽然在使用的时候直接使用即可,但还是推荐使用一个局部变量进行接收，然后使用局部变量，以防止在多线程操作的时候出现异常（相当于java中的静态变量在多线程中的时候需要注意线程安全一样，但常量除外）
+    }
+    
+    变量一经定义,不允许删除(也就是禁用unset命令,因为到目前我还没遇到过什么情况必须unset的)
 ```
 
 
 
-## 进程
-
-```
-查看内存占用前五的进程：   ps auxw | head -1;ps auxw|sort -rn -k4|head -5
-查看CPU占用前三的进程：	 ps auxw | head -1;ps auxw|sort -rn -k3|head -3
-```
-
-## 内存
-
-```
-free -m
-echo 3 > /proc/sys/vm/drop_caches 
-
-TOP
-/*命令经常用来监控linux的系统状况，比如cpu、内存的使用等。*/
-/*查看某个用户内存使用情况,如:postgres*/
-	top -u postgres
-/*
-内容解释：
-
-　　PID：进程的ID
-　　USER：进程所有者
-　　PR：进程的优先级别，越小越优先被执行
-　　NInice：值
-　　VIRT：进程占用的虚拟内存
-　　RES：进程占用的物理内存
-　　SHR：进程使用的共享内存
-　　S：进程的状态。S表示休眠，R表示正在运行，Z表示僵死状态，N表示该进程优先值为负数
-　　%CPU：进程占用CPU的使用率
-　　%MEM：进程使用的物理内存和总内存的百分比
-　　TIME+：该进程启动后占用的总的CPU时间，即占用CPU使用时间的累加值。
-　　COMMAND：进程启动命令名称
-
-常用的命令：
-
-　　P：按%CPU使用率排行
-　　T：按MITE+排行
-　　M：按%MEM排行
-```
-
-## 环境变量
+### 环境变量
 
 ```
 -------------------------------------
@@ -666,6 +792,481 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/dm7client/bin/:/usr/local/dm7
 LANG是针对Linux系统的语言、地区、字符集的设置,对linux下的应用程序有效，如date；NLS_LANG是针对Oracle语言、地区、字符集的设置，对oracle中的工具有效
 ```
 
+### 配置文件
+
+```
+profile系列 和 rc系列 & 交互式的登陆 和 非交互式登陆
+profile：
+	交互式：
+		登陆过程：
+            1. 读取并执行/etc/profile文件；
+            2. 读取并执行~/.bash_profile文件；
+            - 若文件不存在，则读取并执行~/.bash_login文件；
+            - 若文件不存在，则读取并执行~/.profile文件；
+
+        登出过程：
+            1. 读取并执行~/.bash_logout文件；
+            2. 读取并执行/etc/bash.bash_logout文件；
+ 	非交互式：
+        登陆过程：
+            1. 读取并执行/etc/profile文件；
+            2. 读取并执行~/.bash_profile文件；
+            - 若文件不存在，则读取并执行~/.bash_login文件；
+            - 若文件不存在，则读取并执行~/.profile文件；
+        与“交互式登陆shell”相比，“非交互式登陆shell”并没有登出的过程
+        
+rc:
+	交互式：
+		1. 读取并执行~/.bashrc或–rcfile选项指定的文件
+		这里需要说明，其实“rc”系列startup文件还包括/etc/bashrc。但是系统并不直接调用这个文件，而是通过~/.bashrc文件显式地调用它。
+	非交互式：
+
+总结：
+	~/.bash_profile会显式调用~/.bashrc文件，而~/.bashrc又会显式调用/etc/bashrc文件，这是为了让所有交互式界面看起来一样。无论你是从远程登录（登陆shell），还是从图形界面打开终端（非登陆shell），你都拥有相同的提示符，因为环境变量PS1在/etc/bashrc文件中被统一设置过。
+	
+下面我来对startup文件进行一个完整的总结，如下图：
+```
+
+![img](https://img-blog.csdn.net/20180328164239209?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2R1emlsb25nbG92ZQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
+
+### 示例
+
+```
+#!/bin/bash
+NAME="provider-integral"    #想要杀死的进程
+PORT="8081"
+PROCESS="../jars/provider-integral-0.0.1-SNAPSHOT.jar"
+LOGDIR="../log/integral.log"
+echo $NAME
+ID=`ps -ef | grep "$NAME" | grep -v "grep" | awk '{print $2}'`  #注意此shell脚本的名称，避免自杀
+if [ -z "$ID" ];then
+    echo "process id is empty, process is not existed..."
+    echo "process will start..."
+    nohup java -Dserver.port=$PORT -jar $PROCESS  > $LOGDIR 2>&1 &
+    echo "process has start..."
+else
+    echo $ID
+	for id in $ID
+        do
+            kill -9 $id
+            echo "killed $id"
+        done
+    echo "process will restart..."
+    nohup java -Dserver.port=$PORT -jar $PROCESS  > $LOGDIR 2>&1 &
+    echo "process has restart..."
+fi
+
+
+awk '{if ($1=="POST" && FILENAME!="data-govern-doc/md/接口规范.md") {print $2,"   ", FILENAME}}' data-govern-doc/md/*.md
+```
+
+### 采集程序重启
+
+```
+172.16.7.71
+cd /root/filecollection
+vim restart-filecollection.sh
+
+#!/bin/bash
+NAME="filecollection_audit_st1"    #想要杀死的进程
+
+echo "先杀进程：" $NAME
+
+ID=`ps -ef | grep -w "$NAME" | grep -v "grep" | awk '{print $2}'`  #注意此shell脚本的名称，避免自杀
+for id in $ID
+    do
+    	kill -9 $id
+    	echo "killed $id"
+    done
+ 
+SHMID=`ipcs -m | awk '$1=="0x040566ab" {print $2}'` 
+echo "然后删共享内存：" $SHMID
+ipcrm -m $SHMID
+
+echo "最后修改Task.ini文件："
+awk '{ if ($1=="SCHEDULE_MSG_ID" || $1=="SCHEDULE_P_ID") {sub($3,0);print} else print}' ini/Task.ini > ini/Task.ini.bak$$ && mv -f ini/Task.ini.bak$$ ini/Task.ini
+
+echo "重启开始："
+./filecollection_audit_st1 start
+```
+
+
+
+# 常用
+
+## 时区
+
+```
+cat /etc/sysconfig/clock
+```
+
+## alias
+
+```
+alias ls='ls --color=auto'
+alias l='ls -lrt'
+alias rm='rm -i'
+```
+
+## sudo
+
+```
+su root | 或者找一个有sudo权限的账户：
+vim /etc/sudoers //打开sudo的配置文件	
+    root    ALL=(ALL)  ALL                 # 系统默认
+    user1   ALL=(ALL)  ALL                 # user1 可以使用最高权限 需要输入用户密码
+    user2   ALL=(ALL)  NOPASSWD:ALL        # user2 可以使用最高权限 不需要输入用户密码
+
+    # 如果设置用户组前面加 %
+    %group1  ALL=(ALL)  ALL                # 用户组group1下所有用户可以使用最高权限
+
+chmod u+w /etc/sudoers
+chmod u-w /etc/sudoers
+```
+
+## PS1
+
+```
+PS1='[\u@\h \W]\$ '
+vim .bashrc
+	PS1="\[\e[37;40m\][\[\e[32;40m\]\u\[\e[37;40m\]@\h \[\e[36;40m\]\w\[\e[0m\]]\\$ " 
+source .bashrc | . .bashrc
+
+参考：
+	https://www.cnblogs.com/Q--T/p/5394993.html
+```
+
+## stty
+
+```
+stty
+相关命令：暂无相关命令
+用法：stty [-F 设备 | --file=设备] [设置]...
+　或：stty [-F 设备 | --file=设备] [-a|--all]
+　或：stty [-F 设备 | --file=设备] [-g|--save]
+输出或修改终端参数。
+
+  -a, --all             以可读性较好的方式输出全部当前设置
+  -g, --save            以stty 可读取的格式输出当前全部设置
+  -F, --file=设备       打开并使用指定设备代替标准输入
+      --help            显示此帮助信息并退出
+      --version         显示版本信息并退出
+
+可选- 在设置前的指示中，* 标记出了非POSIX 标准的设置。以下系
+统定义象征了哪些设置是有效的。
+
+特殊字符：
+ * dsusp 字符   每当输入刷新时会发送一个用于终端阻塞信号的字符
+   eof  字符    表示文件末尾而发送的字符(用于终止输入)
+   eol  字符    为表示行尾而发送的字符
+ * eol2 字符    为表示行尾而发送的另一个可选字符
+   erase 字符   擦除前一个输入文字的字符
+   intr 字符    用于发送中断信号的字符
+   kill 字符    用于擦除当前终端行的字符
+ * lnext 字符   用于输入下一个引用文字的字符
+   quit 字符    用于发送退出信号的字符
+ * rprnt 字符   用于重绘当前行的字符
+   start 字符   在停止后重新开启输出的字符
+   stop 字符    停止输出的字符
+   susp 字符    发送终端阻断信号的字符
+ * swtch 字符   在不同的shell 层次间切换的字符
+ * werase 字符  擦除前一个输入的单词的字符
+
+特殊设置：
+   N            设置输入输出速度为N 波特
+ * cols N       统治内核终端上有N 栏
+ * columns N    等于cols N
+   ispeed N     设置输入速度为N 波特
+ * line N       设置行约束规则为N
+   min N        和 -icanon 配合使用，设置每次一完整读入的最小字符数为<N>
+   ospeed N     设置输出速度为N 波特
+ * rows N       向内核通告此终端有N 行
+ * size 根据内核信息输出当前终端的行数和列数
+   speed        输出终端速度(单位为波特)
+   time N       和-icanon 配合使用，设置读取超时为N 个十分之一秒
+
+控制设置：
+   [-]clocal    禁用调制解调器控制信号
+   [-]cread     允许接收输入
+ * [-]crtscts   启用RTS/CTS 握手
+   csN          设置字符大小为N 位，N 的范围为5 到8
+   [-]cstopb    每个字符使用2 位停止位 (要恢复成1 位配合"-"即可)
+   [-]hup       当最后一个进程关闭标准终端后发送挂起信号
+   [-]hupcl     等于[-]hup
+   [-]parenb    对输出生成奇偶校验位并等待输入的奇偶校验位
+   [-]parodd    设置校验位为奇数 (配合"-"则为偶数)
+
+输入设置：
+   [-]brkint    任务中断会触发中断信号
+   [-]icrnl     将回车转换为换行符
+   [-]ignbrk    忽略中断字符
+   [-]igncr     忽略回车
+   [-]ignpar    忽略含有奇偶不对称错误的字符
+ * [-]imaxbel   发出终端响铃但不刷新字符的完整输入缓冲
+   [-]inlcr     将换行符转换为回车
+   [-]inpck     启用输入奇偶性校验
+   [-]istrip    剥除输入字符的高8 位比特
+ * [-]iutf8     假定输入字符都是UTF-8 编码
+ * [-]iuclc     将大写字母转换为小写
+ * [-]ixany     使得任何字符都会重启输出，不仅仅是起始字符
+   [-]ixoff     启用开始/停止字符传送
+   [-]ixon      启用XON/XOFF 流控制
+   [-]parmrk    标记奇偶校验错误 (结合255-0 字符序列)
+   [-]tandem    等于[-]ixoff
+
+输出设置：
+ * bsN          退格延迟的风格，N 的值为0 至1
+ * crN          回车延迟的风格，N 的值为0 至3
+ * ffN          换页延迟的风格，N 的值为0 至1
+ * nlN          换行延迟的风格，N 的值为0 至1
+ * [-]ocrnl     将回车转换为换行符
+ * [-]ofdel     使用删除字符代替空字符作填充
+ * [-]ofill     延迟时使用字符填充代替定时器同步
+ * [-]olcuc     转换小写字母为大写
+ * [-]onlcr     将换行符转换为回车
+ * [-]onlret    使得换行符的行为表现和回车相同
+ * [-]onocr     不在第一列输出回车
+   [-]opost     后续进程输出
+ * tabN 水平制表符延迟的风格，N 的值为0 至3
+ * tabs 等于tab0
+ * -tabs        等于tab3
+ * vtN          垂直制表符延迟的风格，N 的值为0 至1
+
+本地设置：
+   [-]crterase  擦除字符回显为退格符
+ * crtkill      依照echoprt 和echoe 的设置清除所有行
+ * -crtkill     依照echoctl 和echol 的设置清除所有行
+ * [-]ctlecho   在头字符中输出控制符号("^c")
+   [-]echo      回显输入字符
+ * [-]echoctl   等于[-]ctlecho
+   [-]echoe    等于[-]crterase
+   [-]echok     在每清除一个字符后输出一次换行
+ * [-]echoke    等于[-]crtkill 意义相同
+   [-]echonl    即使没有回显任何其它字符也输出换行
+ * [-]echoprt   在"\"和"/"之间向后显示擦除的字符
+   [-]icanon    启用erase、kill、werase 和rprnt 等特殊字符
+   [-]iexten    允许POSIX 标准以外的特殊字符
+   [-]isig      启用interrupt、quit和suspend 等特殊字符
+   [-]noflsh    在interrupt 和 quit 特殊字符后禁止刷新
+ * [-]prterase  等于[-]echoprt
+ * [-]tostop    中止尝试向终端写入数据的后台任务
+ * [-]xcase     和icanon 配合使用，用转义符"\"退出大写状态
+
+综合设置：
+ * [-]LCASE     等于[-]lcase
+   cbreak       等于-icanon
+   -cbreak      等于icanon
+   cooked       等于brkint ignpar istrip icrnl ixon opost isig icanon eof                   eol 等的默认值
+   -cooked      等于-raw
+   crt          等于echoe echoctl echoke
+   dec          等于echoe echoctl echoke -ixany intr ^c erase 0177 kill ^u
+ * [-]decctlq   等于[-]ixany
+   ek           清除所有字符，将它们回溯为默认值
+   evenp        等于parenb -parodd cs7
+   -evenp       等于-parenb cs8
+ * [-]lcase     等于xcase iuclc olcuc
+   litout       等于-parenb -istrip -opost cs8
+   -litout      等于parenb istrip opost cs7
+   nl           等于-icrnl -onlcr
+   -nl          等于icrnl -inlcr -igncr onlcr -ocrnl -onlret
+   oddp 等于parenb parodd cs7
+   -oddp        等于-parenb cs8
+   [-]parity    等于[-]evenp
+   pass8        等于-parenb -istrip cs8
+   -pass8       等于parenb istrip cs7
+   raw          等于-ignbrk -brkint -ignpar -parmrk -inpck -istrip
+                 -inlcr -igncr -icrnl -ixon -ixoff -iuclc -ixany
+                 -imaxbel -opost -isig -icanon -xcase min 1 time 0
+   -raw 等于cooked
+   sane 等于cread -ignbrk brkint -inlcr -igncr icrnl -iutf8
+                -ixoff -iuclc -ixany imaxbel opost -olcuc -ocrnl onlcr
+                -onocr -onlret -ofill -ofdel nl0 cr0 tab0 bs0 vt0 ff0
+                isig icanon iexten echo echoe echok -echonl -noflsh
+                -xcase -tostop -echoprt echoctl echoke，所有特殊字符均
+                使用默认值
+                
+$ stty eof c
+    其中c可以是你喜欢的其它特殊控制字符。
+    可以直接输入控制字符，在其前面冠以反斜线和脱字符（ ^）。命令
+$ stty eof ^c
+	将CTRL-C设置为文件结束符。这种语法形式还可以用于修改删除符（通常为退格键BackSpace）和中断符（通常为DEL键）。若希望将删除符改为BACKSPACE，可以使用下列命令：
+$ stty erase ^h
+	可以设置一个会话期，使得当自己键入一个退格键时，系统用退格、删除和退格序列响应。此时可以看到用退格键覆盖的字符从显示中消失了，这样更符合计算机的惯例。使用命令
+```
+
+
+
+## service、systemctl 和 chkconfig
+
+```
+1.service命令其实是去/etc/init.d目录下，去执行相关程序
+	# 启动、停止、重启服务等
+		service redis start|stop|restart|reload(重新加载配置文件,不终止服务)|status
+	# 直接启动redis脚本
+		/etc/init.d/redis start
+	# 开机自启动
+		update-rc.d redis defaults
+
+systemd是Linux系统最新的初始化系统(init),作用是提高系统的启动速度，尽可能启动较少的进程，尽可能更多进程并发启动。
+systemd对应的进程管理命令是systemctl
+
+2. systemctl命令兼容了service，即systemctl也会去/etc/init.d目录下，查看，执行相关程序
+	# 启动、停止、重启服务等
+		systemctl start|stop|restart|reload(重新加载配置文件,不终止服务)|status redis
+	# 开机自启动 
+		systemctl enable|disable redis
+	# 检查某个单元是否启动
+		systemctl is-enabled httpd.service 
+	# 查询服务是否激活，和配置是否开机启动
+		systemctl is-active httpd
+	
+区别：
+	systemctl命令：是一个systemd工具，主要负责控制systemd系统和服务管理器。
+    service命令：可以启动、停止、重新启动和关闭系统服务，还可以显示所有系统服务的当前状态。
+    chkconfig命令：是管理系统服务(service)的命令行工具。所谓系统服务(service)，就是随系统启动而启动，随系统关闭而关闭的程序。
+    systemctl命令是系统服务管理器指令，它实际上将 service 和 chkconfig 这两个命令组合到一起。
+
+    systemctl是RHEL 7 的服务管理工具中主要的工具，它融合之前service和chkconfig的功能于一体。可以使用它永久性或只在当前会话中启用/禁用服务。
+
+    所以systemctl命令是service命令和chkconfig命令的集合和代替。
+```
+
+## cpu
+
+```
+查看cpu相关信息，包括型号、主频、内核信息等
+	cat /proc/cpuinfo
+
+/*CPU查看CPU型号*/
+	cat /proc/cpuinfo | grep name | cut -f2 -d: | uniq -c
+
+/*查看物理CPU个数*/
+	cat /proc/cpuinfo | grep "physical id" | sort -u | wc -l  
+
+/*查看逻辑CPU个数*/
+	cat /proc/cpuinfo | grep "processor" | wc -l  
+
+/*查看CPU内核数*/
+	cat /proc/cpuinfo | grep "cpu cores" | uniq  
+
+/*查看单个物理CPU封装的逻辑CPU数量*/
+	cat /proc/cpuinfo | grep "siblings" | uniq  
+
+/*计算是否开启超线程
+##逻辑CPU > 物理CPU x CPU核数 #开启超线程
+##逻辑CPU = 物理CPU x CPU核数 #没有开启超线程或不支持超线程*/
+
+/*查看是否超线程,如果cpu cores数量和siblings数量一致，则没有启用超线程，否则超线程被启用。*/
+	cat /proc/cpuinfo | grep -e "cpu cores"  -e "siblings" | sort | uniq
+
+/*查看进程相关信息占用的内存情况，(进程号可以通过ps查看)如下所示：*/
+    pmap -d 14596
+    ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid' 
+    ps -e -o 'pid,comm,args,pcpu,rsz,vsz,stime,user,uid' | grep postgres |  sort -nrk5
+/*其中rsz为实际内存，上例实现按内存排序，由大到小*/
+
+/*查看IO情况*/
+	iostat -x 1 10
+/*
+如果 iostat 没有，要 yum install sysstat安装这个包，第一眼看下图红色圈圈的那个如果%util接近100%,表明I/O请求太多,I/O系统已经满负荷，磁盘可能存在瓶颈,一般%util大于70%,I/O压力就比较大，读取速度有较多的wait，然后再看其他的参数，
+内容解释:
+rrqm/s:每秒进行merge的读操作数目。即delta(rmerge)/s 
+wrqm/s:每秒进行merge的写操作数目。即delta(wmerge)/s 
+r/s:每秒完成的读I/O设备次数。即delta(rio)/s 
+w/s:每秒完成的写I/0设备次数。即delta(wio)/s 
+rsec/s:每秒读扇区数。即delta(rsect)/s 
+wsec/s:每秒写扇区数。即delta(wsect)/s 
+rKB/s:每秒读K字节数。是rsec/s的一半，因为每扇区大小为512字节 
+
+wKB/s:每秒写K字节数。是wsec/s的一半 
+avgrq-sz:平均每次设备I/O操作的数据大小(扇区)。即delta(rsect+wsect)/delta(rio+wio) 
+avgqu-sz:平均I/O队列长度。即delta(aveq)/s/1000(因为aveq的单位为毫秒) 
+await:平均每次设备I/O操作的等待时间(毫秒)。即delta(ruse+wuse)/delta(rio+wio) 
+svctm:平均每次设备I/O操作的服务时间(毫秒)。即delta(use)/delta(rio+wio) 
+%util:一秒中有百分之多少的时间用于I/O操作,或者说一秒中有多少时间I/O队列是非空的
+*/
+
+/*找到对应进程*/
+ll /proc/进程号/exe
+```
+
+## 服务
+
+```
+查看服务：
+	chkconfig --list       			# 列出所有系统服务
+	chkconfig --list | grep on    	# 列出所有启动的系统服务
+```
+
+## ps
+
+```
+ps -ef|grep详解
+ps命令将某个进程显示出来
+grep命令是查找
+中间的|是管道命令 是指ps命令与grep同时执行
+
+字段含义如下：
+UID       PID       PPID      C     STIME    TTY       TIME         CMD
+zzw      14124   13991      0     00:38      pts/0      00:00:00    grep --color=auto dae
+
+UID      ：程序被该 UID 所拥有
+PID      ：就是这个程序的 ID 
+PPID    ：则是其上级父程序的ID
+C          ：CPU使用的资源百分比
+STIME ：系统启动时间
+TTY     ：登入者的终端机位置
+TIME   ：使用掉的CPU时间。
+CMD   ：所下达的是什么指令
+```
+
+
+
+## 进程
+
+```
+查看内存占用前五的进程：   ps auxw | head -1;ps auxw|sort -rn -k4|head -5
+查看CPU占用前三的进程：	 ps auxw | head -1;ps auxw|sort -rn -k3|head -3
+
+查看运行用户信息：
+	ps -ef|grep http
+查看进程号：	pgrep php-fpm
+追踪进程号：	strace -f -e connect  -p 你的进程编号
+```
+
+## 内存
+
+```
+free -m
+echo 3 > /proc/sys/vm/drop_caches 
+
+TOP
+/*命令经常用来监控linux的系统状况，比如cpu、内存的使用等。*/
+/*查看某个用户内存使用情况,如:postgres*/
+	top -u postgres
+/*
+内容解释：
+
+　　PID：进程的ID
+　　USER：进程所有者
+　　PR：进程的优先级别，越小越优先被执行
+　　NInice：值
+　　VIRT：进程占用的虚拟内存
+　　RES：进程占用的物理内存
+　　SHR：进程使用的共享内存
+　　S：进程的状态。S表示休眠，R表示正在运行，Z表示僵死状态，N表示该进程优先值为负数
+　　%CPU：进程占用CPU的使用率
+　　%MEM：进程使用的物理内存和总内存的百分比
+　　TIME+：该进程启动后占用的总的CPU时间，即占用CPU使用时间的累加值。
+　　COMMAND：进程启动命令名称
+
+常用的命令：
+
+　　P：按%CPU使用率排行
+　　T：按MITE+排行
+　　M：按%MEM排行
+```
+
 ## 磁盘
 
 ```
@@ -684,21 +1285,22 @@ df -hl 查看磁盘剩余空间
 du -sh [目录名] 返回该目录的大小
 du -sm [文件夹] 返回该文件夹总M数
 du -h [目录名] 查看指定文件夹下的所有文件大小（包含子文件夹）
-查看硬盘的分区 #sudo fdisk -l
-查看IDE硬盘信息 #sudo hdparm -i /dev/hda
-查看STAT硬盘信息 #sudo hdparm -I /dev/sda 或 #sudo apt-get install blktool #sudo blktool /dev/sda id
+
+查看硬盘的分区 #fdisk -l
+查看IDE硬盘信息 #hdparm -i /dev/hda
+查看STAT硬盘信息 #hdparm -I /dev/sda 或 #sudo apt-get install blktool #sudo blktool /dev/sda id
 查看硬盘剩余空间 #df -h #df -H
-查看目录占用空间 #du -hs 目录名
+查看目录占用空间 #du -sh 目录名
 优盘没法卸载 #sync fuser -km /media/usbdisk
 
-du -sh *
-du -sh /var/* | sort -nr
-du -sm *|grep -n
+df -h
+du -sh /*
+du -sh /usr/local/* | sort -nr
 
+lsblk 可以看成是“List block device”的缩写，即列为出所有存储设备。
 
-简介
-lsblk可以看成是“List block device”的缩写，即列为出所有存储设备。
-
+参考：
+	https://www.linuxprobe.com/linux-lvm.html
 ```
 
 ## date
@@ -780,6 +1382,11 @@ $ command >> file 2>&1
 
 netstat查看端口占用情况
 	netstat -anp | grep 9090
+	
+查看端口：
+	netstat -anp | grep portno
+查看监听端口：	netstat -anp | grep LISTEN
+查看php-fpm是否启动了：	netstat -nlp|grep php-fpm
 ```
 
 
@@ -856,11 +1463,176 @@ id  空闲 CPU时间，一般来说，id + us + sy = 100,一般我认为id是空
 wt 等待IO CPU时间
 ```
 
+## ls
+
+```
+用管道传输输出时，ls行为会有所不同。
+‘-1’
+‘--format=single-column’
+List one file per line. This is the default for ls when standard output is not a terminal. See also the -b and -q options to suppress direct output of newline characters within a file name.
+
+
+ls  data-govern-doc/md/*.md|cat
+
+既：ls|cat == ls -1
+```
+
+## xargs
+
+```
+
+```
+
+## awk
+
+```
+语法
+awk [选项参数] 'script' var=value file(s)
+或
+awk [选项参数] -f scriptfile var=value file(s)
+
+选项参数说明：
+    -F fs or --field-separator fs
+    指定输入文件折分隔符，fs是一个字符串或者是一个正则表达式，如-F:。
+    -v var=value or --asign var=value
+    赋值一个用户定义变量。
+    -f scripfile or --file scriptfile
+    从脚本文件中读取awk命令。
+    -mf nnn and -mr nnn
+    对nnn值设置内在限制，-mf选项限制分配给nnn的最大块数目；-mr选项限制记录的最大数目。这两个功能是Bell实验室版awk的扩展功能，在标准awk中不适用。
+    -W compact or --compat, -W traditional or --traditional
+    在兼容模式下运行awk。所以gawk的行为和标准的awk完全一样，所有的awk扩展都被忽略。
+    -W copyleft or --copyleft, -W copyright or --copyright
+    打印简短的版权信息。
+    -W help or --help, -W usage or --usage
+    打印全部awk选项和每个选项的简短说明。
+    -W lint or --lint
+    打印不能向传统unix平台移植的结构的警告。
+    -W lint-old or --lint-old
+    打印关于不能向传统unix平台移植的结构的警告。
+    -W posix
+    打开兼容模式。但有以下限制，不识别：/x、函数关键字、func、换码序列以及当fs是一个空格时，将新行作为一个域分隔符；操作符**和**=不能代替^和^=；fflush无效。
+    -W re-interval or --re-inerval
+    允许间隔正则表达式的使用，参考(grep中的Posix字符类)，如括号表达式[[:alpha:]]。
+    -W source program-text or --source program-text
+    使用program-text作为源代码，可与-f命令混用。
+    -W version or --version
+    打印bug报告信息的版本。
+
+用法一：
+	awk '{[pattern] action}' {filenames}   # 行匹配语句 awk '' 只能用单引号
+实例：
+    # 每行按空格或TAB分割，输出文本中的1、4项
+    $ awk '{print $1,$4}' log.txt
+    
+用法二：
+	awk -F  #-F相当于内置变量FS, 指定分割字符
+实例：
+    # 使用","分割
+    $  awk -F, '{print $1,$2}'   log.txt
+    
+用法三：
+	awk -v  # 设置变量
+实例：
+	$ awk -va=1 '{print $1,$1+a}' log.txt
+	
+用法四：
+	awk -f {awk脚本} {文件名}
+实例：
+	$ awk -f cal.awk log.txt
+	
+内建变量：
+    变量	描述
+    $n	当前记录的第n个字段，字段间由FS分隔
+    $0	完整的输入记录
+    ARGC	命令行参数的数目
+    ARGIND	命令行中当前文件的位置(从0开始算)
+    ARGV	包含命令行参数的数组
+    CONVFMT	数字转换格式(默认值为%.6g)ENVIRON环境变量关联数组
+    ERRNO	最后一个系统错误的描述
+    FIELDWIDTHS	字段宽度列表(用空格键分隔)
+    FILENAME	当前文件名
+    FNR	各文件分别计数的行号
+    FS	字段分隔符(默认是任何空格)
+    IGNORECASE	如果为真，则进行忽略大小写的匹配
+    NF	一条记录的字段的数目
+    NR	已经读出的记录数，就是行号，从1开始
+    OFMT	数字的输出格式(默认值是%.6g)
+    OFS	输出字段分隔符，默认值与输入字段分隔符一致。
+    ORS	输出记录分隔符(默认值是一个换行符)
+    RLENGTH	由match函数所匹配的字符串的长度
+    RS	记录分隔符(默认是一个换行符)
+    RSTART	由match函数所匹配的字符串的第一个位置
+    SUBSEP	数组下标分隔符(默认值是/034)
+    
+运算符
+    运算符	描述
+    = += -= *= /= %= ^= **=	赋值
+    ?:	C条件表达式
+    ||	逻辑或
+    &&	逻辑与
+    ~ 和 !~	匹配正则表达式和不匹配正则表达式
+    < <= > >= != ==	关系运算符
+    空格	连接
+    + -	加，减
+    * / %	乘，除与求余
+    + - !	一元加，减和逻辑非
+    ^ ***	求幂
+    ++ --	增加或减少，作为前缀或后缀
+    $	字段引用
+    in	数组成员
+```
+
+
+
+### 示例
+
+```
+vim /home/dev/md-url.sh
+	awk '{if ($1=="POST" && FILENAME!="data-govern-doc/md/接口规范.md") {print $2}}' data-govern-doc/md/*.md > md-url.txt
+sh md-url.sh
+
+vim /home/dev/sh convert-url.sh
+	awk '{if($9=="url")print "/api-convert" $11}' convert-url.txt > filter-convert-url.txt
+sh convert-url.sh
+
+awk '/api-convert/' md-url.txt > filter-convert-md-url.txt
+
+当需要比较A , B两个文件 , A文件中存在 , 并且把也在B文件中存在的行去除掉 , 可以使用这个awk的用法来
+	awk '{if(ARGIND==1) {val[$0]}else{if($0 in val)  delete val[$0]}}END{for(i in val) print i}' A B
+    使用awk的同时处理多文件功能,配合数组变量来进行处理
+    先扫描文件A,把文件A中的每行作为数组的key放入数组
+    再扫描文件B,判断B中的每行是否存在于数组中,如果存在就删除这个数组元素
+    最后统一打印数组中的key
+
+同时在file1和file2中的行：
+	awk '{if(ARGIND==1) {val[$0]}else{if($0 in val) print $0}}' file1 file2
+只在file1中有的行:
+	awk '{if(ARGIND==1) {val[$0]}else{if($0 in val) delete val[$0]}}END{for(i in val) print i}' file1 file2
+	或者：
+	awk 'ARGIND==1{a[$0]}ARGIND>1&&!($0 in a){print $0}' file1 file2
+只在file2中有的行:
+	awk '{if(ARGIND==1) {val[$0]}else{if($0 in val) delete val[$0]}}END{for(i in val) print i}' file2 file1
+```
+
+## diff
+
+```
+结果中， 以 < 开头的行属于第一个文件，以 > 开头的行属于第二个文件，字母 a b c 分别表示 附加 删除 修改操作（上述结果中仅有c）。
+diff -i filter*
+```
+
+
+
 ## 用户
 
 ```
 参考：
 	https://www.runoob.com/linux/linux-user-manage.html
+	
+查看用户：		cat /etc/passwd
+查看用户组：  	cat /etc/group
+查看用户所属组：   groups user1
 	
 1、添加新的用户账号使用useradd命令，其语法如下：
 useradd 选项 用户名
@@ -903,9 +1675,16 @@ userdel 选项 用户名
 此命令删除用户sam在系统文件中（主要是/etc/passwd, /etc/shadow, /etc/group等）的记录，同时删除用户的主目录。
 ```
 
+### 示例
+
+```
+sudo useradd -d /home/dev -g root -m dev -s /bin/bash 
+sudo passwd dev
+```
 
 
-# 常用工具
+
+# 常用
 
 ## **ssh**
 
@@ -923,8 +1702,6 @@ openssl version
 SSH 服务配置文件位置
 /etc/ssh/sshd_config
 ```
-
-
 
 ## 免密登录
 
@@ -1032,7 +1809,7 @@ service vsftpd start | stop
 
 
 
-# 文件操作
+# 文件
 
 ## **mkdir**
 
@@ -1089,6 +1866,7 @@ find . -name \*52\*
 
 ```
 cp -r svg/* /usr/local/apache2/htdocs/inc_chk/new_index/svg/
+\cp ： 不询问
 ```
 
 ## scp
@@ -1105,7 +1883,7 @@ scp -r root@172.16.7.57:/root/sbin/INS_convert.sh .
 scp -r root@172.16.7.56:/usr/local/apache2.4/htdocs/inc_chk/new_index/svg/* .
 ```
 
-## 清空文件内容
+## 清空文件5种方法
 
 ```
 1. 清空或者让一个文件成为空白的最简单方式，是像下面那样，通过 shell 重定向 null （不存在的事物）到该文件：
@@ -1129,76 +1907,6 @@ scp -r root@172.16.7.56:/usr/local/apache2.4/htdocs/inc_chk/new_index/svg/* .
 你可以利用它和 -s 参数来特别指定文件的大小。要清空文件的内容，则在下面的命令中将文件的大小设定为 0:
 	# truncate -s 0 test.log
 ```
-
-# shell
-
-## 注意事项
-
-```
-SHMID=`ipcs -m | awk '$4==707 {print $2}' ` 
-=号两边不能有空格
-```
-
-## 示例
-
-```
-#!/bin/bash
-NAME="provider-integral"    #想要杀死的进程
-PORT="8081"
-PROCESS="../jars/provider-integral-0.0.1-SNAPSHOT.jar"
-LOGDIR="../log/integral.log"
-echo $NAME
-ID=`ps -ef | grep "$NAME" | grep -v "grep" | awk '{print $2}'`  #注意此shell脚本的名称，避免自杀
-if [ -z "$ID" ];then
-    echo "process id is empty, process is not existed..."
-    echo "process will start..."
-    nohup java -Dserver.port=$PORT -jar $PROCESS  > $LOGDIR 2>&1 &
-    echo "process has start..."
-else
-    echo $ID
-	for id in $ID
-        do
-            kill -9 $id
-            echo "killed $id"
-        done
-    echo "process will restart..."
-    nohup java -Dserver.port=$PORT -jar $PROCESS  > $LOGDIR 2>&1 &
-    echo "process has restart..."
-fi
-```
-
-
-
-## 采集程序重启
-
-```
-172.16.7.71
-cd /root/filecollection
-vim restart-filecollection.sh
-
-#!/bin/bash
-NAME="filecollection_audit_st1"    #想要杀死的进程
-
-echo "先杀进程：" $NAME
-
-ID=`ps -ef | grep -w "$NAME" | grep -v "grep" | awk '{print $2}'`  #注意此shell脚本的名称，避免自杀
-for id in $ID
-    do
-    	kill -9 $id
-    	echo "killed $id"
-    done
- 
-SHMID=`ipcs -m | awk '$1=="0x040566ab" {print $2}'` 
-echo "然后删共享内存：" $SHMID
-ipcrm -m $SHMID
-
-echo "最后修改Task.ini文件："
-awk '{ if ($1=="SCHEDULE_MSG_ID" || $1=="SCHEDULE_P_ID") {sub($3,0);print} else print}' ini/Task.ini > ini/Task.ini.bak$$ && mv -f ini/Task.ini.bak$$ ini/Task.ini
-
-echo "重启开始："
-./filecollection_audit_st1 start
-```
-
 
 
 # 日志
