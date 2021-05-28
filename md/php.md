@@ -1,45 +1,12 @@
 # **常用**
 
-```
+## 开启调试模式
 
 ```
-
-## PHP取整
-
+如果服务器关闭了php服务的错误提示，而又需要对某个php文件进行调试，可以在文件中加入如下代码：
+ini_set('display_errors', true);
+error_reporting(E_ALL);
 ```
-1.直接取整，舍弃小数，保留整数：intval()；
-2.四舍五入取整：round()；
-3.向上取整，有小数就加1：ceil()；
-4.向下取整：floor()。
-
-一、intval—对变数转成整数型态
-    intval如果是字符型的会自动转换为0。
-    intval(3.14159);  // 3
-    intval(3.64159);  // 3
-    intval('ruesin'); //0
-
-二、四舍五入：round()
-    根据参数2指定精度将参数1进行四舍五入。参数2可以是负数或零（默认值）。
-    round(3.14159);      // 3
-    round(3.64159);      // 4
-    round(3.64159, 0);   // 4
-    round(3.64159, 2);   // 3.64
-    round(5.64159, 3);   // 3.642
-    round(364159, -2);   // 364200
-
-三、向上取整，有小数就加1：ceil()
-    返回不小于 value 的下一个整数，value 如果有小数部分则进一位。
-    这个方法，在我们写分页类计算页数时经常会用到。
-    ceil(3.14159);  // 4
-    ceil(3.64159);  // 4
-
-四、向下取整：floor()
-    返回不大于 value 的下一个整数，将 value 的小数部分舍去取整。
-    floor(3.14159);    // 3
-    floor(3.64159);    // 3
-```
-
-
 
 # 常见问题
 
@@ -77,11 +44,235 @@ vim /etc/hosts
 
 
 
+# php-fpm
+
+```
+查看php-fpm的master进程号 ：
+ps aux|grep php-fpm
+netstat -tnl | grep 9000
+kill -9 pid
+
+//php-fpm开机启动配置文件
+vim /usr/lib/systemd/system/php-fpm.service
+
+#chmod 754 /usr/lib/systemd/system/php-fpm.service
+systemctl daemon-reload
+systemctl start php-fpm.service
+systemctl stop php-fpm.service
+systemctl reload php-fpm.service
+systemctl enable php-fpm.service
+systemctl disable php-fpm.service
+systemctl status php-fpm.service -l
+//启动php-fpm
+/usr/local/php/sbin/php-fpm
+```
+
+## php-fpm.conf
+
+```
+vim /usr/local/php/etc/php-fpm.conf
+pid = /usr/local/php/var/run/php-fpm.pid
+```
+
+
+
 # **安装**
 
+## php7.2.31
+
 ```
 
 ```
+## 扩展安装
+
+```
+一些扩展装好后，还会依赖其他扩展，需要配置linux环境变量LD_LIBRARY_PATH(动态库的查找路径)，示例：
+LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64::/usr/lib/oracle/11.2/client64/lib:/usr/local/dm7client/bin/:/usr/local/dm7client/drivers/odbc/
+
+vim /usr/local/unixODBC-2.3.1/etc/odbc.ini
+[dm]
+Description = dm7_dsn
+Driver = DM7
+SERVER = 172.16.7.55
+UID = sysdba
+PWD = huitone2214
+TCP_PORT = 5236
+
+cat odbcinst.ini
+[DM7]
+Description = dm_odbc
+Driver = /usr/local/dm7client/drivers/odbc/libdodbc.so
+
+```
+
+### PDO_ODBC
+
+```
+
+yum -y install unixODBC-*
+-------------------------------第一种：源码安装
+wget http://pecl.php.net/get/PDO_ODBC-1.0.1.tgz
+tar -zxvf PDO_ODBC-1.0.1.tgz
+cd PDO_ODBC-1.0.1
+/usr/local/php7.2.31/bin/phpize
+./configure --prefix=/usr/local/PDO_ODBC-1.0.1 --with-php-config=/usr/local/php7.2.31/bin/php-config --with-pdo-odbc=unixODBC,/usr
+make && make install
+-------------------------------第二种：扩展安装
+1. 进到扩展目录：
+	cd /usr/local/src/php-7.2.31/ext/pdo_odbc
+2. 调用phpize程序生成编译配置文件
+	/usr/local/php7.2.31/bin/phpize
+3. 调用configure生成Makefile文件，然后调用make编译，make install安装
+	./configure -with-php-config=/usr/local/php7.2.31/bin/php-config --with-pdo-odbc=unixODBC,/usr
+4.编译安装
+	make && make install
+	ll /usr/local/php7.2.31/lib/php/extensions/no-debug-zts-20170718/
+5. 修改php配置文件
+	vim /usr/local/php7.2.31/etc/php.ini
+	extension=pdo_odbc.so
+6.重启apache
+	/usr/local/apache2/bin/apachectl stop
+	/usr/local/apache2/bin/apachectl start
+```
+
+### curl
+
+```
+yum install curl curl-devel
+1. 进到扩展目录：
+	cd /usr/local/src/php-7.2.26/ext/curl
+2. 调用phpize程序生成编译配置文件
+	/usr/local/php7/bin/phpize
+3. 调用configure生成Makefile文件，然后调用make编译，make install安装
+	./configure -with-php-config=/usr/local/php7/bin/php-config
+4.编译安装
+	make && make install
+	成功：/usr/local/php7/lib/php/extensions/no-debug-zts-20170718/
+5. 修改php配置文件
+	vim /usr/local/php7/etc/php.ini
+	extension=curl.so
+6.重启apache
+	/usr/local/apache2/bin/apachectl stop
+	/usr/local/apache2/bin/apachectl start
+```
+
+### gd库
+
+```
+cd /usr/local/src/php-7.2.31/ext/gd
+/usr/local/php/bin/phpize
+./configure --with-php-config=/usr/local/php/bin/php-config  --with-jpeg-dir=/usr/lib64  --with-png-dir=/usr/lib64   --with-freetype-dir=/usr/lib64
+```
+
+# 注意事项
+
+## 处理 register_globals 
+
+```
+如果已经弃用的 register_globals 指令被设置为 on 那么局部变量也将在脚本的全局作用域中可用。例如， $_POST['foo']   也将以 $foo  的形式存在。 
+php.ini
+register_globals = On
+```
+
+# 语法
+
+```
+
+```
+
+## 变量
+
+```
+全局变量和静态变量：
+● 全局变量本身就是静态存储方式,所有的全局变量都是静态变量（注：只有局部变量才有静态和自动之分）
+	静态变量和自动变量的区别是存储时期的区别：
+	1、静态变量的存储时期是内存空间在程序运行期间都存在，程序退出才被释放
+	2、自动变量内存空间在作用域内才存在，退出作用域后就被释放
+	
+一、静态局部变量
+1.不会随着函数的调用和退出而发生变化，不过，尽管该变量还继续存在，但不能使用它。倘若再次调用定义它的函数时，它又可继续使用，而且保存了前次被调用后留下的值
+
+2.静态局部变量只会初始化一次
+
+3.静态属性只能被初始化为一个字符值或一个常量，不能使用表达式。即使局部静态变量定义时没有赋初值，系统会自动赋初值0（对数值型变量）或空字符（对字符变量）；静态变量的初始值为0。
+
+4.当多次调用一个函数且要求在调用之间保留某些变量的值时，可考虑采用静态局部变量。虽然用全局变量也可以达到上述目的，但全局变量有时会造成意外的副作用，因此仍以采用局部静态变量为宜。
+示例：
+function test(){
+	static $var = 5;  //static $var = 1+1;就会报错
+	$var++;  echo $var . ' ';
+}
+
+二、静态全局变量
+示例：
+//全局变量本身就是静态存储方式,所有的全局变量都是静态变量
+function static_global(){
+    global $glo;    
+    $glo++;    
+    echo $glo.'<br>';
+}
+---------------------------------------差别
+global和$GLOBALS除了写法不一样以为,其他都一样,可是在实际应用中发现,2者的区别还是很大的
+function test1() { 
+    global $v1, $v2; 
+    $v2 =& $v1; 
+} 
+function test2() { 
+    $GLOBALS['v3'] =& $GLOBALS['v1']; 
+} 
+$v1 = 1; 
+$v2 = $v3 = 0; 
+test1(); 
+echo $v2 ."\n"; 
+test2(); 
+echo $v3 ."\n";
+
+function test() { 
+    global $a; 
+    unset($a); 
+} 
+$a = 1; 
+test(); 
+echo $a;
+```
+
+## 取整
+
+```
+1.直接取整，舍弃小数，保留整数：intval()；
+2.四舍五入取整：round()；
+3.向上取整，有小数就加1：ceil()；
+4.向下取整：floor()。
+
+一、intval—对变数转成整数型态
+    intval如果是字符型的会自动转换为0。
+    intval(3.14159);  // 3
+    intval(3.64159);  // 3
+    intval('ruesin'); //0
+
+二、四舍五入：round()
+    根据参数2指定精度将参数1进行四舍五入。参数2可以是负数或零（默认值）。
+    round(3.14159);      // 3
+    round(3.64159);      // 4
+    round(3.64159, 0);   // 4
+    round(3.64159, 2);   // 3.64
+    round(5.64159, 3);   // 3.642
+    round(364159, -2);   // 364200
+
+三、向上取整，有小数就加1：ceil()
+    返回不小于 value 的下一个整数，value 如果有小数部分则进一位。
+    这个方法，在我们写分页类计算页数时经常会用到。
+    ceil(3.14159);  // 4
+    ceil(3.64159);  // 4
+
+四、向下取整：floor()
+    返回不大于 value 的下一个整数，将 value 的小数部分舍去取整。
+    floor(3.14159);    // 3
+    floor(3.64159);    // 3
+```
+
+
+
 # session
 
 ```

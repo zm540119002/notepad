@@ -293,8 +293,6 @@ public class FilterConfig {
 	https://blog.csdn.net/ZZY1078689276/article/details/88647051?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&dist_request_id=1328741.50950.16170906332807269&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
 ```
 
-
-
 # Spring Boot
 
 ## 连接池
@@ -303,95 +301,11 @@ public class FilterConfig {
 目前最热门的数据库连接池，就要属阿里巴巴的Druid以及HikariCP了，它们也分别是Spring Boot 1.x和Spring Boot 2.x默认的数据库连接池。
 ```
 
-## 日志
-
-```
-参考：	https://blog.csdn.net/weixin_43054590/article/details/88553997
-
-常见日志框架：JUL、JCL、Log4j、Log4j2，Logback、SLF4j、Jboss-logging
-
-企业级开发日志选择：
-    日志门面：SLF4j；
-    日志实现：Log4j、Logback；
-    Log4j2功能非常强大，但是设计比较复杂并且没有日志门面与之相匹配，作为企业级日志会存在不稳定的问题；
-
-日志选择逻辑：日志门面+日志实现，运行日志时调用的是日志门面的接口，但是配置采用的是日志实现的配置。
-
-springboot日志选择：spring框架默认采用的是JCL日志门面，所以springboot底层默认排除了spring框架采用的JCL，选择：
-    日志门面：SLF4j；
-    日志实现：Logback；它相对于Log4j来说更加的强大功能更加齐全。
-    
-SLF4j：只导入SLF4j的jar包，没有实现日志，日志功能单一
-SLF4j+Logback：导入slf4j-api.jar和Logback相关jar包
-
-日志级别从低到高分为TRACE < DEBUG < INFO < WARN < ERROR < FATAL；
-Spring Boot中默认配置ERROR、WARN和INFO级别的日志输出到控制台；
-日志默认输出在控制台，日志输出内容springboot底层已配置好，开箱即用
-
-logging.level.* : 作为package（包）的前缀来设置日志级别；日志级别从低到高分为TRACE < DEBUG < INFO < WARN < ERROR < FATAL
-logging.file :配置日志输出的文件名，也可以配置文件名的绝对路径。
-logging.path :配置日志的路径。如果没有配置logging.file,Spring Boot 将默认使用spring.log作为文件名；当logging.file与logging.path同时存在时，springboot按照logging.file定义的路径输出日志文件
-logging.pattern.console :定义console中logging的样式。
-logging.pattern.file :定义文件中日志的样式。
-logging.pattern.level :定义渲染不同级别日志的格式。默认是%5p.
-logging.exception-conversion-word :.定义当日志发生异常时的转换字
-PID :定义当前进程的ID
-
-根据不同的日志系统，springboot中你可以按如下规则组织配置文件名，就能被正确加载：
-    Logback：logback-spring.xml, logback-spring.groovy, logback.xml, logback.groovy
-    Log4j：log4j-spring.properties, log4j-spring.xml, log4j.properties, log4j.xml
-    Log4j2：log4j2-spring.xml, log4j2.xml
-    JDK (Java Util Logging)：logging.properties
-    
-引入自定义的logback.xml文件,在properties文件夹中进行如下声明
-	logging.config=classpath:logging-test.xml
-	
-springboot集成log4j：
-    方式一：
-        第一步：将log4j对应的中间日志框架log4j-over-slf4j.jar依赖清除掉；
-        第二步：将logback的依赖清除掉；
-        第三步：引入log4j及其适配层日志框架的依赖，最后log4j就能成功运行了。
-   方式二：
-       第一步：移除spring-boot-starter-logging依赖包；
-       第二步：添加spring-boot-starter-log4j依赖包，ok。
-       
-springboot的logback.xml配置内容：
-如果我们觉得springboot默认的配置内容满足不了我们的需求，我们也可以自定义logback日志的xml对logback日志进行重新配置；
-
-注意:springboot官方推荐使用logback-spring.xml,相对于 logback.xml它的配置功能更加齐全，比如logback-spring.xml可以配置profile多环境日志，logback.xml则不能实现此功能
-
-logback.xml语法结构请参考：	https://www.jianshu.com/p/f67c721eea1b
-```
-
-
-
-```
-日志输出格式：
-    %d表示日期时间，
-    %thread表示线程名，
-    %-5level：级别从左显示5个字符宽度
-    %logger{50} 表示logger名字最长50个字符，否则按照句点分割。 
-    %msg：日志消息，
-    %n是换行符
-```
-
-```
-Class path contains multiple SLF4J bindings.警告的解决
-参考：	https://blog.csdn.net/wohaqiyi/article/details/81009689
-
-原因分析：
-  上边的大概意思是说logback-classic 包和slf4j-log4j12 包，关于org/slf4j/impl/StaticLoggerBinder.class 这个类发生了冲突。
-  发生这个错误的原因，首先logback 日志的开发者和log4j 的开发者据说是一波人，而springboot 默认日志是，较新的logback 日志。但是在以前流行的日志却是log4j ，而且很多的第三方工具都含有log4j 得引入。
-  而我们在项目开发中，难免会引入各种各样的工具包，所以，基本上springboot 项目，如果不注意，肯定会出现这种冲突的。
-```
-
 ## 配置文件
 
 ```
 
 ```
-
-
 
 # Spring Mvc
 
@@ -1022,15 +936,145 @@ Bean 的作用域 scope，
 
 ```
 
-# Future机制
+# Thread
+
+https://www.cnblogs.com/dolphin0520/p/3920357.html
+
+## 两种简单用法总结
+
+```
+方法一： 用继承Thread实现
+
+// 多线程的写法2，用两种情况变换，
+// 情况1：新建一个对象，两个线程共享一个对象。另外是新建两个对象，两个线程用两个对象
+// 情况2：int i=0；拿到run（）外面与在run（）里面两种情况 。
+//上面4种情况可以排列组合试一下
+public class Thread13 {
+    public static void main(String args[]){
+        MyThread myThread = new MyThread();
+
+        // MyThread myThread2= new MyThread(); // 2
+
+        Thread t1 = new Thread(myThread);
+        Thread t2 = new Thread(myThread);
+        // Thread t2= new Thread(myThread2); // 2
+        t1.start();
+        t2.start();
+    }
+}
+
+class MyThread extends Thread {
+    // int i=0; // 1
+    public void run() {
+        String name = Thread.currentThread().getName();
+        String inf = Thread.currentThread().toString();
+        long idnum = Thread.currentThread().getId();
+        for ( int i = 0 ;i < 10 ;i ++ ){ // 不管是新建一个对象，还是两个对象， // 2，都是打印20个数据
+            // for(;i<10;i++){ // 新建一个对象的时候，打印11个左右的数据 ,新建两个对象的时候， // 2，会打印20个数据。 // 1
+            System.out.println( " i---------- " + i + " ,thread name== " + name
+            + " ,threadid== " + idnum + " ,thread inf== " + inf);
+        }
+    }
+}
+```
+
+
+
+## 线程的状态
+
+```
+线程从创建到最终的消亡，要经历若干个状态。一般来说，线程包括以下这几个状态：
+	创建(new)、就绪(runnable)、运行(running)、阻塞(blocked)、time waiting、waiting、消亡（dead）
+	
+当需要新起一个线程来执行某个子任务时，就创建了一个线程。但是线程创建之后，不会立即进入就绪状态，因为线程的运行需要一些条件（比如内存资源，在前面的JVM内存区域划分一篇博文中知道程序计数器、Java栈、本地方法栈都是线程私有的，所以需要为线程分配一定的内存空间），只有线程运行需要的所有条件满足了，才进入就绪状态。
+
+当线程进入就绪状态后，不代表立刻就能获取CPU执行时间，也许此时CPU正在执行其他的事情，因此它要等待。当得到CPU执行时间之后，线程便真正进入运行状态。
+
+线程在运行状态过程中，可能有多个原因导致当前线程不继续运行下去，比如用户主动让线程睡眠（睡眠一定的时间之后再重新执行）、用户主动让线程等待，或者被同步块给阻塞，此时就对应着多个状态：time waiting（睡眠或等待一定的事件）、waiting（等待被唤醒）、blocked（阻塞）。
+
+当由于突然中断或者子任务执行完毕，线程就会被消亡。
+
+下面这副图描述了线程从创建到消亡之间的状态：
+```
+
+![img](https://images2015.cnblogs.com/blog/682616/201611/682616-20161115183635779-1231872003.jpg)
+
+```
+在有些教程上将blocked、waiting、time waiting统称为阻塞状态，这个也是可以的，只不过这里我想将线程的状态和Java中的方法调用联系起来，所以将waiting和time waiting两个状态分离出来。
+```
+
+## 上下文切换
+
+```
+对于单核CPU来说（对于多核CPU，此处就理解为一个核），CPU在一个时刻只能运行一个线程，当在运行一个线程的过程中转去运行另外一个线程，这个叫做线程上下文切换（对于进程也是类似）。
+
+由于可能当前线程的任务并没有执行完毕，所以在切换时需要保存线程的运行状态，以便下次重新切换回来时能够继续切换之前的状态运行。举个简单的例子：比如一个线程A正在读取一个文件的内容，正读到文件的一半，此时需要暂停线程A，转去执行线程B，当再次切换回来执行线程A的时候，我们不希望线程A又从文件的开头来读取。
+
+因此需要记录线程A的运行状态，那么会记录哪些数据呢？因为下次恢复时需要知道在这之前当前线程已经执行到哪条指令了，所以需要记录程序计数器的值，另外比如说线程正在进行某个计算的时候被挂起了，那么下次继续执行的时候需要知道之前挂起时变量的值时多少，因此需要记录CPU寄存器的状态。所以一般来说，线程上下文切换过程中会记录程序计数器、CPU寄存器状态等数据。
+
+说简单点的：对于线程的上下文切换实际上就是 存储和恢复CPU状态的过程，它使得线程执行能够从中断点恢复执行。
+
+虽然多线程可以使得任务执行的效率得到提升，但是由于在线程切换时同样会带来一定的开销代价，并且多个线程会导致系统资源占用的增加，所以在进行多线程编程时要注意这些因素。
+```
+
+
+
+# 多线程
+
+https://blog.csdn.net/u012501054/article/details/80384996
+
+```
+多线程编程优点
+    进程之间不能共享内存，但线程之间共享内存非常容易。
+    系统创建线程所分配的资源相对创建进程而言，代价非常小。
+    
+Java中实现多线程有3种方法：
+    继承Thread类
+    实现Runnable接口
+    实现Callable接口
+   
+第一种实现方法—继承Thread类
+	继承Thread类，需要覆盖方法 run()方法，在创建Thread类的子类时需要重写 run(),加入线程所要执行的代即可。
+
+第二种实现方法—实现Runnable接口
+	Runnable是可以共享数据的，多个Thread可以同时加载一个Runnable，当各自Thread获得CPU时间片的时候开始运行Runnable，Runnable里面的资源是被共享的，所以使用Runnable更加的灵活。
+
+第三种—实现Callable接口
+	Runnable是执行工作的独立任务，但是它不返回任何值。如果你希望任务在完成的能返回一个值，那么可以实现Callable接口而不是Runnable接口。在Java SE5中引入的Callable是一种具有类型参数的泛型，它的参数类型表示的是从方法call()(不是run())中返回的值。
+
+总结：
+实现Runnable接口相比继承Thread类有如下优势：
+    可以避免由于Java的单继承特性而带来的局限；
+    增强程序的健壮性，代码能够被多个线程共享，代码与数据是独立的；
+    适合多个相同程序代码的线程区处理同一资源的情况。
+
+实现Runnable接口和实现Callable接口的区别:
+    Runnable是自从java1.1就有了，而Callable是1.5之后才加上去的
+    Callable规定的方法是call(),Runnable规定的方法是run()
+    Callable的任务执行后可返回值，而Runnable的任务是不能返回值(是void)
+    call方法可以抛出异常，run方法不可以
+    运行Callable任务可以拿到一个Future对象，表示异步计算的结果。它提供了检查计算是否完成的方法，以等待计算的完成，并检索计算的结果。通过Future对象可以了解任务执行情况，可取消任务的执行，还可获取执行结果。
+    加入线程池运行，Runnable使用ExecutorService的execute方法，Callable使用submit方法。
+    
+```
+
+## Thread、Runnable和Callable区别
+
+```
+
+```
+
+## Future机制
 
 ```
 常见的两种创建线程的方式。一种是直接继承Thread，另外一种就是实现Runnable接口。
+
 这两种方式都有一个缺陷就是：在执行完任务之后无法获取执行结果。
+
 从Java 1.5开始，就提供了Callable和Future，通过它们可以在任务执行完毕之后得到任务执行结果。
 Future模式的核心思想是能够让主线程将原来需要同步等待的这段时间用来做其他的事情。（因为可以异步获得执行结果，所以不用一直同步等待去获得执行结果）
 ```
-# ThreadLocal
+## ThreadLocal
 
 ```
 1、ThreadLocal是什么
@@ -1222,6 +1266,38 @@ if(classStringArrayList.equals(classIntegerArrayList)){
     一个类只能继承一个类，但是能实现多个接口。
     一个接口能继承另一个接口，这和类之间的继承比较相似。
 ```
+
+## 常用接口
+
+### CommandLineRunner 
+
+https://www.cnblogs.com/chenpi/p/9696310.html
+
+```
+Spring boot的 CommandLineRunner 接口主要用于实现在应用初始化后，去执行一段代码块逻辑，这段初始化代码在整个应用生命周期内只会执行一次。
+```
+
+## ApplicationRunner
+
+```
+ApplicationRunner实现springboot应用启动后做一些初始化操作
+```
+
+
+
+### InitializingBean
+
+```
+
+```
+
+### DisposableBean
+
+```
+
+```
+
+
 
 # 接口的作用
 
@@ -2147,14 +2223,194 @@ public class TestException {
 
 ```
 
+# 调试
+
+## 堆栈信息排查
+
+https://blog.csdn.net/weixin_42660202/article/details/103352515
+
+```
+
+```
+
+## 数据库死锁
+
+```
+Cause: com.mysql.cj.jdbc.exceptions.MySQLTransactionRollbackException: Deadlock found when trying to get lock;
+#设置mysql的隔离级别，重启再观察
+select @@transaction_isolation;
+select @@global.transaction_isolation;
+set session transaction isolation level read committed;
+set global transaction isolation level read committed;
+```
+
+# 日志
+
+https://blog.csdn.net/weixin_43054590/article/details/88553997
+
+```
+常见日志框架：JUL、JCL、Log4j、Log4j2，Logback、SLF4j、Jboss-logging
+
+企业级开发日志选择：
+    日志门面：SLF4j；
+    日志实现：Log4j、Logback；
+    Log4j2功能非常强大，但是设计比较复杂并且没有日志门面与之相匹配，作为企业级日志会存在不稳定的问题；
+
+日志选择逻辑：日志门面+日志实现，运行日志时调用的是日志门面的接口，但是配置采用的是日志实现的配置。
+
+springboot日志选择：spring框架默认采用的是JCL日志门面，所以springboot底层默认排除了spring框架采用的JCL，选择：
+    日志门面：SLF4j；
+    日志实现：Logback；它相对于Log4j来说更加的强大功能更加齐全。
+    
+SLF4j：只导入SLF4j的jar包，没有实现日志，日志功能单一
+SLF4j+Logback：导入slf4j-api.jar和Logback相关jar包
+
+日志级别从低到高分为TRACE < DEBUG < INFO < WARN < ERROR < FATAL；
+Spring Boot中默认配置ERROR、WARN和INFO级别的日志输出到控制台；
+日志默认输出在控制台，日志输出内容springboot底层已配置好，开箱即用
+       
+springboot的logback.xml配置内容：
+如果我们觉得springboot默认的配置内容满足不了我们的需求，我们也可以自定义logback日志的xml对logback日志进行重新配置；
+
+注意:springboot官方推荐使用logback-spring.xml,相对于 logback.xml它的配置功能更加齐全，比如logback-spring.xml可以配置profile多环境日志，logback.xml则不能实现此功能
+
+日志输出格式：
+    %d表示日期时间，
+    %thread表示线程名，
+    %-5level：级别从左显示5个字符宽度
+    %logger{50} 表示logger名字最长50个字符，否则按照句点分割。 
+    %msg：日志消息，
+    %n是换行符
+```
+
+## logback.xml
+
+https://www.jianshu.com/p/f67c721eea1b
+
+https://blog.csdn.net/lhl1124281072/article/details/79852582
+
+```
+以<configuration>开头，后面有零个或多个<appender>元素，有零个或多个<logger>元素，有最多一个<root>元素。
+配置步骤：
+    (1)  尝试在 classpath下查找文件logback-test.xml；
+    (2)  如果文件不存在，则查找文件logback.xml；
+    (3)  如果两个文件都不存在，logback用BasicConfigurator自动对自己进行配置，这会导致记录输出到控制台。
+```
+
+## 配置示例
+
+### application.yml
+
+```
+logging:
+  #  config: classpath:logb-${spring.profiles.active}.xml #动态选择日志环境配置文件
+  config: classpath: #用默认的logback.xml会先于appliction-***.yml加载，导致配置文件动态参数滞后
+
+logback:
+  logDir: /www/data_govern/logs
+  maxHistory: 30
+  errorMaxHistory: 30
+  logLevel: info
+
+
+```
+
+### logb.xml
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <!-- 保存路径-->
+    <!--<property name="logDir" value="./logs"/>-->
+    <!-- 保存日志天数-->
+    <!--<property name="maxHistory" value="10"/>-->
+    <!--错误日志最大保存天数-->
+    <!--<property name="errorMaxHistory" value="30"/>-->
+    <!-- 项目名-->
+    <!--<property name="projectName" value="sensitiveConf"/>-->
+    <!-- 活动文件的大小 -->
+    <property name="maxFileSize" value="500MB"/>
+    <!-- 控制所有归档日志文件的总大小 -->
+    <property name="totalSizeCap" value="30GB"/>
+
+    <springProperty name="projectName" source="spring.application.name"/>
+    <springProperty name="logLevel" source="logback.logLevel"/>
+    <springProperty name="logDir" source="logback.logDir"/>
+    <springProperty name="maxHistory" source="logback.maxHistory"/>
+    <springProperty name="errorMaxHistory" source="logback.errorMaxHistory"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--<filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>-->
+        <file>${logDir}/${projectName}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logDir}/${projectName}-%d{yyyy-MM-dd}.zip</fileNamePattern>
+            <maxHistory>${maxHistory}</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}:%L] - %method\(\) - %msg %n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- ERROR日志 -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logDir}/${projectName}-error.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${logDir}/${projectName}-error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>${maxFileSize}</maxFileSize>
+            <maxHistory>${maxHistory}</maxHistory>
+            <totalSizeCap>${totalSizeCap}</totalSizeCap>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}:%L] - %method\(\) - %msg %n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{36}:%L] - %method\(\) - %msg %n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!--通过配置报名及level  可以选择去掉第三方过多的日志 -->
+    <!--<logger name="com.htgx.baop" level="${logLevel}"/>-->
+
+    <!--自定义需要输出的最低日志等级-->
+    <root level="${logLevel}">
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
+    </root>
+
+    <!-- 本机测试环境输出到控制台，方便调试 其它环境只输出到文件 -->
+    <springProfile name="local">
+        <root level="${logLevel}">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+    </springProfile>
+
+</configuration>
+```
+
+
+
 # 三大器
 
 ## 拦截器
 
+https://www.cnblogs.com/riches/p/12638551.html
+
 ```
-参考：
-	https://www.cnblogs.com/riches/p/12638551.html
-	
 概念：java里的拦截器是动态拦截Action调用的对象，它提供了一种机制可以使开发者在一个Action执行的前后执行一段代码，也可以在一个Action执行前阻止其执行，同时也提供了一种可以提取Action中可重用部分代码的方式。
 
 　　作用域：动态拦截Action调用的对象（也就是我们的controller层）
@@ -2251,8 +2507,6 @@ public void testMap() {
 }
 ```
 
-
-
 ## compute
 
 ```
@@ -2281,17 +2535,20 @@ java内存模型(Java Memory Model，JMM)是java虚拟机规范定义的，用�
 
 # Java内存结构
 
+https://www.jianshu.com/p/15106e9c4bf3
+
 ```
-参考：	https://www.jianshu.com/p/15106e9c4bf3
+
 ```
 
 # java内存管理
 
+http://blog.itpub.net/69904796/viewspace-2565255/
+https://www.cnblogs.com/steffen/p/11368018.html
+https://blog.csdn.net/qq_29078329/article/details/78929457
+
 ```
-参考：	
-	http://blog.itpub.net/69904796/viewspace-2565255/
-	https://www.cnblogs.com/steffen/p/11368018.html
-	https://blog.csdn.net/qq_29078329/article/details/78929457
+
 ```
 
 # 面试

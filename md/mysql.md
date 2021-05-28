@@ -42,6 +42,18 @@ set @@SESSION.sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_F
 sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
 ```
 
+# 慢查询分析
+
+```
+日志：/data/mysql/slow.log
+
+show variables like '%slow_query_log%';
+
+show global status like 'slow_query';
+```
+
+
+
 # 概念解析
 
 ## innodb锁机制
@@ -230,6 +242,22 @@ INVOKER 表示用调用者的权限来执行。默认情况下，系统指定为
 ```
 select version();
 ```
+
+## 登陆
+
+```
+linux登录mysql：
+    在终端输入命令，mysql -h192.168.43.119 -uroot -p1234
+    -h表示mysql服务端的IP，-u表示用户名 -p表示密码
+    
+示例：
+    su - mysql 
+    cd /home/mysql/bin
+    mysql -udev -p
+    输入密码即可
+```
+
+
 
 ## 判断表是否存在
 

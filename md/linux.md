@@ -803,10 +803,10 @@ profile：
             2. 读取并执行~/.bash_profile文件；
             - 若文件不存在，则读取并执行~/.bash_login文件；
             - 若文件不存在，则读取并执行~/.profile文件；
-
         登出过程：
             1. 读取并执行~/.bash_logout文件；
             2. 读取并执行/etc/bash.bash_logout文件；
+            
  	非交互式：
         登陆过程：
             1. 读取并执行/etc/profile文件；
@@ -892,7 +892,7 @@ echo "重启开始："
 
 
 
-# 常用
+# 常用命令
 
 ## 时区
 
@@ -903,8 +903,8 @@ cat /etc/sysconfig/clock
 ## alias
 
 ```
-alias ls='ls --color=auto'
-alias l='ls -lrt'
+alias ls='ls -lrt --color=auto'
+alias ll='ls -a'
 alias rm='rm -i'
 ```
 
@@ -1094,43 +1094,6 @@ $ stty erase ^h
 	可以设置一个会话期，使得当自己键入一个退格键时，系统用退格、删除和退格序列响应。此时可以看到用退格键覆盖的字符从显示中消失了，这样更符合计算机的惯例。使用命令
 ```
 
-
-
-## service、systemctl 和 chkconfig
-
-```
-1.service命令其实是去/etc/init.d目录下，去执行相关程序
-	# 启动、停止、重启服务等
-		service redis start|stop|restart|reload(重新加载配置文件,不终止服务)|status
-	# 直接启动redis脚本
-		/etc/init.d/redis start
-	# 开机自启动
-		update-rc.d redis defaults
-
-systemd是Linux系统最新的初始化系统(init),作用是提高系统的启动速度，尽可能启动较少的进程，尽可能更多进程并发启动。
-systemd对应的进程管理命令是systemctl
-
-2. systemctl命令兼容了service，即systemctl也会去/etc/init.d目录下，查看，执行相关程序
-	# 启动、停止、重启服务等
-		systemctl start|stop|restart|reload(重新加载配置文件,不终止服务)|status redis
-	# 开机自启动 
-		systemctl enable|disable redis
-	# 检查某个单元是否启动
-		systemctl is-enabled httpd.service 
-	# 查询服务是否激活，和配置是否开机启动
-		systemctl is-active httpd
-	
-区别：
-	systemctl命令：是一个systemd工具，主要负责控制systemd系统和服务管理器。
-    service命令：可以启动、停止、重新启动和关闭系统服务，还可以显示所有系统服务的当前状态。
-    chkconfig命令：是管理系统服务(service)的命令行工具。所谓系统服务(service)，就是随系统启动而启动，随系统关闭而关闭的程序。
-    systemctl命令是系统服务管理器指令，它实际上将 service 和 chkconfig 这两个命令组合到一起。
-
-    systemctl是RHEL 7 的服务管理工具中主要的工具，它融合之前service和chkconfig的功能于一体。可以使用它永久性或只在当前会话中启用/禁用服务。
-
-    所以systemctl命令是service命令和chkconfig命令的集合和代替。
-```
-
 ## cpu
 
 ```
@@ -1192,13 +1155,61 @@ ll /proc/进程号/exe
 
 ## 服务
 
+### chkconfig
+
+https://linux.cn/article-1847-1.html
+
 ```
+chkconfig 命令用来设定和查询不同运行级上的系统服务  注：谨记chkconfig不是立即自动禁止或激活一个服务，它只是简单的改变了符号连接。
 查看服务：
 	chkconfig --list       			# 列出所有系统服务
 	chkconfig --list | grep on    	# 列出所有启动的系统服务
 ```
 
-## ps
+### service、systemctl 和 chkconfig
+
+```
+1.service命令其实是去/etc/init.d目录下，去执行相关程序
+	# 启动、停止、重启服务等
+		service redis start|stop|restart|reload(重新加载配置文件,不终止服务)|status
+	# 直接启动redis脚本
+		/etc/init.d/redis start
+	# 开机自启动
+		update-rc.d redis defaults
+
+systemd是Linux系统最新的初始化系统(init),作用是提高系统的启动速度，尽可能启动较少的进程，尽可能更多进程并发启动。
+systemd对应的进程管理命令是systemctl
+
+2. systemctl命令兼容了service，即systemctl也会去/etc/init.d目录下，查看，执行相关程序
+	# 启动、停止、重启服务等
+		systemctl start|stop|restart|reload(重新加载配置文件,不终止服务)|status redis
+	# 开机自启动 
+		systemctl enable|disable redis
+	# 检查某个单元是否启动
+		systemctl is-enabled httpd.service 
+	# 查询服务是否激活，和配置是否开机启动
+		systemctl is-active httpd
+	
+区别：
+	systemctl命令：是一个systemd工具，主要负责控制systemd系统和服务管理器。
+    service命令：可以启动、停止、重新启动和关闭系统服务，还可以显示所有系统服务的当前状态。
+    chkconfig命令：是管理系统服务(service)的命令行工具。所谓系统服务(service)，就是随系统启动而启动，随系统关闭而关闭的程序。
+    systemctl命令是系统服务管理器指令，它实际上将 service 和 chkconfig 这两个命令组合到一起。
+
+    systemctl是RHEL 7 的服务管理工具中主要的工具，它融合之前service和chkconfig的功能于一体。可以使用它永久性或只在当前会话中启用/禁用服务。
+
+    所以systemctl命令是service命令和chkconfig命令的集合和代替。
+```
+
+
+
+## 进程
+
+```
+
+```
+
+### ps
 
 ```
 ps -ef|grep详解
@@ -1207,46 +1218,66 @@ grep命令是查找
 中间的|是管道命令 是指ps命令与grep同时执行
 
 字段含义如下：
-UID       PID       PPID      C     STIME    TTY       TIME         CMD
-zzw      14124   13991      0     00:38      pts/0      00:00:00    grep --color=auto dae
+    UID       PID       PPID      C     STIME    TTY       TIME         CMD
+    zzw      14124   13991      0     00:38      pts/0      00:00:00    grep --color=auto dae
 
-UID      ：程序被该 UID 所拥有
-PID      ：就是这个程序的 ID 
-PPID    ：则是其上级父程序的ID
-C          ：CPU使用的资源百分比
-STIME ：系统启动时间
-TTY     ：登入者的终端机位置
-TIME   ：使用掉的CPU时间。
-CMD   ：所下达的是什么指令
-```
-
-
-
-## 进程
-
-```
+    UID      ：程序被该 UID 所拥有
+    PID      ：就是这个程序的 ID 
+    PPID    ：则是其上级父程序的ID
+    C          ：CPU使用的资源百分比
+    STIME ：系统启动时间
+    TTY     ：登入者的终端机位置
+    TIME   ：使用掉的CPU时间。
+    CMD   ：所下达的是什么指令
+    
 查看内存占用前五的进程：   ps auxw | head -1;ps auxw|sort -rn -k4|head -5
 查看CPU占用前三的进程：	 ps auxw | head -1;ps auxw|sort -rn -k3|head -3
-
-查看运行用户信息：
-	ps -ef|grep http
 查看进程号：	pgrep php-fpm
 追踪进程号：	strace -f -e connect  -p 你的进程编号
 ```
 
+
+
 ## 内存
 
 ```
-free -m
-echo 3 > /proc/sys/vm/drop_caches 
 
-TOP
+
+```
+
+### free
+
+https://www.cnblogs.com/ultranms/p/9254160.html
+
+```
+free 命令显示系统内存的使用情况，包括物理内存、交换内存(swap)和内核缓冲区内存
+	$ free
+如果加上 -h 选项，输出的结果会友好很多
+	$ free -h
+有时我们需要持续的观察内存的状况，此时可以使用 -s 选项并指定间隔的秒数：
+	$ free -h -s 3
+	
+下面先解释一下输出的内容：
+    Mem 行(第二行)是内存的使用情况。
+    Swap 行(第三行)是交换空间的使用情况。
+    total 列显示系统总的可用物理内存和交换空间大小。
+    used 列显示已经被使用的物理内存和交换空间。
+    free 列显示还有多少物理内存和交换空间可用使用。
+    shared 列显示被共享使用的物理内存大小。
+    buff/cache 列显示被 buffer 和 cache 使用的物理内存大小。
+    available 列显示还可以被应用程序使用的物理内存大小。
+```
+
+### top
+
+https://www.cnblogs.com/niuben/p/12017242.html
+
+```
 /*命令经常用来监控linux的系统状况，比如cpu、内存的使用等。*/
 /*查看某个用户内存使用情况,如:postgres*/
 	top -u postgres
 /*
 内容解释：
-
 　　PID：进程的ID
 　　USER：进程所有者
 　　PR：进程的优先级别，越小越优先被执行
@@ -1261,7 +1292,6 @@ TOP
 　　COMMAND：进程启动命令名称
 
 常用的命令：
-
 　　P：按%CPU使用率排行
 　　T：按MITE+排行
 　　M：按%MEM排行
@@ -1340,9 +1370,9 @@ ntpdate -u ntp.api.bz
 ## **I/O重定向**
 
 ```
-标准输入 (stdin): 代码为0，使用<或<<
+标准输入 (stdin) : 代码为0，使用<或<<
 标准输出 (stdout): 代码为1，使用>或>>
-标准错误输出(stderr): 代码为2，使用2>或2>>
+标准错误 (stderr): 代码为2，使用2>或2>>
 0,1,2对应的物理设备一般是 ： 键盘、显示器、显示器
 
 >: 覆盖输出 
@@ -1684,7 +1714,7 @@ sudo passwd dev
 
 
 
-# 常用
+# 常用工具
 
 ## **ssh**
 
@@ -1805,6 +1835,193 @@ service vsftpd start | stop
 示例：在172.16.7.57上
     sftp root@172.16.6.35
     密码： oracle
+```
+
+## vim
+
+```
+插入命令
+    i 在当前位置生前插入
+    I 在当前行首插入
+    a 在当前位置后插入
+    A 在当前行尾插入
+    o 在当前行之后插入一行
+    O 在当前行之前插入一行
+
+查找命令
+    /text　　查找text，按n健查找下一个，按N健查找前一个。
+    ?text　　查找text，反向查找，按n健查找下一个，按N健查找前一个。
+    有一些特殊字符在查找时需要转义　　.*[]^%/?~$
+    :set ignorecase　　忽略大小写的查找
+    :set noignorecase　　不忽略大小写的查找
+	查找很长的词，如果一个词很长，键入麻烦，可以将光标移动到该词上，按*或#键即可以该单词进行搜索，相当于/搜索。而#命令相当于?搜索。
+    :set hlsearch　　高亮搜索结果，所有结果都高亮显示，而不是只显示一个匹配。
+    :set nohlsearch　　关闭高亮搜索显示
+    :nohlsearch　　关闭当前的高亮显示，如果再次搜索或者按下n或N键，则会再次高亮。
+    :set incsearch　　逐步搜索模式，对当前键入的字符进行搜索而不必等待键入完成。
+    :set wrapscan　　重新搜索，在搜索到文件头或尾时，返回继续搜索，默认开启。
+    
+替换命令
+    ra 将当前字符替换为a，当期字符即光标所在字符。
+    s/old/new/ 用old替换new，替换当前行的第一个匹配
+    s/old/new/g 用old替换new，替换当前行的所有匹配
+    %s/old/new/ 用old替换new，替换所有行的第一个匹配
+    %s/old/new/g 用old替换new，替换整个文件的所有匹配
+    :10,20 s/^/ /g 在第10行知第20行每行前面加四个空格，用于缩进。
+    ddp 交换光标所在行和其下紧邻的一行。
+
+移动命令
+    h 左移一个字符
+    l 右移一个字符，这个命令很少用，一般用w代替。
+    k 上移一个字符
+    j 下移一个字符
+    以上四个命令可以配合数字使用，比如20j就是向下移动20行，5h就是向左移动5个字符，在Vim中，很多命令都可以配合数字使用，比如删除10个字符10x，在当前位置后插入3个！，3a！<Esc>，这里的Esc是必须的，否则命令不生效。
+    w 向前移动一个单词（光标停在单词首部），如果已到行尾，则转至下一行行首。此命令快，可以代替l命令。
+    b 向后移动一个单词 2b 向后移动2个单词
+    e，同w，只不过是光标停在单词尾部
+    ge，同b，光标停在单词尾部。
+    ^ 移动到本行第一个非空白字符上。
+    0（数字0）移动到本行第一个字符上，
+    <HOME> 移动到本行第一个字符。同0健。
+    $ 移动到行尾 3$ 移动到下面3行的行尾
+    gg 移动到文件头。 = [[
+    G（shift + g） 移动到文件尾。 = ]]
+    f（find）命令也可以用于移动，fx将找到光标后第一个为x的字符，3fd将找到第三个为d的字符。
+    F 同f，反向查找。
+    跳到指定行，冒号+行号，回车，比如跳到240行就是 :240回车。另一个方法是行号+G，比如230G跳到230行。
+    Ctrl + e 向下滚动一行
+    Ctrl + y 向上滚动一行
+    Ctrl + d 向下滚动半屏
+    Ctrl + u 向上滚动半屏
+    Ctrl + f 向下滚动一屏
+    Ctrl + b 向上滚动一屏
+    
+撤销和重做
+    u 撤销（Undo）
+    U 撤销对整行的操作
+    Ctrl + r 重做（Redo），即撤销的撤销。
+
+删除命令
+    x 删除当前字符
+    3x 删除后三个字符
+    X 删除前一个字符
+    dl 删除当前字符   dl=x
+    dh 删除前一个字符  dh=X
+    dd 删除当前行
+    dj 删除上一行
+    dk 删除下一行
+    2dd 删除下2行。
+    D 删除当前字符之后的所有字符 D=d$
+    d$ 删除当前字符之后的所有字符
+    dgg 删除当前行之前所有行（不包括当前行）
+    dG（d shift + g） 删除当前行之后所有行（不包括当前行）
+    :1,10d 删除1-10行
+    :11,$d 删除11行及以后所有的行
+    :1,$d 删除所有行
+    J(shift + j)　　删除两行之间的空行，实际上是合并两行。
+
+拷贝和粘贴
+    yy 拷贝当前行
+    nyy 拷贝当前后开始的n行，比如2yy拷贝当前行及其下一行。
+    p 在当前光标后粘贴,如果之前使用了yy命令来复制一行，那么就在当前行的下一行粘贴。
+    shift+p 在当前行前粘贴
+    :1,10 co 20 将1-10行插入到第20行之后。
+    :1,$ co $ 将整个文件复制一份并添加到文件尾部。
+    正常模式下按v（逐字）或V（逐行）进入可视模式，然后用jklh命令移动即可选择某些行或字符，再按y即可复制
+    ddp交换当前行和其下一行
+    xp交换当前字符和其后一个字符
+    
+剪切命令
+    正常模式下按v（逐字）或V（逐行）进入可视模式，然后用jklh命令移动即可选择某些行或字符，再按d即可剪切
+    ndd 剪切当前行之后的n行。利用p命令可以对剪切的内容进行粘贴
+    :1,10d 将1-10行剪切。利用p命令可将剪切后的内容进行粘贴。
+    :1, 10 m 20 将第1-10行移动到第20行之后。
+
+退出命令
+    :wq 保存并退出
+    ZZ 保存并退出
+    :q! 强制退出并忽略所有更改
+    :e! 放弃所有修改，并打开原来文件。
+
+窗口命令
+    :split或new 打开一个新窗口，光标停在顶层的窗口上
+    :split file或:new file 用新窗口打开文件
+    split打开的窗口都是横向的，使用vsplit可以纵向打开窗口。
+    Ctrl+ww 移动到下一个窗口
+    Ctrl+wj 移动到下方的窗口
+    Ctrl+wk 移动到上方的窗口
+
+关闭窗口
+    :close 最后一个窗口不能使用此命令，可以防止意外退出vim。
+    :q 如果是最后一个被关闭的窗口，那么将退出vim。
+    ZZ 保存并退出。
+    关闭所有窗口，只保留当前窗口
+    :only
+
+录制宏
+	按q键加任意字母开始录制，再按q键结束录制（这意味着vim中的宏不可嵌套），使用的时候@加宏名，比如qa。。。q录制名为a的宏，@a使用这个宏。
+
+执行shell命令
+    :!command
+    :!ls 列出当前目录下文件
+    :!perl -c script.pl 检查perl脚本语法，可以不用退出vim，非常方便。
+    :!perl script.pl 执行perl脚本，可以不用退出vim，非常方便。
+    :suspend或Ctrl - Z 挂起vim，回到shell，按fg可以返回vim。
+
+注释命令
+    perl程序中#开始的行为注释，所以要注释某些行，只需在行首加入#
+    3,5 s/^/#/g 注释第3-5行
+    3,5 s/^#//g 解除3-5行的注释
+    1,$ s/^/#/g 注释整个文档。
+    :%s/^/#/g 注释整个文档，此法更快。
+
+帮助命令
+    :help or F1 显示整个帮助
+    :help xxx 显示xxx的帮助，比如 :help i, :help CTRL-[（即Ctrl+[的帮助）。
+    :help 'number' Vim选项的帮助用单引号括起
+    :help <Esc> 特殊键的帮助用<>扩起
+    :help -t Vim启动参数的帮助用-
+    ：help i_<Esc> 插入模式下Esc的帮助，某个模式下的帮助用模式_主题的模式
+    帮助文件中位于||之间的内容是超链接，可以用Ctrl+]进入链接，Ctrl+o（Ctrl + t）返回
+
+其他非编辑命令
+    . 重复前一次命令
+    :set ruler?　　查看是否设置了ruler，在.vimrc中，使用set命令设制的选项都可以通过这个命令查看
+    :scriptnames　　查看vim脚本文件的位置，比如.vimrc文件，语法文件及plugin等。
+    :set list 显示非打印字符，如tab，空格，行尾等。如果tab无法显示，请确定用set lcs=tab:>-命令设置了.vimrc文件，并确保你的文件中的确有tab，如果开启了expendtab，那么tab将被扩展为空格。
+```
+
+## ODBC 
+
+```
+1.查看操作系统上查看ODBC版本
+	[dmdba@localhost]# odbc_config --version
+
+2.查看ODBC配置文件存放的位置
+	[root@localhost etc]# odbc_config --odbcini
+	[root@localhost etc]# odbc_config --odbcinstini
+
+3.修改odbc.ini文件
+	[dmdba@localhost]# vim /etc/odbc.ini
+    [dm]
+    Deion = DM ODBC DSN
+    Driver = DM7 ODBC DRIVER
+    SERVER = localhost
+    UID = SYSDBA
+    PWD = SYSDBA
+    TCP_PORT = 5236
+
+4.修改odbcinst.ini文件
+    [dmdba@localhost]# vi /etc/odbcinst.ini
+    [DM7 ODBC DRIVER]
+    Deion = ODBC DRIVER FOR DM7
+    Driver = /opt/dmdbms/bin/libdodbc.so
+
+5.测试连接
+	[root@localhost]# isql dm SYSDBA SYSDBA
+	
+注意配置环境变量LD_LIBRARY_PATH(动态库的查找路径)，示例：
+LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64::/usr/lib/oracle/11.2/client64/lib:/usr/local/dm7client/bin/:/usr/local/dm7client/drivers/odbc/
 ```
 
 
