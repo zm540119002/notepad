@@ -409,13 +409,73 @@ MySQL 8.0已经不支持下面这种命令写法
 	grant all privileges on *.* to 'root'@'%' ;
 ```
 
-# 表操作
+# 常用操作
 
 ## 备份表
 
 ```
 create table xxxx like data_mgr;
 insert into xxxx select *from data_mgr;
+```
+
+## 修改字段
+
+```
+ALTER TABLE 表名 change 原列名 新列名 新的数据类型[（长度）] NULL或NOT NULL
+示例：
+	alter table tb_uc_cfg_quote_ds change alias alias varchar(32) character set utf8mb4 collate utf8mb4_0900_ai_ci  not null comment '别名'
+	
+添加字段，比如我在数据表中添加一个 age 字段，类型为int(11)
+	ALTER TABLE player ADD (age int(11));
+
+ 
+
+2. 修改字段名，将 age 字段改成player_age
+ALTER TABLE player RENAME COLUMN age to player_age
+
+ 
+
+3. 修改字段的数据类型，将player_age的数据类型设置为float(3,1)
+ALTER TABLE player MODIFY (player_age float(3,1));
+
+ 
+
+4. 删除字段, 删除刚才添加的player_age字段
+ALTER TABLE player DROP COLUMN player_age;
+
+修改字段默认值
+
+alter table 表名 drop constraint 约束名字   ------说明：删除表的字段的原有约束
+
+alter table 表名 add constraint 约束名字 DEFAULT 默认值 for 字段名称 -------说明：添加一个表的字段的约束并指定默认值
+
+alter table <表名> change <字段名> <字段新名称> <字段的类型>。
+例子
+
+ALTER TABLE `ue4_map` CHANGE  `levelpath` `filepath` VARCHAR(255);
+ALTER TABLE `ue4_blueprint` CHANGE `strObjectPath` `filepath` VARCHAR(255);
+
+添加备注【字段已经存在==>MODIFY, 不存在==>ADD】
+/*oracle*/ comment on column 表名.列名 is '备注';
+/*mysql*/ ALTER TABLE 表名 MODIFY  字段名 类型 COMMENT '备注';
+
+ 
+
+删除备注【字段已经存在==>MODIFY, 不存在==>ADD】
+
+/*mysql*/ ALTER TABLE 表名 MODIFY  字段名 类型 COMMENT '';
+
+ 
+
+下面用法：
+
+Alter table `db_jddts_jsmj_1_tdw`.`lg2_hero_baseattr`   -- db_jddts_jsmj_1_tdw：数据库名
+  add column `num` int(11) NOT NULL Auto_increment first,  -- 添加字段，并且处于第一列
+  add column `versionTime` varchar(11) NOT NULL after `num`, -- 添加字段，处于num后面
+  change `heroid` `heroid` int(11) NULL,  -- 改变字段类型
+  drop primary key, -- 删除主键
+  add primary key (`num`) -- 添加主键
+
 ```
 
 

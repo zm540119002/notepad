@@ -1,54 +1,4 @@
-=======================================================变量
-全局变量和静态变量：
-● 全局变量本身就是静态存储方式,所有的全局变量都是静态变量（注：只有局部变量才有静态和自动之分）
-	静态变量和自动变量的区别是存储时期的区别：
-	1、静态变量的存储时期是内存空间在程序运行期间都存在，程序退出才被释放
-	2、自动变量内存空间在作用域内才存在，退出作用域后就被释放
-	
-一、静态局部变量
-1.不会随着函数的调用和退出而发生变化，不过，尽管该变量还继续存在，但不能使用它。倘若再次调用定义它的函数时，它又可继续使用，而且保存了前次被调用后留下的值
 
-2.静态局部变量只会初始化一次
-
-3.静态属性只能被初始化为一个字符值或一个常量，不能使用表达式。即使局部静态变量定义时没有赋初值，系统会自动赋初值0（对数值型变量）或空字符（对字符变量）；静态变量的初始值为0。
-
-4.当多次调用一个函数且要求在调用之间保留某些变量的值时，可考虑采用静态局部变量。虽然用全局变量也可以达到上述目的，但全局变量有时会造成意外的副作用，因此仍以采用局部静态变量为宜。
-示例：
-function test(){
-	static $var = 5;  //static $var = 1+1;就会报错
-	$var++;  echo $var . ' ';
-}
-二、静态全局变量
-示例：
-//全局变量本身就是静态存储方式,所有的全局变量都是静态变量
-function static_global(){
-    global $glo;    
-    $glo++;    
-    echo $glo.'<br>';
-}
----------------------------------------差别
-global和$GLOBALS除了写法不一样以为,其他都一样,可是在实际应用中发现,2者的区别还是很大的
-function test1() { 
-    global $v1, $v2; 
-    $v2 =& $v1; 
-} 
-function test2() { 
-    $GLOBALS['v3'] =& $GLOBALS['v1']; 
-} 
-$v1 = 1; 
-$v2 = $v3 = 0; 
-test1(); 
-echo $v2 ."\n"; 
-test2(); 
-echo $v3 ."\n";
-
-function test() { 
-    global $a; 
-    unset($a); 
-} 
-$a = 1; 
-test(); 
-echo $a;
 =======================================================单例模式
 PHP单例模式的缺点
  众所周知，PHP语言是一种解释型的脚本语言，这种运行机制使得每个PHP页面被解释执行后，所有的相关资源都会被回收。也就是说，PHP在语言级别上没有办法让某个对象常驻内存，这和asp.net、Java等编译型是不同的，比如在Java中单例会一直存在于整个应用程序的生命周期里，变量是跨页面级
@@ -56,24 +6,7 @@ PHP单例模式的缺点
 的，真正可以做到这个实例在应用程序生命周期中的唯一性。然而在PHP中，所有的变量无论是全局变量还是类的静态成员，都是页面级的，每次页面被执行时，都会重新建立新的对象，都会在页面执行完毕后被清空，这样似乎PHP单例模式就没有什么意义了，所以PHP单例模式我觉得只是针对单次页面
 
 级请求时出现多个应用场景并需要共享同一对象资源时是非常有意义的。
-=======================================================
-Note: 处理 register_globals 
-如果已经弃用的 register_globals 指令被设置为 on 那么局部变量也将在脚本的全局作用域中可用。例如， $_POST['foo']   也将以 $foo  的形式存在。 
-php.ini
-register_globals = On
-=======================================================拒绝访问目录
-apache:
-找到配置文件，把#Options Indexes FollowSymLinks 注释掉，设置为：Options FollowSymLinks
-header("Content-type: text/html; charset=utf-8");
-header("Content-type: text/html; charset=gb2312");
-//跨域
-header('Access-Control-Allow-Origin: *');
-header("Access-Control-Allow-Headers: token,Origin, X-Requested-With, Content-Type, Accept");
-header('Access-Control-Allow-Methods: POST,GET');
-=======================================================php开启调试模式
-如果服务器关闭了php服务的错误提示，而又需要对某个php文件进行调试，可以在文件中加入如下代码：
-ini_set('display_errors', true);
-error_reporting(E_ALL);
+
 =======================================================
 不论在什么平台、用什么web server，只要是用cgi/fastcgi方式运行PHP，都用非线性安全。
 
@@ -82,45 +15,7 @@ error_reporting(E_ALL);
 =======================================================
 $_SERVER['REQUEST_METHOD']
 $_SERVER['REMOTE_ADDR']
-=======================================================
-查看php-fpm的master进程号 ：
-ps aux|grep php-fpm
-netstat -tnl | grep 9000
-kill -9 pid
-=======================================================
-//php-fpm配置文件
-vim /usr/local/php/etc/php-fpm.conf
-pid = /usr/local/php/var/run/php-fpm.pid
-=======================================================
-//php-fpm开机启动配置文件
-vim /usr/lib/systemd/system/php-fpm.service
-=======================================================
-[Unit]
-Description=The PHP FastCGI Process Manager
-After=network.target
 
-[Service]
-Type=simple
-PIDFile=/usr/local/php/var/run/php-fpm.pid 
-ExecStart=/usr/local/php/sbin/php-fpm --nodaemonize
---fpm-config=/usr/local/php/etc/php-fpm.conf
-ExecReload=/bin/kill -USR2 $MAINPID
-ExecStop=/bin/kill -SIGINT $MAINPID
-PrivateTmp=true
-
-[Install]
-WantedBy=multi-user.target
-=======================================================
-#chmod 754 /usr/lib/systemd/system/php-fpm.service
-systemctl daemon-reload
-systemctl start php-fpm.service
-systemctl stop php-fpm.service
-systemctl reload php-fpm.service
-systemctl enable php-fpm.service
-systemctl disable php-fpm.service
-systemctl status php-fpm.service -l
-//启动php-fpm
-/usr/local/php/sbin/php-fpm
 =======================================================
 下面以代码说明PHP中去除字符串中换行的三种常用的方法
 
@@ -177,52 +72,7 @@ function curPageURL() {
 	}
 	return $pageURL;
 }
-=======================================================pdo_oci
-cd /usr/local/src/php-7.2.26/ext/pdo_oci
-/usr/local/webserver/php/bin/phpize
-./configure --with-php-config=/usr/local/php7/bin/php-config --with-pdo-oci=instantclient,/usr/lib/oracle/11.2/client64/lib
-=======================================================PDO_ODBC
-yum -y install unixODBC-*
--------------------------------第一种：源码安装
-wget http://pecl.php.net/get/PDO_ODBC-1.0.1.tgz
-tar -zxvf PDO_ODBC-1.0.1.tgz
-cd PDO_ODBC-1.0.1
-/usr/local/php7.2.31/bin/phpize
-./configure --prefix=/usr/local/PDO_ODBC-1.0.1 --with-php-config=/usr/local/php7.2.31/bin/php-config --with-pdo-odbc=unixODBC,/usr
-make && make install
--------------------------------第二种：扩展安装
-1. 进到扩展目录：
-	cd /usr/local/src/php-7.2.31/ext/pdo_odbc
-2. 调用phpize程序生成编译配置文件
-	/usr/local/php7.2.31/bin/phpize
-3. 调用configure生成Makefile文件，然后调用make编译，make install安装
-	./configure -with-php-config=/usr/local/php7.2.31/bin/php-config --with-pdo-odbc=unixODBC,/usr
-4.编译安装
-	make && make install
-	ll /usr/local/php7.2.31/lib/php/extensions/no-debug-zts-20170718/
-5. 修改php配置文件
-	vim /usr/local/php7.2.31/etc/php.ini
-	extension=pdo_odbc.so
-6.重启apache
-	/usr/local/apache2/bin/apachectl stop
-	/usr/local/apache2/bin/apachectl start
-=======================================================curl
-yum install curl curl-devel
-1. 进到扩展目录：
-	cd /usr/local/src/php-7.2.26/ext/curl
-2. 调用phpize程序生成编译配置文件
-	/usr/local/php7/bin/phpize
-3. 调用configure生成Makefile文件，然后调用make编译，make install安装
-	./configure -with-php-config=/usr/local/php7/bin/php-config
-4.编译安装
-	make && make install
-	成功：/usr/local/php7/lib/php/extensions/no-debug-zts-20170718/
-5. 修改php配置文件
-	vim /usr/local/php7/etc/php.ini
-	extension=curl.so
-6.重启apache
-	/usr/local/apache2/bin/apachectl stop
-	/usr/local/apache2/bin/apachectl start
+
 =======================================================php7.2.31
 	wget https://www.php.net/distributions/php-7.2.31.tar.gz
 	tar -zvxf php-7.2.31.tar.gz

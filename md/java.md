@@ -35,11 +35,7 @@ user					UserFilter							需要已登录或“记住我”的用户才能访问
 
 # JVM
 
-## 参考
-
-```
 https://www.cnblogs.com/whhjava/p/9916626.html
-```
 
 ## 概念
 
@@ -58,8 +54,6 @@ JVM中的线程分为两种：守护线程和普通线程
 普通线程一般是Java程序的线程，只要JVM中有普通线程在执行，那么JVM就不会停止。
 权限足够的话，可以调用exit()方法终止程序。
 ```
-
-
 
 # JWT
 
@@ -112,32 +106,7 @@ base64(Header).base64(Payload).Signature
 6. 返回响应的资源给浏览器。
 ```
 
-## 登录主要流程
 
-```
-登录时，密码验证通过，取当前时间戳生成签名Token，放在Response Header的Authorization属性中，同时在缓存中记录值为当前时间戳的RefreshToken，并设置有效期。
-客户端请求每次携带Token进行请求。
-服务端每次校验请求的Token有效后，同时比对Token中的时间戳与缓存中的RefreshToken时间戳是否一致，一致则判定Token有效。
-当请求的Token被验证时抛出TokenExpiredException异常时说明Token过期，校验时间戳一致后重新生成Token并调用登录方法。
-每次生成新的Token后，同时要根据新的时间戳更新缓存中的RefreshToken，以保证两者时间戳一致。
-```
-
-## 主要应用场景
-
-```
-身份认证在这种场景下，一旦用户完成了登陆，在接下来的每个请求中包含JWT，可以用来验证用户身份以及对路由，服务和资源的访问权限进行验证。
-由于它的开销非常小，可以轻松的在不同域名的系统中传递，所有目前在单点登录（SSO）中比较广泛的使用了该技术。 
-信息交换在通信的双方之间使用JWT对数据进行编码是一种非常安全的方式，由于它的信息是经过签名的，可以确保发送者发送的信息是没有经过伪造的。
-```
-
-## 优点
-
-```
-1.简洁(Compact): 可以通过URL，POST参数或者在HTTP header发送，因为数据量小，传输速度也很快
-2.自包含(Self-contained)：负载中包含了所有用户所需要的信息，避免了多次查询数据库
-3.因为Token是以JSON加密的形式保存在客户端的，所以JWT是跨语言的，原则上任何web形式都支持。
-4.不需要在服务端保存会话信息，特别适用于分布式微服务。
-```
 
 ## 缺点
 
@@ -651,16 +620,19 @@ ${}:用于获取配置文件中的属性值，通常用于获取写在applicatio
 
 
 
-# 注解原理与实战
+## 注解原理与实战
+
+https://blog.csdn.net/yanluandai1985/article/details/99446060
 
 ```
-参考：
-	https://blog.csdn.net/yanluandai1985/article/details/99446060
+
 ```
 
 # **注意事项**
 
 ```
+@Component 默认是单例，如果要经常new初始化对象，不是服务类或配置类，没必要加'@Component'注解；
+
 在Spring中对于bean的默认处理都是单例的，我们通过上下文容器.getBean方法拿到bean容器，并对其进行实例化，这个实例化的过程其实只进行一次，即多次getBean 获取的对象都是同一个对象，也就相当于这个bean的实例在IOC容器中是public的，对于所有的bean请求来讲都可以共享此bean。
 
 1.先判断null，再判断equals("")
@@ -689,8 +661,23 @@ JAVA中try、catch、finally带return的执行顺序：
     3、finally中有return时，会直接在finally中退出，导致try、catch中的return失效。
     
 使用标志位终止线程，变量要声明为volatile，让其它线程可见
+```
 
-synchronized
+## synchronized
+
+https://blog.csdn.net/zjy15203167987/article/details/82531772
+
+https://www.cnblogs.com/weibanggang/p/9470718.html
+
+https://blog.csdn.net/baidu_38083619/article/details/82527461?utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
+
+```
+synchronized是Java中的关键字，是一种同步锁。它修饰的对象有以下几种： 
+　　1. 修饰一个代码块，被修饰的代码块称为同步语句块，其作用的范围是大括号{}括起来的代码，作用的对象是调用这个代码块的对象； 
+　　2. 修饰一个方法，被修饰的方法称为同步方法，其作用的范围是整个方法，作用的对象是调用这个方法的对象； 
+　　3. 修改一个静态的方法，其作用的范围是整个静态方法，作用的对象是这个类的所有对象； 
+　　4. 修改一个类，其作用的范围是synchronized后面括号括起来的部分，作用主的对象是这个类的所有对象。
+
 ```
 
 
@@ -1023,6 +1010,8 @@ class MyThread extends Thread {
 
 https://blog.csdn.net/u012501054/article/details/80384996
 
+https://www.cnblogs.com/zrtqsk/p/3776328.html
+
 ```
 多线程编程优点
     进程之间不能共享内存，但线程之间共享内存非常容易。
@@ -1277,7 +1266,7 @@ https://www.cnblogs.com/chenpi/p/9696310.html
 Spring boot的 CommandLineRunner 接口主要用于实现在应用初始化后，去执行一段代码块逻辑，这段初始化代码在整个应用生命周期内只会执行一次。
 ```
 
-## ApplicationRunner
+### ApplicationRunner
 
 ```
 ApplicationRunner实现springboot应用启动后做一些初始化操作
@@ -1590,6 +1579,52 @@ Collection 接口又有 3 种子类型，List、Set 和 Queue，再下面是一�
 ```
 
 ![img](https://www.runoob.com/wp-content/uploads/2014/01/2243690-9cd9c896e0d512ed.gif)
+
+## 数组和链表的区别
+
+```
+数组的特点
+    在内存中，数组是一块连续的区域。 拿上面的看电影来说，这几个人在电影院必须坐在一起。
+
+    数组需要预留空间，在使用前要先申请占内存的大小，可能会浪费内存空间。 比如看电影时，为了保证10个人能坐在一起，必须提前订好10个连续的位置。这样的好处就是能保证10个人可以在一起。但是这样的缺点是，如果来的人不够10个，那么剩下的位置就浪费了。如果临时有多来了个人，那么10个就不够用了，这时可能需要将第11个位置上的人挪走，或者是他们11个人重新去找一个11连坐的位置，效率都很低。如果没有找到符合要求的作为，那么就没法坐了。
+
+    插入数据和删除数据效率低，插入数据时，这个位置后面的数据在内存中都要向后移。删除数据时，这个数据后面的数据都要往前移动。 比如原来去了5个人，然后后来又去了一个人要坐在第三个位置上，那么第三个到第五个都要往后移动一个位子，将第三个位置留给新来的人。 当这个人走了的时候，因为他们要连在一起的，所以他后面几个人要往前移动一个位置，把这个空位补上。
+
+    随机读取效率很高。因为数组是连续的，知道每一个数据的内存地址，可以直接找到给地址的数据。
+
+    并且不利于扩展，数组定义的空间不够时要重新定义数组。
+
+链表的特点
+    在内存中可以存在任何地方，不要求连续。 在电影院几个人可以随便坐。
+    每一个数据都保存了下一个数据的内存地址，通过这个地址找到下一个数据。 第一个人知道第二个人的座位号，第二个人知道第三个人的座位号……
+
+    增加数据和删除数据很容易。 再来个人可以随便坐，比如来了个人要做到第三个位置，那他只需要把自己的位置告诉第二个人，然后问第二个人拿到原来第三个人的位置就行了。其他人都不用动。
+
+    查找数据时效率低，因为不具有随机访问性，所以访问某个位置的数据都要从第一个数据开始访问，然后根据第一个数据保存的下一个数据的地址找到第二个数据，以此类推。 要找到第三个人，必须从第一个人开始问起。
+
+    不指定大小，扩展方便。链表大小不用定义，数据随意增删。
+    
+数组的优点
+    随机访问性强
+    查找速度快
+数组的缺点
+    插入和删除效率低
+    可能浪费内存
+    内存空间要求高，必须有足够的连续内存空间。
+    数组大小固定，不能动态拓展
+
+链表的优点
+    插入删除速度快
+    内存利用率高，不会浪费内存
+    大小没有固定，拓展很灵活。
+链表的缺点
+    不能随机查找，必须从第一个开始遍历，查找效率低
+    
+重点介绍：
+	Vector、ArrayList都是以数组的形式存储在内存中，所以查询效率高，新增和删除效率不高，
+	但是Vector被Synchronized修饰，所以线程是安全的，ArraryList线程不安全。
+	LinkedList则以链表的形式进行存储，所以查询效率底，新增和删除效率高，并且线程不安全。
+```
 
 
 
@@ -2554,22 +2589,223 @@ https://blog.csdn.net/qq_29078329/article/details/78929457
 # 面试
 
 ```
-1、最常用的BeanFactory 实现是XmlBeanFactory 类，它根据XML文件中的定义加载beans。该容器从XML 文件读取配置元数据并用它去创建一个完全配置的系统或应用。
+最常用的BeanFactory 实现是XmlBeanFactory 类，它根据XML文件中的定义加载beans。该容器从XML 文件读取配置元数据并用它去创建一个完全配置的系统或应用。
 
-2、bean 装配是指在Spring 容器中把bean组装到一起，前提是容器需要知道bean的依赖关系，如何通过依赖注入来把它们装配到一起。
+bean 装配是指在Spring 容器中把bean组装到一起，前提是容器需要知道bean的依赖关系，如何通过依赖注入来把它们装配到一起。
 
-3、Spring 容器能够自动装配相互合作的bean，这意味着容器不需要<constructor-arg>和<property>配置，能通过Bean工厂自动处理bean之间的协作。
+Spring 容器能够自动装配相互合作的bean，这意味着容器不需要<constructor-arg>和<property>配置，能通过Bean工厂自动处理bean之间的协作。
 
-4、有五种自动装配的方式，可以用来指导Spring容器用自动装配方式来进行依赖注入。
+有五种自动装配的方式，可以用来指导Spring容器用自动装配方式来进行依赖注入。
     no：默认的方式是不进行自动装配，通过显式设置ref 属性来进行装配。
     byName：通过参数名 自动装配，Spring容器在配置文件中发现bean的autowire属性被设置成byname，之后容器试图匹配、装配和该bean的属性具有相同名字的bean。
     byType:：通过参数类型自动装配，Spring容器在配置文件中发现bean的autowire属性被设置成byType，之后容器试图匹配、装配和该bean的属性具有相同类型的bean。如果有多个bean符合条件，则抛出错误。
     constructor：这个方式类似于byType， 但是要提供给构造器参数，如果没有确定的带参数的构造器参数类型，将会抛出异常。
     autodetect：首先尝试使用constructor来自动装配，如果无法工作，则使用byType方式。
     
-5、自动装配的局限性是：
+自动装配的局限性是：
     重写： 你仍需用 <constructor-arg>和 <property> 配置来定义依赖，意味着总要重写自动装配。
     基本数据类型：你不能自动装配简单的属性，如基本数据类型，String字符串，和类。
     模糊特性：自动装配不如显式装配精确，如果有可能，建议使用显式装配。
+    
+```
+
+## 线程池有几种，锁有哪些
+
+https://www.cnblogs.com/zrtqsk/p/3776328.html
+
+https://www.cnblogs.com/zrtqsk/p/3784049.html
+
+https://www.cnblogs.com/hlkawa/p/9872136.html
+
+### 同步锁synchronized与Lock的区别
+
+```
+两者区别：
+    1.首先synchronized是java内置关键字，在jvm层面，Lock是个java类；
+    2.synchronized无法判断是否获取锁的状态，Lock可以判断是否获取到锁；
+    3.synchronized会自动释放锁(a 线程执行完同步代码会释放锁 ；b 线程执行过程中发生异常会释放锁)，Lock需在finally中手工释放锁（unlock()方法释放锁），否则容易造成线程死锁；
+    4.用synchronized关键字的两个线程1和线程2，如果当前线程1获得锁，线程2线程等待。如果线程1阻塞，线程2则会一直等待下去，而Lock锁就不一定会等待下去，如果尝试获取不到锁，线程可以不用一直等待就结束了；
+    5.synchronized的锁可重入、不可中断、非公平，而Lock锁可重入、可判断、可公平（两者皆可）
+    6.Lock锁适合大量同步的代码的同步问题，synchronized锁适合代码少量的同步问题。
+    7.最重要的是Lock是一个接口，而synchronized是一个关键字，synchronized放弃锁只有两种情况：①线程执行完了同步代码块的内容②发生异常；而lock不同，它可以设定超时时间，也就是说他可以在获取锁时便设定超时时间，如果在你设定的时间内它还没有获取到锁，那么它会放弃获取锁然后响应放弃操作。
+```
+
+
+
+### 线程池
+
+https://www.cnblogs.com/zincredible/p/10984459.html
+
+```
+线程优先级：
+	java中的线程优先级的范围是1～10，默认的优先级是5。每个线程默认的优先级都与创建它的父线程具有相同的优先级。默认情况下，mian线程具有普通优先级。“高优先级线程”会优先于“低优先级线程”执行。Thread提供了setPriority(int newPriority)和getPriority()方法来设置和返回线程优先级。
+	　　Thread类有3个静态常量：
+		——MAX_PRIORITY = 10
+    	——MIN_PRIORITY = 1
+    	——NORM_PRIORITY = 5
+    	
+java 中有两种线程：
+	用户线程和守护线程。
+	可以通过isDaemon()方法来区别它们：如果返回false，则说明该线程是“用户线程”；否则就是“守护线程”。
+	用户线程一般用户执行用户级任务，而守护线程也就是“后台线程”，一般用来执行后台任务。
+	需要注意的是：Java虚拟机在“用户线程”都结束后会后退出。
+ 　　守护线程又称“后台线程”、“精灵线程”，它有一个特征--如果所有前台线程都死亡，后台线程自动死亡。
+	通过setDaemon(true)来设置一个线程。
+	
+四种线程池 ：	
+    1、newCachedThreadPool：用来创建一个可以无限扩大的线程池，适用于负载较轻的场景，执行短期异步任务。（可以使得任务快速得到执行，因为任务时间执行短，可以很快结束，也不会造成cpu过度切换）
+    2、newFixedThreadPool：创建一个固定大小的线程池，因为采用无界的阻塞队列，所以实际线程数量永远不会变化，适用于负载较重的场景，对当前线程数量进行限制。（保证线程数可控，不会造成线程过多，导致系统负载更为严重）
+    3、newSingleThreadExecutor：创建一个单线程的线程池，适用于需要保证顺序执行各个任务。
+    4、newScheduledThreadPool：适用于执行延时或者周期性任务。
+
+Java通过Executors提供四种线程池，分别为
+    newSingleThreadExecutor 创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。
+    newFixedThreadPool  创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。
+    newScheduledThreadPool 创建一个可定期或者延时执行任务的定长线程池，支持定时及周期性任务执行。 
+    newCachedThreadPool 创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。 
+    
+核心类
+    四种线程池本质都是创建ThreadPoolExecutor类，ThreadPoolExecutor构造参数如下
+    int corePoolSize, 核心线程大小
+    int maximumPoolSize,最大线程大小
+    long keepAliveTime, 超过corePoolSize的线程多久不活动被销毁时间
+    TimeUnit unit,时间单位
+    BlockingQueue<Runnable> workQueue 任务队列
+    ThreadFactory threadFactory 线程池工厂
+    RejectedExecutionHandler handler 拒绝策略
+    
+阻塞队列
+    ArrayBlockingQueue ：一个由数组结构组成的有界阻塞队列
+    LinkedBlockingQueue ：一个由链表结构组成的有界阻塞队列（常用）
+    PriorityBlockingQueue ：一个支持优先级排序的无界阻塞队列
+    DelayQueue： 一个使用优先级队列实现的无界阻塞队列
+    SynchronousQueue： 一个不存储元素的阻塞队列（常用）
+    LinkedTransferQueue： 一个由链表结构组成的无界阻塞队列
+    LinkedBlockingDeque： 一个由链表结构组成的双向阻塞队列
+    
+线程池任务执行流程
+    当线程池小于corePoolSize时，新提交任务将创建一个新线程执行任务，即使此时线程池中存在空闲线程。
+    当线程池达到corePoolSize时，新提交任务将被放入workQueue中，等待线程池中任务调度执行
+    当workQueue已满，且maximumPoolSize>corePoolSize时，新提交任务会创建新线程执行任务
+    当提交任务数超过maximumPoolSize时，新提交任务由RejectedExecutionHandler处理
+    当线程池中超过corePoolSize线程，空闲时间达到keepAliveTime时，释放空闲线程
+    当设置allowCoreThreadTimeOut(true)时，该参数默认false，线程池中corePoolSize线程空闲时间达到keepAliveTime也将关闭
+```
+
+### 锁机制
+
+https://www.cnblogs.com/hustzzl/p/9343797.html
+
+```
+在计算机科学中，锁(lock)或互斥(mutex)是一种同步机制，用于在有许多执行线程的环境中强制对资源的访问限制。锁旨在强制实施互斥排他、并发控制策略。
+
+1、锁开销 lock overhead 锁占用内存空间、 cpu初始化和销毁锁、获取和释放锁的时间。程序使用的锁越多，相应的锁开销越大
+2、锁竞争 lock contention 一个进程或线程试图获取另一个进程或线程持有的锁，就会发生锁竞争。锁粒度越小，发生锁竞争的可能性就越小
+3、死锁 deadlock 至少两个任务中的每一个都等待另一个任务持有的锁的情况锁粒度是衡量锁保护的数据量大小，通常选择粗粒度的锁(锁的数量少，每个锁保护大量的数据)，在当单进程访问受保护的数据时锁开销小，但是当多个进程同时访问时性能很差。因为增大了锁的竞争。相反，使用细粒度的锁(锁数量多，每个锁保护少量的数据)增加了锁的开销但是减少了锁竞争。例如数据库中，锁的粒度有表锁、页锁、行锁、字段锁、字段的一部分锁
+
+相关术语  Critical Section(临界区)、 Mutex/mutual exclusion(互斥体)、 Semaphore/binary semaphore(信号量)
+```
+
+#### 公平锁/非公平锁
+
+```
+公平锁是指多个线程按照申请锁的顺序来获取锁。
+非公平锁是指多个线程获取锁的顺序并不是按照申请锁的顺序，有可能后申请的线程比先申请的线程优先获取锁。有可能，会造成优先级反转或者饥饿现象。
+对于Java ReentrantLock而言，通过构造函数指定该锁是否是公平锁，默认是非公平锁。非公平锁的优点在于吞吐量比公平锁大。
+对于Synchronized而言，也是一种非公平锁。由于其并不像ReentrantLock是通过AQS的来实现线程调度，所以并没有任何办法使其变成公平锁。
+```
+
+#### 可重入锁
+
+```
+可重入锁又名递归锁，是指在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁。说的有点抽象，下面会有一个代码的示例。
+对于Java ReentrantLock而言, 他的名字就可以看出是一个可重入锁，其名字是Re entrant Lock重新进入锁。
+对于Synchronized而言,也是一个可重入锁。可重入锁的一个好处是可一定程度避免死锁。
+
+synchronized void setA() throws Exception{
+Thread.sleep(1000);
+	setB();
+}
+
+synchronized void setB() throws Exception{
+	Thread.sleep(1000);
+}
+上面的代码就是一个可重入锁的一个特点，如果不是可重入锁的话，setB可能不会被当前线程执行，可能造成死锁。
+```
+
+#### 独享锁/共享锁
+
+```
+独享锁是指该锁一次只能被一个线程所持有。
+
+共享锁是指该锁可被多个线程所持有。
+
+对于Java ReentrantLock而言，其是独享锁。但是对于Lock的另一个实现类ReadWriteLock，其读锁是共享锁，其写锁是独享锁。
+
+读锁的共享锁可保证并发读是非常高效的，读写，写读 ，写写的过程是互斥的。
+
+独享锁与共享锁也是通过AQS来实现的，通过实现不同的方法，来实现独享或者共享。
+
+对于Synchronized而言，当然是独享锁。
+```
+
+#### 互斥锁/读写锁
+
+```
+上面讲的独享锁/共享锁就是一种广义的说法，互斥锁/读写锁就是具体的实现。
+
+互斥锁在Java中的具体实现就是ReentrantLock
+
+读写锁在Java中的具体实现就是ReadWriteLock
+```
+
+#### 乐观锁/悲观锁
+
+```
+乐观锁与悲观锁不是指具体的什么类型的锁，而是指看待并发同步的角度。
+
+悲观锁认为对于同一个数据的并发操作，一定是会发生修改的，哪怕没有修改，也会认为修改。因此对于同一个数据的并发操作，悲观锁采取加锁的形式。悲观的认为，不加锁的并发操作一定会出问题。
+
+乐观锁则认为对于同一个数据的并发操作，是不会发生修改的。在更新数据的时候，会采用尝试更新，不断重新的方式更新数据。乐观的认为，不加锁的并发操作是没有事情的。
+
+从上面的描述我们可以看出，悲观锁适合写操作非常多的场景，乐观锁适合读操作非常多的场景，不加锁会带来大量的性能提升。
+
+悲观锁在Java中的使用，就是利用各种锁。
+
+乐观锁在Java中的使用，是无锁编程，常常采用的是CAS算法，典型的例子就是原子类，通过CAS自旋实现原子操作的更新。
+```
+
+#### 分段锁
+
+```
+分段锁其实是一种锁的设计，并不是具体的一种锁，对于ConcurrentHashMap而言，其并发的实现就是通过分段锁的形式来实现高效的并发操作。
+
+我们以ConcurrentHashMap来说一下分段锁的含义以及设计思想，ConcurrentHashMap中的分段锁称为Segment，它即类似于HashMap(JDK7与JDK8中HashMap的实现)的结构，即内部拥有一个Entry数组，数组中的每个元素又是一个链表；同时又是一个ReentrantLock(Segment继承了ReentrantLock)。
+
+当需要put元素的时候，并不是对整个hashmap进行加锁，而是先通过hashcode来知道他要放在那一个分段中，然后对这个分段进行加锁，所以当多线程put的时候，只要不是放在一个分段中，就实现了真正的并行的插入。
+
+但是，在统计size的时候，可就是获取hashmap全局信息的时候，就需要获取所有的分段锁才能统计。
+
+分段锁的设计目的是细化锁的粒度，当操作不需要更新整个数组的时候，就仅仅针对数组中的一项进行加锁操作。
+```
+
+#### 偏向锁/轻量级锁/重量级锁
+
+```
+这三种锁是指锁的状态，并且是针对Synchronized。在Java 5通过引入锁升级的机制来实现高效Synchronized。这三种锁的状态是通过对象监视器在对象头中的字段来表明的。
+
+偏向锁是指一段同步代码一直被一个线程所访问，那么该线程会自动获取锁。降低获取锁的代价。
+
+轻量级锁是指当锁是偏向锁的时候，被另一个线程所访问，偏向锁就会升级为轻量级锁，其他线程会通过自旋的形式尝试获取锁，不会阻塞，提高性能。
+
+重量级锁是指当锁为轻量级锁的时候，另一个线程虽然是自旋，但自旋不会一直持续下去，当自旋一定次数的时候，还没有获取到锁，就会进入阻塞，该锁膨胀为重量级锁。重量级锁会让其他申请的线程进入阻塞，性能降低。
+```
+
+#### 自旋锁
+
+```
+在Java中，自旋锁是指尝试获取锁的线程不会立即阻塞，而是采用循环的方式去尝试获取锁，这样的好处是减少线程上下文切换的消耗，缺点是循环会消耗CPU。
+
+典型的自旋锁实现的例子，可以参考自旋锁的实现
 ```
 
