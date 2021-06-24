@@ -14,7 +14,7 @@
 ## 使用 url配置控制鉴权授权
 
 ```
-配置缩写					对应的过滤器							功能
+配置缩写				 对应的过滤器						  	  功能
 anon					AnonymousFilter						指定url可以匿名访问
 authc					FormAuthenticationFilter			指定url需要form表单登录，默认会从请求中获取username、password,rememberMe
 															等参数并尝试登录，如果登录不了就会跳转到loginUrl配置的路径。
@@ -32,28 +32,6 @@ user					UserFilter							需要已登录或“记住我”的用户才能访问
 ```
 
 
-
-# JVM
-
-https://www.cnblogs.com/whhjava/p/9916626.html
-
-## 概念
-
-```
-JVM即 Java Virtual Machine ，Java虚拟机。它是由软件技术模拟出计算机运行的一个虚拟的计算机。
-Java虚拟机主要由字节码指令集、寄存器、栈、垃圾回收堆和存储方法域等构成。
-```
-
-## 周期
-
-```
-JVM在Java程序开始执行的时候，它才运行，程序结束的时它就停止。
-一个Java程序会开启一个JVM进程，如果一台机器上运行三个程序，那么就会有三个运行中的JVM进程。
-JVM中的线程分为两种：守护线程和普通线程
-守护线程是JVM自己使用的线程，比如垃圾回收（GC）就是一个守护线程。
-普通线程一般是Java程序的线程，只要JVM中有普通线程在执行，那么JVM就不会停止。
-权限足够的话，可以调用exit()方法终止程序。
-```
 
 # JWT
 
@@ -280,28 +258,120 @@ public class FilterConfig {
 
 # Spring
 
+https://www.w3cschool.cn/wkspring/dcu91icn.html
+
 ```
-参考：
-	https://www.w3cschool.cn/wkspring/dcu91icn.html
+
 ```
 
 ![img](https://atts.w3cschool.cn/attachments/image/wk/wkspring/arch1.png)
 
-```
-Bean 与 Spring 容器之间的关系：
-```
+## Bean 与 Spring 容器之间的关系
 
 ![img](https://atts.w3cschool.cn/attachments/image/20201030/1604037368126454.png)
 
 
 
-# 注解
+## Resource（资源）的获取
+
+https://www.cnblogs.com/deityjian/p/11487644.html
 
 ```
-参考： 
-	https://blog.csdn.net/yuzongtao/article/details/84314103
-	
-AnnotationConfigApplicationContext
+
+```
+
+## 反射
+
+```
+反射机制概述
+	反射视为动态语言的关键，反射机制允许程序在执行期借助于Reflection API取得任何类的内部信息，并能直接操作认一对象的内部属性及方法。
+	加载完类之后在，在堆内存的方法区就产生了一个Class类型的对象（一个类只有一个Class对象），这个对象就包含了完整的类的结构信息。我们可以通过这个对象看到类的结构。这个对象就像一面镜子，透过这个镜子看到类的结构，所以，我们形象的称之为：反射。
+
+反射的优缺点：
+    1、优点：在运行时获得类的各种内容，进行反编译，对于Java这种先编译再运行的语言，能够让我们很方便的创建灵活的代码，这些代码可以在运行时装配，无需在组件之间进行源代码的链接，更加容易实现面向对象。
+
+    2、缺点：
+    （1）反射会消耗一定的系统资源，因此，如果不需要动态地创建一个对象，那么就不需要用反射；
+    （2）反射调用方法时可以忽略权限检查，因此可能会破坏封装性而导致安全问题。
+
+```
+
+## 动态代理
+
+```
+
+```
+
+## IOC
+
+```
+
+```
+
+## AOP
+
+https://segmentfault.com/a/1190000020904086?utm_source=tag-newest
+
+```
+在AOP编程中，我们经常会遇到下面的概念：
+    Aspect：切面，即一个横跨多个核心逻辑的功能，或者称之为系统关注点；
+    Joinoint：连接点，即定义在应用程序流程的何处插入切面的执行；
+    Pointcut：切入点，即一组连接点的集合；
+    Advice：增强，指特定连接点上执行的动作；
+    Introduction：引介，指为一个已有的Java对象动态地增加新的接口；
+    Weaving：织入，指将切面整合到程序的执行流程中；
+    Interceptor：拦截器，是一种实现增强的方式；
+    Target Object：目标对象，即真正执行业务的核心逻辑对象；
+    AOP Proxy：AOP代理，是客户端持有的增强后的对象引用。
+　　
+使用场景　
+　　Authentication 权限
+　　Caching 缓存
+　　Context passing 内容传递
+　　Error handling 错误处理
+　　Lazy loading　懒加载
+　　Debugging　　调试
+　　logging, tracing, profiling and monitoring　记录跟踪　优化　校准
+　　Performance optimization　性能优化
+　　Persistence　　持久化
+　　Resource pooling　资源池
+　　Synchronization　同步
+　　Transactions 事务
+　　
+实现方式--基础XML配置AOP、基于注解配置AOP
+    1、定义普通业务组件
+    2、定义切入点，一个切入点可能横切多个业务组件
+    3、定义增强处理，增强处理就是在AOP框架为普通业务组件织入的处理动作
+    
+连接点（Joinpoint）: 表示需要在程序中插入横切关注点的扩展点，连接点可能是类初始化、方法执行、方法调用、字段调用或处理异常等等，Spring只支持方法执行连接点；在AOP中表示为“在哪里干”；
+
+切入点（Pointcut）: 选择一组相关连接点的模式，即可以认为连接点的集合，Spring支持perl5正则表达式和AspectJ切入点模式，Spring默认使用AspectJ语法；在AOP中表示为“在哪里干的集合”；
+
+通知（Advice）: 在连接点上执行的行为，通知提供了在AOP中需要在切入点所选择的连接点处进行扩展现有行为的手段；包括前置通知（before advice）、后置通知(after advice)、环绕通知（around advice），在Spring中通过代理模式实现AOP，并通过拦截器模式以环绕连接点的拦截器链织入通知；在AOP中表示为“干什么”；
+
+切面（Aspect）：横切关注点的模块化，比如日志组件。可以认为是通知、引入和切入点的组合；在Spring中可以使用Schema和@AspectJ方式进行组织实现；在AOP中表示为“在哪干和干什么集合”；
+
+引入（Introduction）: 也称为内部类型声明，为已有的类添加额外新的字段或方法，Spring允许引入新的接口（必须对应一个实现）到所有被代理对象（目标对象）；在AOP中表示为“干什么（引入什么）”；
+
+目标对象（Target Object）:需要被织入横切关注点的对象，即该对象是切入点选择的对象，需要被通知的对象，从而也可称为“被通知对象”；由于Spring AOP 通过代理模式实现，从而这个对象永远是被代理对象；在AOP中表示为“对谁干”；
+
+AOP代理（AOP Proxy）: AOP框架使用代理模式创建的对象，从而实现在连接点处插入通知（即应用切面），就是通过代理来对目标对象应用切面。在Spring中，AOP代理可以用JDK动态代理或CGLIB代理实现，而通过拦截器模型应用切面。
+
+织入（Weaving）: 织入是一个过程，是将切面应用到目标对象从而创建出AOP代理对象的过程，织入可以在编译期、类装载期、运行期进行。组装方面来创建一个被通知对象。这可以在编译时完成（例如使用AspectJ编译器），也可以在运行时完成。Spring和其他纯Java AOP框架一样，在运行时完成织入。
+```
+
+# 注解
+
+https://www.zhihu.com/question/24401191
+
+https://blog.csdn.net/baidu_36385172/article/details/79953410
+
+https://blog.csdn.net/yuzongtao/article/details/83306182
+
+https://www.cnblogs.com/yangming1996/p/9295168.html
+
+```
+
 ```
 
 ## 元注解
@@ -388,6 +458,55 @@ RetentionPolicy的取值包含以下三种：
     运行程序，结果为 true。
 ```
 
+## AOP的五种注解
+
+```
+@Before 注解表示这个通知将在切点执行
+@After  注解表示这个通知将在切点之后执行
+@AfterReturning 表示这个方法将在切点正常执行后执行
+@AfterThrowing  表示这个通知方法将在出现异常时执行
+@Around 在方法调用的前后执行自定义的增强行为（最灵活的方式）
+
+@PointCut：公共切入点表达式
+JoinPoint： 作为函数的参数传入切面方法，可以得到目标方法的相关信息
+@Aspect ： 指定切面类
+@EnableAspectJAutoProxy ： 开启基于注解的AOP模式
+
+```
+
+## 自定义注解
+
+http://www.javashuo.com/article/p-apcshuiw-dq.html
+
+```
+自定义注解
+使用@interface自定义注解时，自动继承了java.lang.annotation.Annotation接口，由编译程序自动完成其他细节。在定义注解时，不能继承其他的注解或接口。@interface用来声明一个注解，其中的每一个方法实际上是声明了一个配置参数。方法的名称就是参数的名称，返回值类型就是参数的类型（返回值类型只能是基本类型、Class、String、enum）。可以通过default来声明参数的默认值。
+定义注解格式:
+public @interface 注解名 {定义体}
+　　 注解参数的可支持数据类型:
+　　 1. 所有基本数据类型（int,float,boolean,byte,double,char,long,short)
+　　 2. String类型
+　　 3. Class类型
+　　 4. enum类型
+　　 5. Annotation类型
+　　 6. 以上所有类型的数组
+　　
+　　Annotation类型里面的参数该怎么设定:
+　　第一,只能用public或默认(default)这两个访问权修饰.例如,String value();这里把方法设为defaul默认类型；
+　　第二,参数成员只能用基本类型byte,short,char,int,long,float,double,boolean八种基本数据类型和 String,Enum,Class,annotations等数据类型,以及这一些类型的数组.例如,String value();这里的参数成员就为String;
+　　第三,如果只有一个参数成员,最好把参数名称设为"value",后加小括号.例:下面的例子FruitName注解就只有一个参数成员。
+```
+
+### 基于aop的自定义注解
+
+https://www.cnblogs.com/acode/p/11189833.html
+
+https://www.jianshu.com/p/6127725bd382?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation
+
+```
+
+```
+
 
 
 ## 常用
@@ -424,10 +543,12 @@ RetentionPolicy的取值包含以下三种：
 
 ## spring
 
+https://blog.csdn.net/qq_31337311/article/details/78527094?utm_medium=distribute.pc_relevant_download.none-task-blog-baidujs-1.nonecase&depth_1-utm_source=distribute.pc_relevant_download.none-task-blog-baidujs-1.nonecase
+
+https://www.jianshu.com/p/53d84d4e6d7b
+
 ```
-参考：
-    https://www.jianshu.com/p/21f3e074e91a
-    https://blog.csdn.net/weixin_40423597/article/details/80643990
+ 
 ```
 
 ### @Autowire和@Resource注解的区别
@@ -598,6 +719,10 @@ ${}:用于获取配置文件中的属性值，通常用于获取写在applicatio
 
 ## spring boot
 
+https://blog.csdn.net/weixin_40753536/article/details/81285046?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
+
+https://blog.csdn.net/yuzongtao/article/details/84314103
+
 ```
 @Service用于标注业务层组件
 @Controller用于标注控制层组件（如struts中的action）
@@ -669,7 +794,7 @@ https://blog.csdn.net/zjy15203167987/article/details/82531772
 
 https://www.cnblogs.com/weibanggang/p/9470718.html
 
-https://blog.csdn.net/baidu_38083619/article/details/82527461?utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
+https://www.cnblogs.com/wangwudi/p/12302668.html
 
 ```
 synchronized是Java中的关键字，是一种同步锁。它修饰的对象有以下几种： 
@@ -856,42 +981,6 @@ public class TestAopCglib {
 }
 
 在Spring的AOP编程中：如果加入容器的目标对象有实现接口，用JDK代理；如果目标对象没有实现接口，用Cglib代理；
-```
-
-
-
-# AOP
-
-```
-（Aspect Oriented Programming），即面向切面编程
-概念
-	切面：与业务无关，却被业务模块共同调用的逻辑，封装起来，提高代码复用，利于维护等；
-　　连接点：被拦截的方法；(拦截哪些方法，增加哪些功能)
-　　切入点：对连接点进行拦截的定义；
-　　通知：拦截到连接点后要执行操作或处理，如前置before、后置after-returning、异常after-throwing、最终after、环绕around通知五类；
-　　引入：在不修改代码的前提下，为类添加新的属性或者方法；
-　　织入：将切面应用于目标对象并且导致代理对象的创建；
-　　
-使用场景　
-　　Authentication 权限
-　　Caching 缓存
-　　Context passing 内容传递
-　　Error handling 错误处理
-　　Lazy loading　懒加载
-　　Debugging　　调试
-　　logging, tracing, profiling and monitoring　记录跟踪　优化　校准
-　　Performance optimization　性能优化
-　　Persistence　　持久化
-　　Resource pooling　资源池
-　　Synchronization　同步
-　　Transactions 事务
-　　
-实现方式--基础XML配置AOP、基于注解配置AOP
-    1、定义普通业务组件
-    2、定义切入点，一个切入点可能横切多个业务组件
-    3、定义增强处理，增强处理就是在AOP框架为普通业务组件织入的处理动作
-    
-
 ```
 
 
@@ -1626,6 +1715,23 @@ Collection 接口又有 3 种子类型，List、Set 和 Queue，再下面是一�
 	LinkedList则以链表的形式进行存储，所以查询效率底，新增和删除效率高，并且线程不安全。
 ```
 
+## JDK和CGLib的区别
+
+```
+JDK和CGLib的区别
+    JDK动态代理只能对实现了接口的类生成代理，而不能针对类
+    CGLib是针对类实现代理，主要是对指定的类生成一个子类，覆盖其中的方法（继承）
+
+Spring在选择用JDK还是CGLib的依据
+    当Bean实现接口时，Spring就会用JDK的动态代理
+    当Bean没有实现接口时，Spring使用CGLib来实现
+    可以强制使用CGLib（在Spring配置中加入<aop:aspectj-autoproxy proxy-target-class=“true”/>）
+    
+JDK和CGLib的性能对比
+    使用CGLib实现动态代理，CGLib底层采用ASM字节码生成框架，使用字节码技术生成代理类，在JDK1.6之前比使用Java反射效率要高。唯一需要注意的是，CGLib不能对声明为final的方法进行代理，因为CGLib原理是动态生成被代理类的子类。
+    在JDK1.6、JDK1.7、JDK1.8逐步对JDK动态代理优化之后，在调用次数较少的情况下，JDK代理效率高于CGLib代理效率，只有当进行大量调用的时候，JDK1.6和JDK1.7比CGLib代理效率低一点，但是到JDK1.8的时候，JDK代理效率高于CGLib代理
+```
+
 
 
 # 常用示例
@@ -2198,6 +2304,8 @@ public class ListUtils {
 
 # 异常
 
+https://www.cnblogs.com/lulipro/p/7504267.html
+
 ```
 任何Java代码都可以抛出异常，如：自己编写的代码、来自Java开发环境包中代码，或者Java运行时系统。
 无论是谁，都可以通过Java的throw语句抛出异常。从方法中抛出的任何异常都必须使用throws子句。
@@ -2212,72 +2320,40 @@ public class ListUtils {
     throw：通常用在方法体中或者用来抛出用户自定义异常，并且抛出一个异常对象。程序在执行到throw语句时立即停止，如果要捕捉throw抛出的异常，
     则必须使用try-catch语句块或者try-catch-finally语句。
 
-例：throws方法抛出异常
-public class Shoot {
-    static void pop()throws NegativeArraySizeException{
-    	int[] arr = new int[-3];
-    }
-	public static void main(String[] args) {
-		 try{
-			 pop();
-		 }catch(NegativeArraySizeException e){
-			 System.out.println("pop()方法抛出的异常");
-		 }
-	}
- 
-}
-运行结果：
-	pop()方法抛出的异常
-                 
-例2：throw方法抛出异常
-public class TestException {
-	public static void main(String[] args) {
-		int a = 6;
-		int b = 0;
-		try {  
-			if (b == 0) throw new ArithmeticException(); // 通过throw语句抛出异常
-			System.out.println("a/b的值是：" + a / b);
-		}
-		catch (ArithmeticException e) { // catch捕捉异常
-			System.out.println("程序出现异常，变量b不能为0。");
-		}
-		System.out.println("程序正常结束。");
-	}
-}
-运行结果：
-    程序出现异常，变量b不能为0。
-    程序正常结束。
-
 对于try-catch-finally语句：先执行try 块中的代码，如果正常运行没有发生异常则执行完后执行finally 代码块中的代码；
 如若在try 中发生异常且被catch 捕捉到则执行catch 中的代码块，然后执行finally 块中的代码；
 但也存在以下4种特殊情况，finally块不会被执行：
-      在前面的代码中使用了System.exit()退出程序；
-      在finally语句块中发生异常；
-      程序所在的线程死亡；
-      关闭CPU。
+      1、在前面的代码中使用了System.exit()退出程序；
+      2、在finally语句块中发生异常；
+      3、程序所在的线程死亡；
+      4、关闭CPU。
 
 ```
 
-# 调试
+## finally 的用法
 
-## 堆栈信息排查
-
-https://blog.csdn.net/weixin_42660202/article/details/103352515
+https://blog.csdn.net/w605283073/article/details/103841999?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
 
 ```
 
 ```
 
-## 数据库死锁
+## Transaction rolled back because it has been marked as rollback-only
+
+https://blog.csdn.net/LiuRenyou/article/details/93033077?utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
+
+https://blog.csdn.net/lvxinchun/article/details/117114845?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-0&spm=1001.2101.3001.4242
 
 ```
-Cause: com.mysql.cj.jdbc.exceptions.MySQLTransactionRollbackException: Deadlock found when trying to get lock;
-#设置mysql的隔离级别，重启再观察
-select @@transaction_isolation;
-select @@global.transaction_isolation;
-set session transaction isolation level read committed;
-set global transaction isolation level read committed;
+之前经常报"Transaction rolled back because it has been marked as rollback-only"这个异常
+
+字面意思是"事务回滚了，因为它被标记了必须回滚"，最开始完全不懂事务的嵌套，每次出现这个错误都想知道为什么，但是总是不能重现，后面反复折腾终于弄明白了怎么回事。
+
+之前不能重现的一个重要原因是：同一个类，内部方法调用不走代理，spring基于注解的事务是基于代理的，不走代理，被调用的方法就不受事务管理代码的控制，自然无法重现问题.
+
 ```
+
+
 
 # 日志
 
@@ -2572,6 +2648,8 @@ java内存模型(Java Memory Model，JMM)是java虚拟机规范定义的，用�
 
 https://www.jianshu.com/p/15106e9c4bf3
 
+https://blog.csdn.net/Hollake/article/details/92762180
+
 ```
 
 ```
@@ -2586,7 +2664,268 @@ https://blog.csdn.net/qq_29078329/article/details/78929457
 
 ```
 
-# 面试
+# Java 内存分配
+
+https://blog.csdn.net/shimiso/article/details/8595564
+
+https://blog.csdn.net/weixin_36165152/article/details/114186021?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-0&spm=1001.2101.3001.4242
+
+https://blog.csdn.net/wo541075754/article/details/115385541?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-8&spm=1001.2101.3001.4242
+
+https://zhuanlan.zhihu.com/p/73727459
+
+```
+使用top命令查看系统资源的使用情况，命令：top
+
+定位线程问题(通过命令查看7285进程的线程情况)，命令：ps p 7285 -L -o pcpu,pmem,pid,tid,time,tname,cmd
+由此可以看到这PID：7285的进程产生了很多线程。接下来就可以通过jstack查看内存使用的堆栈。
+
+查看内存使用的堆栈：在这里我们挑选了TID=7835的线程进行分析，首先需要将7835这个id转换为16进制。需输入如下命令，
+printf "%x\n" 7835
+
+推荐配置：
+	-Xmx1024m -Xms1024m -XX:NewRatio=4 -XX:MaxPermSize=1024m
+	
+通过Java命令自带的功能来查看默认的内存设置，在Linux操作系统下，输入如下命令：
+	java -XX:+PrintFlagsFinal -version | grep HeapSize
+```
+
+# 虚拟机
+
+```
+提起HotSpot VM，相信所有Java程序员都知道，它是Sun JDK和OpenJDK中所带的虚拟机，也是目前使用范围最广的Java虚拟机。
+但不一定所有人都知道的是，这个目前看起来“血统纯正”的虚拟机在最初并非由Sun公司开发，而是由一家名为“Longview Technologies”的小公司设计的；
+甚至这个虚拟机最初并非是为Java语言而开发的，它来源于Strongtalk VM，
+而这款虚拟机中相当多的技术又是来源于一款支持Self语言实现“达到C语言50%以上的执行效率”的目标而设计的虚拟机，
+Sun公司注意到了这款虚拟机在JIT编译上有许多优秀的理念和实际效果，在1997年收购了Longview Technologies公司，从而获得了HotSpot VM。
+
+HotSpot VM既继承了Sun之前两款商用虚拟机的优点（如前面提到的准确式内存管理），也有许多自己新的技术优势，
+如它名称中的HotSpot指的就是它的热点代码探测技术（其实两个VM基本上是同时期的独立产品，HotSpot还稍早一些，HotSpot一开始就是准确式GC，
+而Exact VM之中也有与HotSpot几乎一样的热点探测。
+为了Exact VM和HotSpot VM哪个成为Sun主要支持的VM产品，在Sun公司内部还有过争论，HotSpot打败Exact并不能算技术上的胜利），
+HotSpot VM的热点代码探测能力可以通过执行计数器找出最具有编译价值的代码，然后通知JIT编译器以方法为单位进行编译。
+如果一个方法被频繁调用，或方法中有效循环次数很多，将会分别触发标准编译和OSR（栈上替换）编译动作。
+通过编译器与解释器恰当地协同工作，可以在最优化的程序响应时间与最佳执行性能中取得平衡，而且无须等待本地代码输出才能执行程序，
+即时编译的时间压力也相对减小，这样有助于引入更多的代码优化技术，输出质量更高的本地代码。
+
+在2006年的JavaOne大会上，Sun公司宣布最终会把Java开源，并在随后的一年，陆续将JDK的各个部分（其中当然也包括了HotSpot VM）在GPL协议下公开了源码，
+并在此基础上建立了OpenJDK。这样，HotSpot VM便成为了Sun JDK和OpenJDK两个实现极度接近的JDK项目的共同虚拟机。
+
+在2008年和2009年，Oracle公司分别收购了BEA公司和Sun公司，这样Oracle就同时拥有了两款优秀的Java虚拟机：JRockit VM和HotSpot VM。
+Oracle公司宣布在不久的将来（大约应在发布JDK 8的时候）会完成这两款虚拟机的整合工作，使之优势互补。
+整合的方式大致上是在HotSpot的基础上，移植JRockit的优秀特性，譬如使用JRockit的垃圾回收器与MissionControl服务，
+使用HotSpot的JIT编译器与混合的运行时系统。
+```
+
+
+
+# JVM
+
+https://blog.csdn.net/shengmingqijiquan/article/details/77508471
+
+https://www.cnblogs.com/whhjava/p/9916626.html
+
+https://my.oschina.net/indestiny/blog/214276
+
+```
+JVM即 Java Virtual Machine ，Java虚拟机。它是由软件技术模拟出计算机运行的一个虚拟的计算机。
+Java虚拟机主要由字节码指令集、寄存器、栈、垃圾回收堆和存储方法域等构成。
+
+JVM在Java程序开始执行的时候，它才运行，程序结束的时它就停止。
+
+一个Java程序会开启一个JVM进程，如果一台机器上运行三个程序，那么就会有三个运行中的JVM进程。
+
+JVM中的线程分为两种：守护线程和普通线程
+	守护线程是JVM自己使用的线程，比如垃圾回收（GC）就是一个守护线程。
+	普通线程一般是Java程序的线程，只要JVM中有普通线程在执行，那么JVM就不会停止。权限足够的话，可以调用exit()方法终止程序。
+	
+
+```
+
+## 调试及性能分析
+
+https://blog.csdn.net/weixin_42660202/article/details/103352515
+
+http://www.lanxinbase.com/?tag=jmap
+
+```
+#统计多少个进程
+ps -ef|wc
+top
+然后shift+m
+
+遇到线上问题不要慌，首先确认排查问题的思路：
+    查看日志
+    查看CPU情况
+    查看TCP情况
+    查看java线程，jstack
+    查看java堆，jmap
+    通过MAT分析堆文件，寻找无法被回收的对象
+
+jps
+jinfo pid
+jstack pid |jstack -m pid
+jmap pid |jmap -heap pid
+jstat -gc pid
+
+jmap 查看内存
+    jmap打印给定进程或核心文件或远程调试服务器的共享对象内存映射或堆内存详细信息。如果给定进程在64位VM上运行，则可能需要指定-J-d64选项，例如：
+    jmap -J-d64 -heap pid
+
+jstack 查看线程
+    jstack为给定的Java进程或核心文件或远程调试服务器打印Java线程的Java堆栈跟踪。对于每个Java框架，将打印完整的类名，方法名，“ bci”（字节码索引）和行号（如果有）。使用-m选项，jstack可以同时打印所有线程的Java和本机框架以及“ pc”（程序计数器）。对于每个本机帧，将打印与“ pc”最接近的本机符号（如果有）。C ++杂乱无章的名称不会被删除。要对C ++名称进行解密，可以将此命令的输出传递给c ++ filt。如果给定进程在64位VM上运行，则可能需要指定-J-d64选项，例如：
+    jstack -J-d64 -m pid
+
+jstat 性能分析
+    jstat命令详解
+    jstat -gc pid
+    可以显示gc的信息,查看gc的次数,及时间。
+    其中最后五项,分别是young gc的次数,young gc的时间,full gc的次数,full gc的时间,gc的总时间。
+    jstat -gccapacity pid
+    可以显示,VM内存中三代(young,old,perm)对象的使用和占用大小,
+    如:PGCMN显示的是最小perm的内存使用量,PGCMX显示的是perm的内存最大使用量,
+    PGC是当前新生成的perm内存占用量,PC是但前perm内存占用量。
+    其他的可以根据这个类推, OC是old内纯的占用量。
+    jstat -gcutil pid
+    统计gc信息统计。
+    jstat -gcnew pid
+    年轻代对象的信息。
+    jstat -gcnewcapacity pid
+    年轻代对象的信息及其占用量。
+    jstat -gcold pid
+    old代对象的信息。
+    stat -gcoldcapacity pid
+    old代对象的信息及其占用量。
+    jstat -gcpermcapacity pid
+    perm对象的信息及其占用量。
+    jstat -class pid
+    显示加载class的数量,及所占空间等信息。
+    jstat -compiler pid
+    显示VM实时编译的数量等信息。
+    stat -printcompilation pid
+    当前VM执行的信息。
+    
+S0C:年轻代中第一个survivor(幸存区)的容量(字节)
+S1C:年轻代中第二个survivor(幸存区)的容量(字节)
+S0U:年轻代中第一个survivor(幸存区)目前已使用空间(字节)
+S1U:年轻代中第二个survivor(幸存区)目前已使用空间(字节)
+EC:年轻代中Eden(伊甸园)的容量(字节)
+EU:年轻代中Eden(伊甸园)目前已使用空间(字节)
+OC:Old代的容量(字节)
+OU:Old代目前已使用空间(字节)
+PC:Perm(持久代)的容量(字节)
+PU:Perm(持久代)目前已使用空间(字节)
+YGC:从应用程序启动到采样时年轻代中gc次数
+YGCT:从应用程序启动到采样时年轻代中gc所用时间(s)
+FGC:从应用程序启动到采样时old代(全gc)gc次数
+FGCT:从应用程序启动到采样时old代(全gc)gc所用时间(s)
+GCT:从应用程序启动到采样时gc用的总时间(s)
+NGCMN:年轻代(young)中初始化(最小)的大小(字节)
+NGCMX:年轻代(young)的最大容量(字节)
+NGC:年轻代(young)中当前的容量(字节)
+OGCMN:old代中初始化(最小)的大小(字节)
+OGCMX:old代的最大容量(字节)
+OGC:old代当前新生成的容量(字节)
+PGCMN:perm代中初始化(最小)的大小(字节)
+PGCMX:perm代的最大容量(字节)
+PGC:perm代当前新生成的容量(字节)
+S0:年轻代中第一个survivor(幸存区)已使用的占当前容量百分比
+S1:年轻代中第二个survivor(幸存区)已使用的占当前容量百分比
+E:年轻代中Eden(伊甸园)已使用的占当前容量百分比
+O:old代已使用的占当前容量百分比
+P:perm代已使用的占当前容量百分比
+S0CMX:年轻代中第一个survivor(幸存区)的最大容量(字节)
+S1CMX:年轻代中第二个survivor(幸存区)的最大容量(字节)
+ECMX:年轻代中Eden(伊甸园)的最大容量(字节)
+DSS:当前需要survivor(幸存区)的容量(字节)
+```
+
+
+
+##  jvm内部执行运行流程图
+
+https://blog.csdn.net/csdnliuxin123524/article/details/81303711
+
+![img](https://img-blog.csdn.net/20170809115320310?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc2luYXRfMzMwODcwMDE=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+
+```
+启动一个jvm虚拟机程序就是启动了一个进程。启动的同时就在操作系统的堆内存中开辟一块jvm内存区
+
+虚拟机栈、本地方法栈、程序计数器这三个模块是线程私有的，有多少线程就有多少个这三个模块，声明周期跟所属线程的声明周期一致。以程序计数器为例，因为多线程是通过线程轮流切换和分配执行时间来实现，所以当线程切回到正确执行位置，每个线程都有独立的程序计数器，各个线程之间的计数器互不影响，独立存储。
+
+其余是跟JVM虚拟机的生命周期一致。
+
+程序计数器模块是JVM内存区域唯一不会报outofMemoryError情况的区域。
+程序计数器（Program Counter Register）:也叫PC寄存器，是一块较小的内存空间，它可以看做是当前线程所执行的字节码的行号指示器。在虚拟机的概念模型里，字节码解释器工作时就是通过改变这个计数器的值来选取下一条需要执行的字节码指令、分支、循环、跳转、异常处理、线程恢复等基础功能都需要依赖这个计数器来完成。，（1），区别于计算机硬件的pc寄存器，两者不略有不同。计算机用pc寄存器来存放“伪指令”或地址，而相对于虚拟机，pc寄存器它表现为一块内存(一个字长，虚拟机要求字长最小为32位)，虚拟机的pc寄存器的功能也是存放伪指令，更确切的说存放的是将要执行指令的地址。（2）当虚拟机正在执行的方法是一个本地（native）方法的时候，jvm的pc寄存器存储的值是undefined。（3）程序计数器是线程私有的，它的生命周期与线程相同，每个线程都有一个。（4）此内存区域是唯一一个在Java虚拟机规范中没有规定任何OutOfMemoryError情况的区域。
+
+我们总结出JVM内存包含两个子系统和两个组件，两个子系统是：Classloader子系统和Executionengine(执行引擎)子系统；两个组件分别是：Runtimedataarea(运行时数据区域)组件和Nativeinterface(本地库接口)组件。
+
+从图中可以看出运行时数据区域包含5部分：方法区，堆，虚拟机栈，本地方法栈，程序计数器
+
+本地库接口和本地方法库：（1）本地方法库接口：即操作系统所使用的编程语言的方法集，是归属于操作系统的。（2）本地方法库保存在动态链接库中，即.dll(windows系统)文件中，格式是各个平台专有的。
+```
+
+
+
+## 类加载机制
+
+https://blog.csdn.net/zhangliangzi/article/details/51319033?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
+
+```
+
+```
+
+## 内存溢出、内存泄漏 和 栈溢出
+
+https://www.cnblogs.com/haimishasha/p/11329510.html
+
+```
+
+```
+
+## 运行时数据区
+
+https://www.cnblogs.com/haimishasha/p/11229386.html
+
+```
+
+```
+
+# 问题统计
+
+```
+
+```
+
+## 数据库问题
+
+```
+相关操作没有被事务管理起来
+	SqlSession was not registered for synchronization because synchronization is not active
+死锁
+	Cause: com.mysql.cj.jdbc.exceptions.MySQLTransactionRollbackException: Deadlock found when trying to get lock;
+
+解决方式：
+    #设置mysql的隔离级别，重启再观察
+    select @@transaction_isolation;
+    select @@global.transaction_isolation;
+    set session transaction isolation level read committed;
+    set global transaction isolation level read committed;
+
+Public Key Retrieval is not allowed
+
+解决方式：
+	在连接数据库的url中，加上allowPublicKeyRetrieval=true
+	示例：
+	spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxl_job?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    spring.datasource.username=dev
+    spring.datasource.password=abc123!
+    spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+```
+
+
+
+# 总结
 
 ```
 最常用的BeanFactory 实现是XmlBeanFactory 类，它根据XML文件中的定义加载beans。该容器从XML 文件读取配置元数据并用它去创建一个完全配置的系统或应用。

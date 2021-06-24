@@ -42,6 +42,25 @@ vim /etc/hosts
     原因：oracle安全机制，需要用计算机名去访问数据库，会根据ip去所配dns服务器解析
 ```
 
+## 乱码问题
+
+```
+1、添加环境变量：
+	vim ~/.bash_profile
+	export NLS_LANG='SIMPLIFIED CHINESE_CHINA.ZHS16GBK'
+	source ~/.bash_profile
+	然后重启apache：
+	/usr/local/apache2.4/bin/apachectl stop
+	/usr/local/apache2.4/bin/apachectl start
+	加了环境变量后最好检查一下有没有生效：
+	ps -ef|grep httpd
+	strings /proc/apache进程id/environ | grep NLS_LANG
+	例如：	strings /proc/1940/environ | grep NLS_LANG
+2、php.ini文件禁用putenv函数
+	vim /usr/local/php7/etc/php.ini
+SIMPLIFIED CHINESE_CHINA.ZHS16GBK与AMERICAN_AMERICA.ZHS16GBK区别：
+```
+
 
 
 # php-fpm
@@ -317,13 +336,17 @@ select distinct C.SERVICE_ID, C.SERVICE_NAME, C.BIZ_DOMAIN, C.SEQU
    delete TB_UC_ROLE_RIGHT where role_id='1000' and uc_rsc_type='SUB_SERVICE' 
    insert into TB_UC_ROLE_RIGHT(ROLE_RIGHT_ID,ROLE_ID,UC_RSC_TYPE,UC_RSC_ID,RIGHT) 		values(SEQ_UA_TO_CFG.nextval,'1000','SUB_SERVICE',1723201,'EDIT') 
 ```
-## 权限
+## 问题记录
+
+### 生成动态类错误
 
 ```
-
+/usr/local/apache2.4/htdocs/inc_chk/RptCustom/tmp 目录权限
 ```
 
-# 现场部署
+
+
+## 现场部署
 
 ```
 全局替换：

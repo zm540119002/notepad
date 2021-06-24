@@ -34,7 +34,7 @@ yum list all mysql*
 
 
 
-# 网络
+# ***<u>网络</u>***
 
 ## **概念解析**
 
@@ -459,7 +459,7 @@ iptables通过控制端口来控制服务，而firewalld则是通过控制协议
         IPV6_PEERROUTES=yes
 ```
 
-# 系统
+# *<u>**系统**</u>*
 
 ```
 一般来说，linux系统采用 A.B.C.D 的版本号管理方式，A表示主版本号，B表示次版本号，C表示修订版本，D表示更新版本号。
@@ -765,6 +765,7 @@ csh, the C shell, is a command interpreter with a syntax similar to the C progra
 	 env|grep PATH
 2、查看所有的环境变量
     env
+	sudo env
 -------------------------------------
 1、当前shell有效，临时设置
 	# PATH=$PATH:/usr/local/php7/bin
@@ -784,13 +785,52 @@ csh, the C shell, is a command interpreter with a syntax similar to the C progra
  ~/.bashrc			当前用户有效
 /etc/bashrc			所有用户有效
 /etc/environment	所有用户有效
--------------------------------------LD_LIBRARY_PATH
-env|grep LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/dm7client/bin/:/usr/local/dm7client/drivers/odbc/
--------------------------------------PATH
-
-LANG是针对Linux系统的语言、地区、字符集的设置,对linux下的应用程序有效，如date；NLS_LANG是针对Oracle语言、地区、字符集的设置，对oracle中的工具有效
+-------------------------------------LANG
+是针对Linux系统的语言、地区、字符集的设置,对linux下的应用程序有效，如date；NLS_LANG是针对Oracle语言、地区、字符集的设置，对oracle中的工具有效
 ```
+
+#### LD_LIBRARY_PATH
+
+https://blog.csdn.net/native_lee/article/details/105380259
+
+```
+非默认动态库的查找路径
+    echo $LD_LIBRARY_PATH
+    env|grep LD_LIBRARY_PATH
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/dm7client/bin/:/usr/local/dm7client/drivers/odbc/
+```
+
+##### sudo保持前用用户的env环境变量
+
+https://www.modb.pro/db/26671
+
+```
+通过sudo -l来查看sudo的限制
+选项Defaults env_reset表示默认会将环境变量重置，这样你定义的变量在sudo环境就会失效，获取不到
+
+sudo命令会重置环境变量,查看文件
+sudo vim /etc/sudoers,可以看到这样的配置，由于此文件是只读文件，保存退出时先 w! ,再 q， 或者 sudo visudu
+Defaults      env_reset
+
+解决方法:(实际验证无效)
+	第一种,也是最简单的，使用sudo -E来代替sudo即可保留当前用户的环境变量，但缺点也很明显，每次都要加
+
+	第二种方式：修改/etc/sudoers文件，将Defaults env_reset改为 Defaults !env_reset，这样以后使用sudo就再也不会重置环境变量了
+
+    需要注意的是`/etc/sudoers`是只读文件,vim不能更改,要使用`visudo`命令(不用加文件名)来更改内容
+    另外有的发行版还有一个Defaults env_keep=""的选项，用于保留部分环境变量不被重置，需要保留的变量就写入双引号中。
+
+不行的话在用户的主目录里的.bashrc中添加:
+	alias sudo='sudo env PATH=$PATH'
+```
+
+#### export
+
+```
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/home/dmdbms/bin"
+```
+
+
 
 ### 配置文件
 
@@ -829,70 +869,7 @@ rc:
 
 ![img](https://img-blog.csdn.net/20180328164239209?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2R1emlsb25nbG92ZQ==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
-### 示例
 
-```
-#!/bin/bash
-NAME="provider-integral"    #想要杀死的进程
-PORT="8081"
-PROCESS="../jars/provider-integral-0.0.1-SNAPSHOT.jar"
-LOGDIR="../log/integral.log"
-echo $NAME
-ID=`ps -ef | grep "$NAME" | grep -v "grep" | awk '{print $2}'`  #注意此shell脚本的名称，避免自杀
-if [ -z "$ID" ];then
-    echo "process id is empty, process is not existed..."
-    echo "process will start..."
-    nohup java -Dserver.port=$PORT -jar $PROCESS  > $LOGDIR 2>&1 &
-    echo "process has start..."
-else
-    echo $ID
-	for id in $ID
-        do
-            kill -9 $id
-            echo "killed $id"
-        done
-    echo "process will restart..."
-    nohup java -Dserver.port=$PORT -jar $PROCESS  > $LOGDIR 2>&1 &
-    echo "process has restart..."
-fi
-
-
-awk '{if ($1=="POST" && FILENAME!="data-govern-doc/md/接口规范.md") {print $2,"   ", FILENAME}}' data-govern-doc/md/*.md
-```
-
-### 采集程序重启
-
-```
-172.16.7.71
-cd /root/filecollection
-vim restart-filecollection.sh
-
-#!/bin/bash
-NAME="filecollection_audit_st1"    #想要杀死的进程
-
-echo "先杀进程：" $NAME
-
-ID=`ps -ef | grep -w "$NAME" | grep -v "grep" | awk '{print $2}'`  #注意此shell脚本的名称，避免自杀
-for id in $ID
-    do
-    	kill -9 $id
-    	echo "killed $id"
-    done
- 
-SHMID=`ipcs -m | awk '$1=="0x040566ab" {print $2}'` 
-echo "然后删共享内存：" $SHMID
-ipcrm -m $SHMID
-
-echo "最后修改Task.ini文件："
-awk '{ if ($1=="SCHEDULE_MSG_ID" || $1=="SCHEDULE_P_ID") {sub($3,0);print} else print}' ini/Task.ini > ini/Task.ini.bak$$ && mv -f ini/Task.ini.bak$$ ini/Task.ini
-
-echo "重启开始："
-./filecollection_audit_st1 start
-```
-
-
-
-# 常用命令
 
 ## 时区
 
@@ -922,6 +899,27 @@ vim /etc/sudoers //打开sudo的配置文件
 
 chmod u+w /etc/sudoers
 chmod u-w /etc/sudoers
+
+su和sudo的区别
+    共同点：都是root用户权限；
+    不同点：su只获得root权限，工作环境不变，还是在切换之前用户的工作环境；sudo是完全获得root的权限和root的工作环境。(此处实际验证不对)
+    sudo:表示获取临时的root权限执行命令。
+    sudo执行命令的流程:
+        1、当前用户切换到root（或其他指定切换到的用户），
+        2、以root（或其他指定的切换到的用户）身份执行命令，
+        3、执行完成后，直接退回到当前用户，而这些的前提是要通过sudo的配置文件/etc/sudoers来进行授权。
+        
+su - root和su root区别
+	su - root：以root身份登录，then the shell is login shell, .bash_profile and .bashrc will be sourced.
+	su root/其他命令：与root建立一个连接，通过root执行命令。then only .bashrc will be sourced.
+	最直接的区别是su目录还是原先用户目录，su - root后目录就变为root用户的主目录。
+	
+sudo su 运行sudo命令给su命令提权，运行su命令。要求执行该命令的用户必须在sudoers中才可以。
+示例：	sudo su - root | sudo su -
+
+执行sudo su -成root的用户，和root用户的区别：
+    普通用户使用sudo 来执行只有root才能执行权限的命令，跟用root用户执行是不一样的，因为这时候他用的还是普通用户的环境变量。
+    用su -成root的用户还是有些环境变量是和root登陆是不一样的。另外，它们的uid也是不一样，只有euid是相同的。
 ```
 
 ## PS1
@@ -1201,6 +1199,78 @@ systemd对应的进程管理命令是systemctl
     所以systemctl命令是service命令和chkconfig命令的集合和代替。
 ```
 
+### 开机自启动
+
+```
+一、修改开机启动文件：/etc/rc.local（或者/etc/rc.d/rc.local）
+	vim /etc/rc.local
+		/usr/local/pgsql/start.sh
+	chmod +x /etc/rc.local
+	chmod 755 /etc/rc.local
+	
+二、自己写一个shell脚本
+	将写好的脚本（.sh文件）放到目录 /etc/profile.d/ 下，系统启动后就会自动执行该目录下的所有shell脚本。
+	
+三、通过chkconfig命令设置
+	# 1.将(脚本)启动文件移动到 /etc/init.d/或者/etc/rc.d/init.d/目录下。（前者是后者的软连接）
+    	mv /www/wwwroot/test.sh /etc/rc.d/init.d
+
+    # 2.启动文件前面务必添加如下三行代码，否侧会提示chkconfig不支持。
+        #!/bin/sh             告诉系统使用的shell,所以的shell脚本都是这样
+        #chkconfig: 35 20 80        分别代表运行级别，启动优先权，关闭优先权，此行代码必须
+        #description: http server     自己随便发挥！！！，此行代码必须
+        /bin/echo $(/bin/date +%F_%T) >> /tmp/test.log
+
+    # 3.增加脚本的可执行权限
+    	chmod +x /etc/rc.d/init.d/test.sh
+
+    # 4.添加脚本到开机自动启动项目中。添加到chkconfig，开机自启动。
+        [root@localhost ~]# cd /etc/rc.d/init.d
+        [root@localhost ~]# chkconfig --add test.sh
+        [root@localhost ~]# chkconfig test.sh on
+
+    # 5.关闭开机启动 
+    	[root@localhost ~]# chkconfig test.sh off
+
+    # 6.从chkconfig管理中删除test.sh
+    	[root@localhost ~]# chkconfig --del test.sh
+
+    # 7.查看chkconfig管理
+    	[root@localhost ~]# chkconfig --list test.sh
+    	
+四、自定义服务文件，添加到系统服务，通过Systemctl管理
+    1.写服务文件：如nginx.service、redis.service、supervisord.service
+        [Unit]:服务的说明
+        Description:描述服务
+        After:描述服务类别
+
+        [Service]服务运行参数的设置
+        Type=forking      是后台运行的形式
+        ExecStart        为服务的具体运行命令
+        ExecReload       为服务的重启命令
+        ExecStop        为服务的停止命令
+        PrivateTmp=True     表示给服务分配独立的临时空间
+        注意：启动、重启、停止命令全部要求使用绝对路径
+
+        [Install]        服务安装的相关设置，可设置为多用户
+        WantedBy=multi-user.target 
+    2.文件保存在目录下：以754的权限。目录路径：/usr/lib/systemd/system。如上面的supervisord.service文件放在这个目录下面。
+        [root@localhost ~]# cat /usr/lib/systemd/system/nginx.service
+        [root@localhost ~]# cat /usr/lib/systemd/system/supervisord.service
+    3.设置开机自启动(任意目录下执行)。如果执行启动命令报错，则执行：systemctl daemon-reload
+        设置开机自启动
+        [root@localhost ~]# systemctl enable nginx.service    
+        [root@localhost ~]# systemctl enable supervisord
+
+        停止开机自启动
+        [root@localhost ~]# systemctl disable nginx.service
+        [root@localhost ~]# systemctl disable supervisord
+
+        验证一下是否为开机启动
+        [root@localhost ~]# systemctl is-enabled nginx
+        [root@localhost ~]# systemctl is-enabled supervisord
+```
+
 
 
 ## 进程
@@ -1241,8 +1311,14 @@ grep命令是查找
 ## 内存
 
 ```
+1.1 /proc/meminfo
+	# 这个文件记录着比较详细的内存配置信息，使用 cat /proc/meminfo 查看。
 
-
+MemTotal：系统总内存，由于 BIOS、内核等会占用一些内存，所以这里和配置声称的内存会有一些出入，比如我这里配置有 2G，但其实只有 1.95G 可用。
+MemFree：系统空闲内存。
+MemAvailable：应用程序可用内存。有人会比较奇怪和 MemFree 的区别，可以从两个层面来区分，MemFree 是系统层面的，而 MemAvailable 是应用程序层面的。系统中有些内存虽然被使用了但是有一部分是可以回收的，比如 Buffers、Cached 及 Slab 这些内存，这部分可以回收的内存加上 MemFree 才是 MemAvailable 的内存值，这是内核通过特定算法算出来的，是一个估算值。
+Buffers：缓冲区内存
+Cached：缓存
 ```
 
 ### free
@@ -1266,6 +1342,8 @@ free 命令显示系统内存的使用情况，包括物理内存、交换内存
     shared 列显示被共享使用的物理内存大小。
     buff/cache 列显示被 buffer 和 cache 使用的物理内存大小。
     available 列显示还可以被应用程序使用的物理内存大小。
+    
+available  = free + buffer + cache 请注意，这只是一个很理想的计算方式，实际中的数据往往有较大的误差。
 ```
 
 ### top
@@ -1419,6 +1497,12 @@ netstat查看端口占用情况
 查看php-fpm是否启动了：	netstat -nlp|grep php-fpm
 ```
 
+### 端口映射
+
+```
+
+```
+
 
 
 ## **管道**
@@ -1430,11 +1514,95 @@ netstat查看端口占用情况
 ## ulimit
 
 ```
-ulimit -n
-ulimit -a
+ulimit 是一个计算机命令，用于shell启动进程所占用的资源，可用于修改系统资源限制
+命令格式：
+	ulimit [-SHcdefilmnpqrstuvx] [limit]
+
+参数说明：
+    -a 显示当前系统所有的limit资源信息。 
+    -H 设置硬资源限制，一旦设置不能增加。
+    -S 设置软资源限制，设置后可以增加，但是不能超过硬资源设置。
+    -c 最大的core文件的大小，以 blocks 为单位。
+    -f 进程可以创建文件的最大值，以blocks 为单位.
+    -d 进程最大的数据段的大小，以Kbytes 为单位。
+    -m 最大内存大小，以Kbytes为单位。
+    -n 查看进程可以打开的最大文件描述符的数量。
+    -s 线程栈大小，以Kbytes为单位。
+    -p 管道缓冲区的大小，以Kbytes 为单位。
+    -u 用户最大可用的进程数。
+    -v 进程最大可用的虚拟内存，以Kbytes 为单位。
+    -t 最大CPU占用时间，以秒为单位。
+    -l 最大可加锁内存大小，以Kbytes 为单位。
+
+查询当前终端的文件句柄数：	ulimit -n
+修改当前终端的文件句柄数：	ulimit -n 65535
+
+将ulimit 加入到/etc/profile 文件底部：
+    echo ulimit -n 65535 >>/etc/profile
+    source /etc/profile    #加载修改后的profile
+    
 注意：
     root用户没有限制
     当前会话只能降
+    
+永久配置：
+步骤一：
+	vim /etc/security/limits.conf
+    # 添加如下的行
+        * soft noproc 65535
+        * hard noproc 65535
+        * soft nofile 65535
+        * hard nofile 65535
+        或者：
+        * - noproc 65535
+        * - nofile 65535
+    以上内容表示，将-u和-n的软限制和硬限制同时修改为65535
+    
+    说明：* 代表针对所有用户
+        noproc 是代表最大进程数
+        nofile 是代表最大文件打开数
+        
+步骤二（次步奏可忽略）：
+	vim /etc/pam.d/login
+	添加如下内容：
+    session required pam_limits.so
+    以上内容表示，在登录时使用pam管理limit。
+
+步骤三：
+    添加如下内容
+    vim ~/.bash_profile # 当前用户有效
+    vim /etc/profile # 所有用户有效
+    ulimit -u 65535
+    ulimit -n 65535
+    每次登陆shell后，会初始执行这两条ulimit命令，并使其生效。
+
+生效：
+	重新登录或使用source /etc/profile|. /etc/profile立即生效。
+	source使当前shell对指定文件内容生效。
+	
+/etc/security/limits.conf配置详解：  
+    domain 是指生效实体
+        用户名
+        也可以通过@group指定用户组
+        使用*表示默认值
+    type指限制类型
+        soft软限制
+        hard硬限制
+        item限制资源
+    core同ulimit -c
+    data同ulimit -d
+    fsize同ulimit -f
+    memloc同ulimit -l
+    nofile同ulimit -n
+    stack同ulimit -s
+    cpu 同ulimit -t
+    nproc同ulimit -u
+    maxlogins指定用户可以同时登陆的数量
+    maxsyslogins系统可以同时登陆的用户数
+    priority用户进程运行的优先级
+    locks用户可以锁定的文件最大值
+    sigpengding同ulimit -i
+    msgqueue同ulimit -q
 ```
 
 ## lsof
@@ -1613,9 +1781,94 @@ awk [选项参数] -f scriptfile var=value file(s)
     in	数组成员
 ```
 
-
-
 ### 示例
+
+```
+#!/bin/bash
+NAME="provider-integral"    #想要杀死的进程
+PORT="8081"
+PROCESS="../jars/provider-integral-0.0.1-SNAPSHOT.jar"
+LOGDIR="../log/integral.log"
+echo $NAME
+ID=`ps -ef | grep "$NAME" | grep -v "grep" | awk '{print $2}'`  #注意此shell脚本的名称，避免自杀
+if [ -z "$ID" ];then
+    echo "process id is empty, process is not existed..."
+    echo "process will start..."
+    nohup java -Dserver.port=$PORT -jar $PROCESS  > $LOGDIR 2>&1 &
+    echo "process has start..."
+else
+    echo $ID
+	for id in $ID
+        do
+            kill -9 $id
+            echo "killed $id"
+        done
+    echo "process will restart..."
+    nohup java -Dserver.port=$PORT -jar $PROCESS  > $LOGDIR 2>&1 &
+    echo "process has restart..."
+fi
+
+
+awk '{if ($1=="POST" && FILENAME!="data-govern-doc/md/接口规范.md") {print $2,"   ", FILENAME}}' data-govern-doc/md/*.md
+```
+
+### 采集程序重启
+
+```
+172.16.7.71
+cd /root/filecollection
+vim restart-filecollection.sh
+
+#!/bin/bash
+NAME="filecollection_audit_st1"    #想要杀死的进程
+
+echo "先杀进程：" $NAME
+
+ID=`ps -ef | grep -w "$NAME" | grep -v "grep" | awk '{print $2}'`  #注意此shell脚本的名称，避免自杀
+for id in $ID
+    do
+    	kill -9 $id
+    	echo "killed $id"
+    done
+ 
+SHMID=`ipcs -m | awk '$1=="0x040566ab" {print $2}'` 
+echo "然后删共享内存：" $SHMID
+ipcrm -m $SHMID
+
+echo "最后修改Task.ini文件："
+awk '{ if ($1=="SCHEDULE_MSG_ID" || $1=="SCHEDULE_P_ID") {sub($3,0);print} else print}' ini/Task.ini > ini/Task.ini.bak$$ && mv -f ini/Task.ini.bak$$ ini/Task.ini
+
+echo "重启开始："
+./filecollection_audit_st1 start
+```
+
+### 批量替换文件夹中所有文件
+
+```
+===============================测试-单个文件
+vim test1
+    1a 9,100.34
+    1b 1,999.00
+    1c 5,656.55
+awk '{sub(/1/,"test")}{print "\n",$1,$2}' test1
+awk '{gsub(/1/,"test")}{print "\n",$1,$2}' test1
+awk '{gsub(/1/,"test")}{print $0}' test1 > temp && mv -f temp test1
+===============================多个文件
+vim strReplace.sh
+
+#!/bin/bash 
+#功能：利用awk批量读取并处理文件夹中的所有文件，并将处理结果输出到另一个文件夹中。 
+#`ls`获取文件中所有文件的文件名 
+#for循环读取`ls`中的值并赋值给文件名变量，awk依次利用这写文件名变量对文件进行处理。 
+#
+cd /home/dev/sbin
+for file in *
+do
+	awk '{gsub(/test/,"home")}{print $0}' $file > temp && mv -f temp $file
+done
+```
+
+### A , B两个文件比较
 
 ```
 vim /home/dev/md-url.sh
@@ -1714,7 +1967,7 @@ sudo passwd dev
 
 
 
-# 常用工具
+# ***<u>常用工具</u>***
 
 ## **ssh**
 
@@ -1732,6 +1985,8 @@ openssl version
 SSH 服务配置文件位置
 /etc/ssh/sshd_config
 ```
+
+
 
 ## 免密登录
 
@@ -1989,7 +2244,19 @@ service vsftpd start | stop
     :set ruler?　　查看是否设置了ruler，在.vimrc中，使用set命令设制的选项都可以通过这个命令查看
     :scriptnames　　查看vim脚本文件的位置，比如.vimrc文件，语法文件及plugin等。
     :set list 显示非打印字符，如tab，空格，行尾等。如果tab无法显示，请确定用set lcs=tab:>-命令设置了.vimrc文件，并确保你的文件中的确有tab，如果开启了expendtab，那么tab将被扩展为空格。
+    :set paste 粘贴时不缩进。
 ```
+
+### 可视模式下不能复制问题
+
+```
+vim /usr/share/vim/vim81/defaults.vim
+/mouse搜索关键词mouse
+将 set mouse=a 改为set mouse-=a（在等号前面加上一个减号）
+输入:wq! 保存即可解决问题。
+```
+
+
 
 ## ODBC 
 
@@ -2026,7 +2293,7 @@ LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64::/usr/lib/oracle/11.2/client64/l
 
 
 
-# 文件
+# ***<u>文件</u>***
 
 ## **mkdir**
 
@@ -2071,6 +2338,20 @@ du : 显示每个文件和目录的磁盘使用空间~~~文件的大小。
 解压：	tar -xzvf FileName.tar.gz -C /usr/local #-C 选项的作用是：指定需要解压到的目录。
 示例： 
 ```
+## zip
+
+```
+压缩服务器上当前目录的内容为xxx.zip文件
+	zip -r xxx.zip ./*
+
+解压zip文件到当前目录
+	unzip filename.zip
+
+另：有些服务器没有安装zip包执行不了zip命令，但基本上都可以用tar命令的
+```
+
+
+
 ## find
 
 ```
@@ -2078,6 +2359,22 @@ find / -name '*.logout*' 2>/dev/null
 find . -type f -name *.svn*    | xargs rm -f
 find . -name \*52\* 
 ```
+
+## grep
+
+```
+grep LD /etc/profile.d/*.sh /etc/bash.bashrc
+```
+
+## mv
+
+```
+mv `ls|grep -v "test"` test
+sudo mv `\ls libdm*.so|grep -v libdmmp.so` temp
+sudo mv `ll lib*.so|grep dmdba|awk '{print $9}'` temp
+```
+
+
 
 ## cp
 
@@ -2126,7 +2423,7 @@ scp -r root@172.16.7.56:/usr/local/apache2.4/htdocs/inc_chk/new_index/svg/* .
 ```
 
 
-# 日志
+# ***<u>日志</u>***
 
 ```
 遇事先看 /var/log/secure 和 /var/log/messages

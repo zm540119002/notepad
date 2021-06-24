@@ -255,6 +255,14 @@ linux登录mysql：
     cd /home/mysql/bin
     mysql -udev -p
     输入密码即可
+    
+配置mysql：
+mysql -u root -p
+(输入密码abc123!)
+root账号仅限于127.0.0.1登录，需创建账号dev，并授与远程登录的权限
+CREATE USER `dev`@`%` IDENTIFIED BY 'abc123!';
+grant all privileges on *.* to 'dev'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
 ```
 
 
@@ -271,6 +279,65 @@ linux登录mysql：
 ```
 
 ## 用户权限
+
+https://www.cnblogs.com/keme/p/10288168.html
+
+```
+mysql中存在4个控制权限的表，分别为user表，db表，tables_priv表，columns_priv表
+    select * from mysql.user
+    select * from mysql.db
+    select * from mysql.tables_priv
+    select * from mysql.columns_priv
+
+User表：存放用户账户信息以及全局级别（所有数据库）权限，决定了来自哪些主机的哪些用户可以访问数据库实例，如果有全局权限则意味着对所有数据库都有此权限 
+Db表：存放数据库级别的权限，决定了来自哪些主机的哪些用户可以访问此数据库 
+Tables_priv表：存放表级别的权限，决定了来自哪些主机的哪些用户可以访问数据库的这个表 
+Columns_priv表：存放列级别的权限，决定了来自哪些主机的哪些用户可以访问数据库表的这个字段 
+Procs_priv表：存放存储过程和函数级别的权限
+
+mysql权限表的验证过程为：
+    先从user表中的Host,User,Password这3个字段中判断连接的ip、用户名、密码是否存在，存在则通过验证。
+    通过身份认证后，进行权限分配，按照user，db，tables_priv，columns_priv的顺序进行验证。
+    即先检查全局权限表user，如果user中对应的权限为Y，则此用户对所有数据库的权限都为Y，将不再检查db, tables_priv,columns_priv；
+    如果为N，则到db表中检查此用户对应的具体数据库，并得到db中为Y的权限；如果db中为N，则检查tables_priv中此数据库对应的具体表，取得表中的权限Y，以此类推。
+    
+查看root@’localhost’用户的权限
+	show grants for root@localhost;
+	
+用户组成
+    MySQL的授权用户由两部分组成： 用户名和登录主机名
+    表达用户的语法为’user_name’@’host_name’
+    单引号不是必须，但如果其中包含特殊字符则是必须的
+    ”@‘localhost’代表匿名登录的用户
+    Host_name可以使主机名或者ipv4/ipv6的地址。 Localhost代表本机， 127.0.0.1代表ipv4本机地址， ::1代表ipv6的本机地址
+    Host_name字段允许使用%和_两个匹配字符，比如’%’代表所有主机， ’%.mysql.com’代表 
+    来自mysql.com这个域名下的所有主机， ‘192.168.1.%’代表所有来自192.168.1网段的主机
+
+修改用户密码的方式包括：
+    mysql> ALTER USER 'jeffrey'@'localhost' IDENTIFIED BY 'mypass';
+    mysql> SET PASSWORD FOR 'jeffrey'@'localhost' = PASSWORD('mypass');
+    mysql> GRANT USAGE ON *.* TO 'jeffrey'@'localhost' IDENTIFIED BY 'mypass';
+    shell> mysqladmin -u user_name -h host_name password "new_password"
+    
+ALTER USER 'root'@'localhost' IDENTIFIED BY '123456';
+
+修改用户权限
+    执行Grant,revoke,set password,rename user命令修改权限之后， MySQL会自动将修改后的权限信息同步加载到系统内存中
+
+    如果执行insert/update/delete操作上述的系统权限表之后，则必须再执行刷新权限命令才能同步到系统内存中，刷新权限命令包括： flush privileges/mysqladmin flush-privileges / mysqladmin reload
+
+    如果是修改tables和columns级别的权限，则客户端的下次操作新权限就会生效
+
+    如果是修改database级别的权限，则新权限在客户端执行use database命令后生效
+
+    如果是修改global级别的权限，则需要重新创建连接新权限才能生效
+
+    如果是修改global级别的权限，则需要重新创建连接新权限才能生效 (例如修改密码)   
+    
+GRANT ALL PRIVILEGES ON *.* TO 'dev'@'127.0.0.1' WITH GRANT OPTION;
+```
+
+
 
 ### 示例
 
@@ -428,17 +495,11 @@ ALTER TABLE 表名 change 原列名 新列名 新的数据类型[（长度）] N
 添加字段，比如我在数据表中添加一个 age 字段，类型为int(11)
 	ALTER TABLE player ADD (age int(11));
 
- 
-
 2. 修改字段名，将 age 字段改成player_age
 ALTER TABLE player RENAME COLUMN age to player_age
 
- 
-
 3. 修改字段的数据类型，将player_age的数据类型设置为float(3,1)
 ALTER TABLE player MODIFY (player_age float(3,1));
-
- 
 
 4. 删除字段, 删除刚才添加的player_age字段
 ALTER TABLE player DROP COLUMN player_age;
@@ -459,13 +520,9 @@ ALTER TABLE `ue4_blueprint` CHANGE `strObjectPath` `filepath` VARCHAR(255);
 /*oracle*/ comment on column 表名.列名 is '备注';
 /*mysql*/ ALTER TABLE 表名 MODIFY  字段名 类型 COMMENT '备注';
 
- 
-
 删除备注【字段已经存在==>MODIFY, 不存在==>ADD】
 
 /*mysql*/ ALTER TABLE 表名 MODIFY  字段名 类型 COMMENT '';
-
- 
 
 下面用法：
 

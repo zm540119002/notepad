@@ -61,6 +61,19 @@ redis-cli -h host -p port -a password
 	redis-cli -h 172.16.7.57 -p 26379 -a 123456
 ```
 
+### 创建密码或者修改密码
+
+```
+1.进入redis的容器 docker exec -it 容器ID bash
+2.进入redis目录 cd /usr/local/bin 
+3.运行命令：redis-cli
+4.查看现有的redis密码：config get requirepass
+5.设置redis密码config set requirepass 123456（123456为你要设置的密码）
+6.若出现(error) NOAUTH Authentication required.错误，则使用 auth 密码 来认证密码
+```
+
+
+
 ## 命令
 
 ```
