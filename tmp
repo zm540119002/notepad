@@ -1,3 +1,6 @@
 
 
-vue组件库element-ui 的validate方法
+# -L localport:remotehost:remotehostport sshserver
+# -N 不打开远程shell，处于等待状态（不加-N则直接登录进去） -g 启用网关功能
+# 在172.16.7.71上执行，将9527的请求转发到172.16.7.56的80端口
+ssh -L 9527:172.16.7.56:80 -Ng 172.16.7.71

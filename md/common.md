@@ -1,24 +1,35 @@
 # **常用**
 
-```
-公司邮箱网址：
-	http://mail.huitone.com/webmail7.5/webmail.php?r=site/index/domain/huitone.com
-    登录账户：	zm@huitone.com
-    登录密码：	HTGX100
-    
-公司官方网站
-    前台：	http://www.huitone.com/
-    后台:  http://www.faisco.cn/ 
-    账号: iw13833136 
-    员工号: xc 
-    密码: ZGRiNDE0ZWYxODk5MTlk
+## 公司邮箱网址
 
-    (2)域名:http://domain.cnolnic.com
-    账号: huitone.com 
-    密码: OTEzZjgzNTBjMWFiNGQ0
-    
-oa系统：
-	账号：	手机号码
+http://mail.huitone.com/webmail7.5/webmail.php?r=site/index/domain/huitone.com
+
+```
+登录账户：	zm@huitone.com
+登录密码：	HTGX100
+```
+
+## 公司官方网站
+
+前台：	http://www.huitone.com/
+后台:  http://www.faisco.cn/ 
+
+```
+账号: iw13833136 
+员工号: xc 
+密码: ZGRiNDE0ZWYxODk5MTlk
+   
+http://domain.cnolnic.com
+账号: huitone.com 
+密码: OTEzZjgzNTBjMWFiNGQ0
+```
+
+## oa系统
+
+http://oa.huitone.com:2019/wui/index.html
+
+```
+账号：	手机号码
 	密码： 12345678
 	手机App：下载搜索 E-Mobile7 安装
 	地址：
@@ -40,50 +51,6 @@ vim /usr/local/php/lib/php.ini
 extension_dir = "/usr/local/php/include/php/ext"
 cd /usr/local/php/include/php/ext
 ---------------------------------------------------------------
-```
-
-## 172.16.8.3  
-
-```
-username:	root
-password:	123456
-```
-
-## 172.16.8.231
-
-```
-username:	root
-password:	 Huitone369!@#
-```
-
-## 124.71.112.70
-
-```
-username:	root
-password:	Huitone!2214
-------------------------------apache2.4
-vim /usr/local/apache2/conf/httpd.conf
-vim /usr/local/apache2/conf/extra/httpd-vhosts.conf
-/usr/local/apache2/bin/apachectl stop
-------------------------------达梦
-systemctl start DmServiceDMSERVER
-------------------------------php
-------------------------------php.ini
-extension_dir=/data/dmdbms/drivers/php_pdo
-extension=libphp72ts_dm.so
-extension_dir=/data/dmdbms/drivers/php_pdo
-extension=php72ts_pdo_dm.so
-------------------------------
-php增加DM、PDO_DM 扩展方法：
-1.服务器装一套达梦客户端：dmdbms .
-2.php.ini 文件增加扩展项：
-extension_dir=/data/dmdbms/drivers/php_pdo
-extension=libphp72ts_dm.so
-extension_dir=/data/dmdbms/drivers/php_pdo
-extension=php72ts_pdo_dm.so
-3.环境变量增加指向达梦的bin目录，并重载环境变量。
-export LD_LIBRARY_PATH=/data/dmdbms/bin
-4.重启apache 即可完成DM，PDO_DM的加载项安装。
 ```
 
 # 记录
@@ -159,6 +126,10 @@ ssh -L 9527:172.16.7.56:80 -Ng 172.16.7.71
 ```
 
 ## 流程配置
+
+```
+
+```
 
 ### 问题
 
