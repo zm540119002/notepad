@@ -296,9 +296,19 @@ https://www.cnblogs.com/deityjian/p/11487644.html
 
 ```
 
-## 动态代理
+## 代理
+
+https://www.cnblogs.com/gonjan-blog/p/6685611.html
+
+https://blog.csdn.net/weixin_40573194/article/details/82834308
 
 ```
+AOP用到了两种动态代理来实现织入功能：
+    jdk动态代理
+    cglib动态代理
+比较：
+	jdk动态代理是由java内部的反射机制来实现的，cglib动态代理底层则是借助asm来实现的。反射机制在生成类的过程中比较高效，而asm在生成类之后的相关执行过程中比较高效（可以通过将asm生成的类进行缓存，这样解决asm生成类过程低效问题）。
+	jdk动态代理的应用前提是目标类必须基于统一的接口。因此，jdk动态代理有一定的局限性，cglib这种第三方类库实现的动态代理应用更加广泛，且在效率上更有优势。
 
 ```
 
@@ -361,8 +371,6 @@ AOP代理（AOP Proxy）: AOP框架使用代理模式创建的对象，从而实
 ```
 
 # 注解
-
-https://www.zhihu.com/question/24401191
 
 https://blog.csdn.net/baidu_36385172/article/details/79953410
 

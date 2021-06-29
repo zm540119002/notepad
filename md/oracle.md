@@ -197,3 +197,43 @@ WHEN NOT MATCHED THEN
     5.带delete的update(觉得可以用3来实现)
 ```
 
+## create table
+
+```
+
+```
+
+### 示例
+
+```
+--------------------------------------------------------------------------------------- tb_uc_cfg_algorithm_task
+-- Create table
+drop table ua_dbg.tb_uc_cfg_algorithm_task;
+create table ua_dbg.tb_uc_cfg_algorithm_task
+(
+  algorithm_task_id number not null,
+  algorithm_task_name VARCHAR2(64) not null,
+  classify       char(2) default '1' not null,
+  ds_id number not null,
+  sub_service_id  number not null,
+  
+  status            char(1) default '0' not null,
+  indb_staff        varchar2(32),
+  indb_time         date not null,
+  modify_staff      varchar2(32),
+  modify_time       date,
+  remark            varchar2(2000)
+);
+-- Create/Recreate primary, unique and foreign key constraints 
+alter table ua_dbg.tb_uc_cfg_algorithm_task
+  add constraint pk_tb_uc_cfg_algorithm_task primary key (algorithm_task_id);
+alter table ua_dbg.tb_uc_cfg_algorithm_task
+  add constraint fk_cfg_algorithml_task_sub_svc foreign key (sub_service_id)
+  references ua_dbg.tb_ua_cfg_sub_service_type (sub_service_id) on delete cascade
+  deferrable;
+```
+
+
+
+
+

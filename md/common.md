@@ -1,11 +1,6 @@
 # **常用**
 
 ```
-广州汇通国信科技有限公司OA系统正式上线，网址是公司内网
-http://157.122.61.228:2019/login/Login.jsp?logintype=1
-账户名为大家各自的手机号，密码是：	HTGX100。
-同时下载手机app端进行考勤签到，OA手机端服务器为157.122.61.228:89。
-
 公司邮箱网址：
 	http://mail.huitone.com/webmail7.5/webmail.php?r=site/index/domain/huitone.com
     登录账户：	zm@huitone.com
@@ -13,7 +8,7 @@ http://157.122.61.228:2019/login/Login.jsp?logintype=1
     
 公司官方网站
     前台：	http://www.huitone.com/
-    后台:  	http://www.faisco.cn/ 
+    后台:  http://www.faisco.cn/ 
     账号: iw13833136 
     员工号: xc 
     密码: ZGRiNDE0ZWYxODk5MTlk
@@ -23,330 +18,15 @@ http://157.122.61.228:2019/login/Login.jsp?logintype=1
     密码: OTEzZjgzNTBjMWFiNGQ0
     
 oa系统：
-	http://oa.huitone.com:2019/login/Login.jsp?logintype=1
 	账号：	手机号码
-	密码： 20210421
-
+	密码： 
+	手机App：下载搜索 E-Mobile7 安装
+	地址：
+        外网：http://oa.huitone.com:8999
+        内网：http://172.16.7.120:2019/
 ```
 
 
-
-# **服务器**
-
-## 172.16.6.32
-
-```
----------------------------------------------------------------jenkins
-http://172.16.6.32:8089
-置人员账号/密码：admin123/admin123
----------------------------------------------------------------
----------------------------------------------------------------
----------------------------------------------------------------
-```
-
-
-
-## 172.16.6.35
-
-```
----------------------------------------------------------------
-username:	root
-password:	huitone2215#
----------------------------------------------------------------mysql
-su - mysql
-启动守护进程：
-/bin/sh /home/mysql/bin/mysqld_safe --datadir=/home/mysql/data/mysql --pid-file=/home/mysql/data/mysql/mysqldb.pid
-启动mysql服务：
-sh /home/mysql/support-files/mysql.server start
----------------------------------------------------------------redis
-cd /usr/local/redis-2.8.17/src
-./redis-server ../redis.conf
-/usr/local/redis-2.8.17/src/redis-server /usr/local/redis-2.8.17/redis.conf
----------------------------------------------------------------postgresql
-su - postgresql
-/usr/local/postgresql-10.1/bin/pg_ctl -D /usr/local/postgresql-10.1/data -l /usr/local/postgresql-10.1/log/pgsql.log start 
----------------------------------------------------------------java
-vim /usr/local/sbin/restart-java.sh
-重启防火墙之后要检查9001端口有没有放开
----------------------------------------------------------------
----------------------------------------------------------------可能问题java
-```
-## 172.16.6.44
-
-```
-username:	root
-password:	huitone2214
-username:	oracle
-password:	huitone2214
----------------------------------------------------------------apache
-vim /usr/local/apache/conf/httpd.conf
-LoadModule php5_module        modules/libphp5.so
-vim /usr/local/apache/conf/httpd.conf
-vim /usr/local/apache/conf/extra/httpd-vhosts.conf
-web根目录：	/usr/local/apache/htdocs
-/usr/local/apache2/logs
-http://172.16.6.44/inc_chk/login.php
-apache 启动：	/usr/local/apache/bin/apachectl restart
----------------------------------------------------------------php
-vim /usr/local/php/etc/php.ini
-log_errors=On
-error_log=/usr/local/php/php_error.log
-/usr/local/php/bin/php -m 
-/usr/local/php/bin/phpize
-php已安装扩展：
-cd /usr/local/php/lib/php/extensions/no-debug-non-zts-20060613
----------------------------------------------------------------
-```
-
-## 172.16.6.45
-
-```
-username:	root
-password:	huitone2214
-```
-
-
-
-## 172.16.7.54
-
-```
----------------------------------------------------------------gitlab
-http://172.16.7.54:9090
-登陆账号密码： 
-    root/huitone2214
-    git/huitone2214
-    htgx@huitone.com/12345678
-参考：
-	https://www.jianshu.com/p/80d9a656d6c6?utm_campaign=maleskine&utm_content=note&utm_medium=
-	seo_notes&utm_source=recommendation
----------------------------------------------------------------
-```
-
-## 172.16.7.55
-
-```
-username:	root
-password:	htgx@test&
-username:	dev
-password:	abc123!
----------------------------------------------------------------oracle
-ua_dbg/ua_dbgrica
-ltdba/ltdbarica
----------------------------------------------------------------mysql
-数据库用户：			 dev
-数据库用户密码：		abc123!
-su - mysql
-sh /home/mysql/support-files/mysql.server start
----------------------------------------------------------------
-```
-
-## 172.16.7.56
-
-```
-username:	root
-password:	huitone2214$
----------------------------------------------------------------apache
-vim /etc/apache2.4/httpd.conf
-vim /etc/apache2.4/extra/httpd-vhosts.conf
-vim /etc/apache2.4/extra/httpd-ssl.conf
-/usr/local/apache2.4/bin/apachectl start
-tail -f /usr/local/apache2.4/logs/access_log
-tail -f /usr/local/apache2.4/logs/error_log
-注意防火墙问题！！
----------------------------------------------------------------php-7.2.26
-扩展库路径：	cd /usr/local/php7/lib/php/extensions/no-debug-zts-20170718
-配置文件：	vim /usr/local/php7/etc/php.ini
-scp -r root@139.159.218.155:/app/dmdbms/drivers/oci/libdmoci.so oci8.so
-scp -r root@172.16.7.55:/home/oracle/dmdbms/drivers/oci/libdmoci.so oci8.so
-
-解压：tar zxvf libdmoci.so.tar.gz
-压缩：tar zcvf libdmoci.so.tar.gz libdmoci.so
-
-解包：tar xvf libdmoci.so.tar
-打包：tar cvf libdmoci.so.tar libdmoci.so
-（注：tar是打包，不是压缩！）
----------------------------------------------------------------php-7.2.31
-cd /usr/local/lib/php/extensions/no-debug-non-zts-20170718/
-```
-
-## 172.16.7.57
-
-```
-username:	root
-password:	huitone2215!
-username:	dev
-password:	huitonedev
-username:	oracle
-password:	huitone2214
---------------------------------------------------------------nginx
-安装目录：	cd /usr/local/nginx/
-web目录：	 cd /www/wwwroot/front/
-配置文件：	vim /usr/local/nginx/conf/nginx.conf
-启动：		 /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
-停止：
-	ps -ef|grep nginx
-	从容停止： kill -QUIT 2072
-	快速停止： kill -TERM 2132 | kill -INT 2132
-	强制停止： pkill -9 nginx
---------------------------------------------------------------redis
-#启动
-	/usr/local/redis/bin/redis-server /usr/local/redis/bin/redis.conf
-	sudo /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx.conf
---------------------------------------------------------------mongoDB
-#启动
-	/usr/local/mongodb/bin/mongod --config /usr/local/mongodb/bin/mongodb.conf
-#关闭
-	/usr/local/mongodb/bin/mongod --config /usr/local/mongodb/bin/mongodb.conf --shutdown
---------------------------------------------------------------java
-57用dev用户启动java程序：	
-	su - dev
-	
-vim /home/dev/sbin/restart-govern.sh
-
-ps -ef|grep data_govern|grep java | awk '{print "kill " $2}'|sh
-sleep 10
-ps -ef|grep data_govern|grep java | awk '{print "kill " $2}'|sh
-
-# 所有服务启动脚本 
-nohup java  -jar  /www/data_govern/jars/databank-eurekaserver.jar >> /www/data_govern/logs/eurekaserver.log 2>&1 &
-sleep 10
-# xxl-job
-nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48888,server=y,suspend=n -Dspring.profiles.active=dev -jar /www/data_govern/jars/xxl-job-admin-2.2.1-SNAPSHOT.jar   >>  /www/data_govern/logs/xxl-job-admin-2.2.1-SNAPSHOT.log 2>&1 &
-sleep 10
-nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48001,server=y,suspend=n  -Dspring.profiles.active=dev   -jar /www/data_govern/jars/baop-dbserver-1.0.0-SNAPSHOT.jar >> /www/data_govern/logs/baop-dbserver-1.0.0-SNAPSHOT.log 2>&1 &
-nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48762,server=y,suspend=n  -Dspring.profiles.active=dev   -jar /www/data_govern/jars/baop-authapi-1.0.0-SNAPSHOT.jar >> /www/data_govern/logs/baop-authapi-1.0.0-SNAPSHOT.log 2>&1 &
-nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=49001,server=y,suspend=n  -Dspring.profiles.active=dev  -jar  /www/data_govern/jars/baop-gateway-1.0.1-SNAPSHOT.jar >> /www/data_govern/logs/baop-gateway-1.0.1-SNAPSHOT.log 2>&1 &
-sleep 10
-nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48089,server=y,suspend=n   -Dspring.profiles.active=dev  -jar   /www/data_govern/jars/data-govern-0.0.1-SNAPSHOT.jar  >>  /www/data_govern/logs/data-govern-0.0.1-SNAPSHOT.log 2>&1 &
-nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48889,server=y,suspend=n   -Dspring.profiles.active=dev  -jar   /www/data_govern/jars/convert-0.0.1-SNAPSHOT.jar  >>  /www/data_govern/logs/convert-0.0.1-SNAPSHOT.log 2>&1 &
- nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48891,server=y,suspend=n -Dspring.profiles.active=dev -jar /www/data_govern/jars/data-clean-0.0.1-SNAPSHOT.jar  >>  /www/data_govern/logs/data-clean-0.0.1-SNAPSHOT.log 2>&1 &
-sleep 10
-nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48890,server=y,suspend=n  -Dspring.profiles.active=dev   -jar /www/data_govern/jars/task-sched-0.0.1-SNAPSHOT.jar  >>  /www/data_govern/logs/task-sched-0.0.1-SNAPSHOT.log 2>&1 &
-sleep 5
-nohup java -Xdebug -Xrunjdwp:transport=dt_socket,address=48099,server=y,suspend=n  -Dspring.profiles.active=dev   -jar /www/data_govern/jars/data-report-0.0.1-SNAPSHOT.jar  >>  /www/data_govern/logs/data-report-0.0.1-SNAPSHOT.log 2>&1 &
-sleep 15
-ps -ef|grep data_govern|grep java
-ps -ef|grep data_govern|grep java|wc -l
---------------------------------------------------------------启动单个服务
-cd /usr/local/web/data-govern/
-git pull 
-mvn clean install -Dmaven.test.skip=true -Dmaven.javadoc.skip=true 
-runjar.sh
-
-cat /home/dev/sbin/runjar.sh
-#! /bin/sh
-
-# 询问用户需要启动哪个
-v_jar_list="databank-eurekaserver.jar
-xxl-job-admin-2.2.1-SNAPSHOT.jar
-baop-dbserver-1.0.0-SNAPSHOT.jar
-baop-authapi-1.0.0-SNAPSHOT.jar
-baop-gateway-1.0.1-SNAPSHOT.jar
-data-govern-0.0.1-SNAPSHOT.jar
-convert-0.0.1-SNAPSHOT.jar
-data-clean-0.0.1-SNAPSHOT.jar
-task-sched-0.0.1-SNAPSHOT.jar
-data-report-0.0.1-SNAPSHOT.jar"
-
-
-echo "------------目前系统支持的jar包有-----------"
-cat <<< "${v_jar_list}"
-echo "-----------------------"
-
-echo "请输入启动哪个jar包名（从上面复制粘贴）:"
-
-read v_jar
-v_file=$(find /usr/local/web/data-govern/ -name ${v_jar})
-
-if [ "${v_file}" == "" ]
-then
-    echo "查找不到jar包"
-    exit 1
-fi
-
-# v_file是文件全路径 v_file_name是文件名
-v_file_name=$(echo ${v_file} | awk -F / '{print $NF}')
-
-# 如果文件更新则需要复制一份
-if [  ${v_file} -nt  /www/data_govern/jars/${v_file_name}  ]
- then
-    # \cp避免alias干扰  -p代表保持时间一致
-    \cp -p ${v_file} /www/data_govern/jars/
-fi
-
-# 如果进程在 则一直循环杀进程
-while [ "$(ps -ef|grep ${v_file_name}|grep -v grep)"  != "" ] 
-do
-    echo "to kill proc $(ps -ef|grep ${v_file_name}|grep -v grep)"
-    ps -ef|grep ${v_file_name}|grep -v grep | awk '{print "kill "$2}'|sh
-    sleep 2
-done
-
-# 获取启动命令并执行
-v_cmd=$(grep  ${v_file_name} ${HOME}/sbin/restart-govern.sh)
-echo ${v_cmd} | sh
-
-sleep 2
-ps -ef|grep ${v_file}|grep -v grep
-
---------------------------------------------------------------
-```
-
-## 172.16.7.58
-
-```
-username:	root
-password:	huitone2214@
-username:	oracle
-password:	huitone2214
----------------------------------------------------------------mysql
-service mysqld start
-注意ONLY_FULL_GROUP_BY问题
-
-jdbc-url: jdbc:mysql://172.16.7.58:3306/api_platform?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-username: root
-password: Huitone2214!
----------------------------------------------------------------
-```
-
-## 172.16.7.60 
-
-```
-username:	root
-password:	huitone2214
-```
-
-## 172.16.7.71
-
-```
----------------------------------------------------------------
-username:	root
-password:	htgx@123456%
----------------------------------------------------------------nginx
-vi /usr/local/nginx/conf/nginx_2c.conf
-ps -ef|grep nginx
-启动： /usr/local/nginx/sbin/nginx -c /usr/local/nginx/conf/nginx_2c.conf
-重启： /usr/local/nginx/sbin/nginx -s reload
-停止： /usr/local/nginx/sbin/nginx -s stop 
----------------------------------------------------------------postgresql
-vim /usr/local/pgsql/data/postgresql.conf
-    shared_buffers = 128MB | 4GB
-    max_wal_size = 1GB | 8GB
-    work_mem = 4MB | 256MB
-    maintenance_work_mem = 64MB | 2GB
-    autovacuum_work_mem = -1 | 2GB
-    effective_cache_size = 4GB
-    
-vim /usr/local/pgsql/data/pg_hba.conf
-启动：
-	su - postgresql
-	/usr/local/pgsql/bin/pg_ctl -D /usr/local/pgsql/data -l /usr/local/pgsql/log/pgsql.log start | stop | status
-登陆：
-	psql -h 127.0.0.1 -p 5432 -U postgre -d dev
-密码：	
-	huitone2214
----------------------------------------------------------------
-```
 
 ## 172.16.7.74
 
@@ -471,6 +151,11 @@ from a left join (select id, 1  as check_id from b) b on (a.id = b.id)
 
 另外，偶尔会出现服务在压测过程中假死的情况。初步怀疑是gc造成的，现在设置虚拟机输出gc日志，等假死情况复现时再观察gc日志分析。
 
+
+# -L localport:remotehost:remotehostport sshserver
+# -N 不打开远程shell，处于等待状态（不加-N则直接登录进去） -g 启用网关功能
+# 在172.16.7.71上执行，将9527的请求转发到172.16.7.56的80端口
+ssh -L 9527:172.16.7.56:80 -Ng 172.16.7.71
 ```
 
 ## 流程配置
@@ -488,5 +173,14 @@ from a left join (select id, 1  as check_id from b) b on (a.id = b.id)
 	添加字段后字段表达式应该自动匹配
 ```
 
+# 概念
 
+## 数据中台
+
+https://www.zhihu.com/question/330356466/answer/965877274
+
+```
+数据中台是指通过数据技术，对海量数据进行采集、计算、存储、加工，同时统一标准和口径。
+前台是快速转动的小齿轮,后台是转动较慢的大齿轮,而中台正是连接两个齿轮的中间那枚变速齿轮,匹配前后台的速率,提高效率.
+```
 

@@ -9,21 +9,6 @@ $act = $_REQUEST['act'];
 =================================================================================
 encodeChar("utf-8","gbk",$val);
 encodeChar("gbk","utf-8",$val);
-=================================================================================乱码&加载时常失败问题
-1、添加环境变量：
-	vim ~/.bash_profile
-	export NLS_LANG='SIMPLIFIED CHINESE_CHINA.ZHS16GBK'
-	source ~/.bash_profile
-	然后重启apache：
-	/usr/local/apache2.4/bin/apachectl stop
-	/usr/local/apache2.4/bin/apachectl start
-	加了环境变量后最好检查一下有没有生效：
-	ps -ef|grep httpd
-	strings /proc/apache进程id/environ | grep NLS_LANG
-	例如：	strings /proc/1940/environ | grep NLS_LANG
-2、php.ini文件禁用putenv函数
-	vim /usr/local/php7/etc/php.ini
-SIMPLIFIED CHINESE_CHINA.ZHS16GBK与AMERICAN_AMERICA.ZHS16GBK区别：
 =================================================================================解决php7.2后报错Warning: Use of undefined constant PRE - assumed问题
 解决此种问题其实也不是很难，只是报了”Warning警告“，我们只需要关闭”PHP错误提示“就行了。具体步骤如下：
 
