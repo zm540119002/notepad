@@ -26,6 +26,14 @@ Restfultookit
 	Spring MVC网页开发的时候，我们都是通过requestmapping的方式来定义页面的URL地址的，为了找到这个地址我们一般都是cmd+shift+F的方式进行查找，
 	大家都知道，我们URL的命名一个是类requestmapping+方法requestmapping，查找的时候还是有那么一点不方便的，restfultookit就能很方便的帮忙进行查找。
 POJO To Json
+
+SonarLink
+
+SonarQube
+
+Alibaba Java Coding
+关闭行尾注释：
+settings->Editor->Inspections 搜索注释，关闭
 ```
 
 *Cannot resolve method "XX" 问题解决*

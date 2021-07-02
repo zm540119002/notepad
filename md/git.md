@@ -39,6 +39,59 @@ git checkout -b local-name origin/remote-name
     执行git push即可完成
 ```
 
+# 散点知识
+
+```
+
+```
+
+## git push和git pull的默认行为
+
+```
+我们本该输入git pull origin <branch>或者git push origin <branch>时，我们只想输入git pull或者git push，这个就可以叫做git pull 与git push 的默认行为。
+
+git的全局配置中，有一个push.default属性，其决定了git push操作的默认行为。在Git 2.0之前，这个属性的默认被设为'matching'，2.0之后则被更改为了'simple'。
+
+我们可以通过git version确定当前的git版本（如果小于2.0，更新是个更好的选择），通过git config --global push.default 'option'改变push.default的默认行为（或者也可直接编辑~/.gitconfig文件）。
+
+push.default 有以下几个可选值：
+nothing, current, upstream, simple, matching
+
+nothing - push操作无效，除非显式指定远程分支，例如git push origin develop（我觉得。。。可以给那些不愿学git的同事配上此项）。
+
+current - push当前分支到远程同名分支，如果远程同名分支不存在则自动创建同名分支。
+
+upstream - push当前分支到它的upstream分支上（这一项其实用于经常从本地分支push/pull到同一远程仓库的情景，这种模式叫做central workflow）。
+
+simple - simple和upstream是相似的，只有一点不同，simple必须保证本地分支和它的远程
+upstream分支同名，否则会拒绝push操作。
+
+matching - push所有本地和远程两端都存在的同名分支。
+
+因此如果我们使用了git2.0之前的版本，push.default = matching，git push后则会推送当前分支代码到远程分支，而2.0之后，push.default = simple，如果没有指定当前分支的upstream分支，就会收到上文的fatal提示。
+
+upstream & downstream
+说到这里，需要解释一下git中的upstream到底是什么：
+
+git中存在upstream和downstream，简言之，当我们把仓库A中某分支x的代码push到仓库B分支y，此时仓库B的这个分支y就叫做A中x分支的upstream，而x则被称作y的downstream，这是一个相对关系，每一个本地分支都相对地可以有一个远程的upstream分支（注意这个upstream分支可以不同名，但通常我们都会使用同名分支作为upstream）。
+
+git pull的默认行为和git push完全不同。当我们执行git pull的时候，实际上是做了git fetch + git merge操作，fetch操作将会更新本地仓库的remote tracking，也就是refs/remotes中的代码，并不会对refs/heads中本地当前的代码造成影响。
+
+当我们进行pull的第二个行为merge时，对git来说，如果我们没有设定当前分支的upstream，它并不知道我们要合并哪个分支到当前分支，所以我们需要通过下面的代码指定当前分支的upstream：
+
+git branch --set-upstream-to=origin/<branch> develop
+// 或者git push --set-upstream origin develop 
+实际上，如果我们没有指定upstream，git在merge时会访问git config中当前分支(develop)merge的默认配置，我们可以通过配置下面的内容指定某个分支的默认merge操作
+
+[branch "develop"]
+    remote = origin
+    merge = refs/heads/develop // [1]为什么不是refs/remotes/develop?
+或者通过command-line直接设置：
+
+git config branch.develop.merge refs/heads/develop
+这样当我们在develop分支git pull时，如果没有指定upstream分支，git将根据我们的config文件去merge origin/develop；如果指定了upstream分支，则会忽略config中的merge默认配置。
+```
+
 
 
 # 分支
@@ -47,7 +100,7 @@ git checkout -b local-name origin/remote-name
 同步远程分支
     git fetch 将本地分支与远程保持同步
     git checkout -b 本地分支名x origin/远程分支名x 拉取远程分支并同时创建对应的本地分支
-首先同步所有远程分支，如下：
+同步所有远程分支，如下：
 	git branch -r | grep -v '\->' | while read remote; do git branch --track "${remote#origin/}" "$remote"; done
 
 将本地所有分支与远程保持同步 
@@ -55,70 +108,109 @@ git checkout -b local-name origin/remote-name
 
 最后拉取所有分支代码 
 	git pull --all
-```
-
-
 
 ```
-1.查看一下本地分支
-    git branch;
-    查看本地和远程的所有分支
+
+## 查看
+
+```
+查看本地仓库的本地分支
+    git branch
+查看本地仓库的远程分支
+    git branch -r
+查看本地仓库的所有分支
     git branch -a
-2.新建一个本地的分支
-    git branch -b newbranch   //这个命令是新建一个分支，并切换到该分支上去
-    （git branch newbranch;     git checkout newbranch）这两个命令合起来等同于上面的一个命令
-3.新建一个远程分支（同名字的远程分支）
-    git push origin newbranch:newbranch   //创建了一个远程分支名字叫 newbranch
-4.把本地的新分支，和远程的新分支关联
-    git push --set-upstream origin newbranch
-这时就可以在这个分支下使用 git pull 推送到远程的新分支上了
-
-示例：
-本地：
-	git checkout -b dm8
-	git push origin dm8:dm8
-	git push origin v0.8:v0.8
-其他git：
-	git checout -b dm8
-```
-
-## checkout
-
-```
-示例：当前分支：master
-    git checkout -b hz origin/master
-    git push origin hz:hz
-其他人：
-    git checkout -b hz origin/hz
-    报错解决详见：git 命令行拉去远程的非master分支报错
-注意
-    git checkout -b newbranch	//从本地拉取代码创建新的分支，并切换到新的分支
-    git checkout -b newbranch origin/newbranch //从远程拉取代码创建新的分支，并切换到新的分支
-```
-
-## 删除分支
-
-```
-1、快速创建分支并切换分支 (dev 分支)
-	git checkout -b dev
+    
+实时的远程仓库的分支信息
+	git remote show origin
 	
-2、删除分支 ： 如分支名为dev
+注意：
+	git branch -a 输出的是本地仓库的远程分支信息，而git remote show origin需要联网输出实时的远程仓库的分支信息。
+	解决方法：git fetch origin  //从远程仓库更新信息
+
+```
+
+## 创建&检出
+
+```
+使用git branch <branch name>命令创建一个新的分支。
+可以从现有的分支创建一个新的分支。 也可以使用特定的提交或标签作为起点创建分支。 
+如果没有提供任何特定的提交ID，那么将以HEAD作为起点来创建分支:
+	$ git branch new_branch
+	
+切换分支使用git checkout命令在分支之间切换。
+	$ git checkout new_branch
+
+创建和切换分支的快捷方式:
+	$ git checkout -b test_branch
+
+//从本地拉取代码创建新的分支，并切换到新的分支
+	git checkout -b newbranch	
+
+//从远程拉取代码创建新的分支，并切换到新的分支
+    git checkout -b newbranch origin/远程分支名 | git checkout --track origin/远程分支名 | git checkout -t origin/远程分支名
+
+把本地的新分支，和远程的新分支关联
+    git push --set-upstream origin newbranch
+    
+示例：当前分支：master
+    git checkout -b newbranch origin/远程分支名
+    git push origin newbranch:newbranch
+其他人：
+    git checkout -b newbranch
+
+```
+
+## 删除
+
+```
+删除分支 ： 如分支名为dev
     git branch -d dev 会在删除前检查merge状态（其与上游分支或者与head）。
     git branch -D dev 它会直接删除,不检查
 
-3、删除远程分支
+删除远程分支
 	git push origin --delete dev
 
-4、清理本地不存在的远程分支，如别人删除了dev,但是你本地查看还有，就可以执行该条命令
+清理本地不存在的远程分支，如别人删除了dev,但是你本地查看还有，就可以执行该条命令
 	git remote prune origin
+	
+注意：
+	删除现有分支之前，请切换到其他分支。
+	删除分支命令，有 git branch -d 和 git branch -D，-D 表示强制删除。
+	如果本地分支没有合并到其他分支，或者没有对应的远程分支，删除时则会提示这个错误。
+	直接选择强制删除即可。
 ```
+
+## 重命名
+
+```
+1、本地分支重命名
+ 	git branch -m oldName  newName
+2、将重命名后的分支推送到远程
+	git push origin newName
+3、删除远程的旧分支
+	git push --delete origin oldName
+	
+显示如下，说明删除成功
+To http://11.11.11.11/demo/demo.git
+ - [deleted]           oleName
+```
+
+## 合并
+
+```
+
+```
+
+
 
 # 工作流（分支管理策略）
 
+https://blog.csdn.net/qq_35865125/article/details/80049655
+https://blog.csdn.net/qq_32452623/article/details/78905181
+
 ```
-参考：	
-	https://blog.csdn.net/qq_35865125/article/details/80049655
-	https://blog.csdn.net/qq_32452623/article/details/78905181
+
 ```
 
 # 常用命令
@@ -306,6 +398,7 @@ git branch -r
 	git checkout -b 本地自定义跟踪分支名称 origin/上游分支
 3】本地有个跟踪分支，远程有一个目标分支，想让本地的分支跟踪这个目标分支
 	git branch --set-upstream-to origin/目标分支
+	git branch --set-upstream-to=origin/remote_branch  your_branch
 4】本地有一个跟踪分支，远程没有目标分支，想在远程建立一个目标分支，并建立本地跟踪分支与新建远程分支之间的跟踪关系
 	git push --set-upstream origin 本地跟踪分支/远程新建目标分支名称
 ```

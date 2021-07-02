@@ -37,25 +37,7 @@ http://oa.huitone.com:2019/wui/index.html
         内网：http://172.16.7.120:2019/
 ```
 
-
-
-## 172.16.7.74
-
-```
----------------------------------------------------------------apache
-vim /usr/local/apache2/conf/httpd.conf
-vim /usr/local/apache2/conf/extra/httpd-vhosts.conf
-/usr/local/apache2/bin/apachectl start
----------------------------------------------------------------php
-vim /usr/local/php/lib/php.ini
-extension_dir = "/usr/local/php/include/php/ext"
-cd /usr/local/php/include/php/ext
----------------------------------------------------------------
-```
-
-# 记录
-
-## 词辉
+# 词辉
 
 ```
 1 易用性稳定性及数据权限优化，补充设计文档，对不合理代码重构，补全之前跳过的功能细节（入参校验，数据源表引用登记，数据源标变更处理）
@@ -125,19 +107,19 @@ from a left join (select id, 1  as check_id from b) b on (a.id = b.id)
 ssh -L 9527:172.16.7.56:80 -Ng 172.16.7.71
 ```
 
-## 流程配置
+# 流程配置
 
 ```
 
 ```
 
-### 问题
+## 问题
 
 ```
 1，数据同步新增字段
 ```
 
-### 可优化
+## 可优化
 
 ```
 1、插入数据节点
