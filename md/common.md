@@ -6,7 +6,7 @@ http://mail.huitone.com/webmail7.5/webmail.php?r=site/index/domain/huitone.com
 
 ```
 登录账户：	zm@huitone.com
-登录密码：	HTGX100
+登录密码：	appleId密码
 ```
 
 ## 公司官方网站

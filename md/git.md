@@ -204,7 +204,7 @@ To http://11.11.11.11/demo/demo.git
 
 
 
-# 工作流（分支管理策略）
+## 工作流（分支管理策略）
 
 https://blog.csdn.net/qq_35865125/article/details/80049655
 https://blog.csdn.net/qq_32452623/article/details/78905181
@@ -212,6 +212,57 @@ https://blog.csdn.net/qq_32452623/article/details/78905181
 ```
 
 ```
+
+## 查看分支与远程分支追踪状态
+
+```
+git branch -vv
+git remote -vv
+```
+
+## 建立追踪关系
+
+```
+1：建立本地仓test 并建立追踪关系，如果建立了本地仓也建立了追踪会修改追踪关系（ 建议使用）
+	git branch --set-upstream test origin/master
+
+2:建立test仓库 并建立追踪关系 
+	git branck --track test origin/develop
+
+3:修改追踪关系
+    切换到test，修改追踪仓库（一定要先切换）
+    git checkout test
+    git branch --set-upstream-to  origin/master
+
+4：另一个更为简洁的方式是初次push时，加入-u参数，
+    例如git push -u origin develop或git push --set-upstream origin my_remote_branch_name
+    这个操作在push的同时会指定当前分支的upstream
+
+```
+
+## 设置默认上游分支
+
+```
+假设我有一个名字叫 dev 的分支
+
+一般我们从本地分支提交到远程分支需要
+
+git push origin dev
+
+但是也有时候这样做会更方便快捷
+
+git push
+
+但是在你操作的时候有时会报错,提示你设置上游分支
+
+那你就需要设置一个默认的上游分支
+
+git push --set-upstream origin dev
+
+然后再执行 git push 就可以将本地 dev 分支,直接推送到远程 dev 分支了
+```
+
+
 
 # 常用命令
 
@@ -238,6 +289,7 @@ git push <远程主机名> <本地分支名>  <远程分支名>
 	例如：	git push origin master:refs/for/master
 	即是将本地的master分支推送到远程主机origin上的对应master分支
 	origin 是远程主机名，第一个master是本地分支名，第二个master是远程分支名。
+	
 1.1 git push origin master
 	如果远程分支被省略，如上则表示将本地master分支推送到与之存在追踪关系的远程分支（通常两者同名），如果该远程分支不存在，则会被新建
 
@@ -298,6 +350,14 @@ git pull命令的作用是：取回远程主机某个分支的更新，再与本
 
 
 ```
+
+## git fetch
+
+```
+git fetch origin  //从远程仓库取回所有分支的更新
+```
+
+
 
 ## git reset
 
@@ -374,24 +434,24 @@ $ git revert [commit]
 git branch -a
 git branch -r
 
-查看本地的分支与远程分支之间的追踪关系
-	git branch -vv
+git branch -vv
+	查看本地的分支与远程分支之间的追踪关系	
 
-建立本地的分支与远程分支之间的追踪关系:
-	$ git branch --set-upstream master origin/next
+$ git branch --set-upstream master origin/next
+	建立本地的分支与远程分支之间的追踪关系
 
-上面命令指定master分支追踪origin/next分支。
-如果当前分支与远程分支存在追踪关系，git pull就可以省略远程分支名。
-	$ git pull origin
+$ git pull origin
+    上面命令指定master分支追踪origin/next分支。
+    如果当前分支与远程分支存在追踪关系，git pull就可以省略远程分支名。
 
-上面命令表示，本地的当前分支自动与对应的origin主机”追踪分支”(remote-tracking branch)进行合并。
-如果当前分支只有一个追踪分支，连远程主机名都可以省略。
-	$ git pull
+$ git pull
+    上面命令表示，本地的当前分支自动与对应的origin主机”追踪分支”(remote-tracking branch)进行合并。
+    如果当前分支只有一个追踪分支，连远程主机名都可以省略。	
 
-上面命令表示，当前分支自动与唯一一个追踪分支进行合并。
-如果合并需要采用rebase模式，可以使用–rebase选项。
-	$ git pull --rebase <远程主机名> <远程分支名>:<本地分支名>
-
+$ git pull --rebase <远程主机名> <远程分支名>:<本地分支名>
+    上面命令表示，当前分支自动与唯一一个追踪分支进行合并。
+    如果合并需要采用rebase模式，可以使用–rebase选项。
+	
 1】远程有上游分支，但是本地没有相应的跟踪分支时候，此时会在本地建立一个和远程上游分支同名的分支
 	git checkout --track origin/上游分支
 2】远程有上游分支，但是本地没有相应的追踪分支，想建立一个与上游分支不同名称的分支
@@ -401,6 +461,23 @@ git branch -r
 	git branch --set-upstream-to=origin/remote_branch  your_branch
 4】本地有一个跟踪分支，远程没有目标分支，想在远程建立一个目标分支，并建立本地跟踪分支与新建远程分支之间的跟踪关系
 	git push --set-upstream origin 本地跟踪分支/远程新建目标分支名称
+	
+简介
+git branch [--color[=<when>] | --no-color] [-r | -a]
+    [--list] [-v [--abbrev=<length> | --no-abbrev]]
+    [--column[=<options>] | --no-column] [--sort=<key>]
+    [(--merged | --no-merged) [<commit>]]
+    [--contains [<commit]] [--no-contains [<commit>]]
+    [--points-at <object>] [--format=<format>] [<pattern>…​]
+git branch [--set-upstream | --track | --no-track] [-l] [-f] <branchname> [<start-point>]
+git branch (--set-upstream-to=<upstream> | -u <upstream>) [<branchname>]
+git branch --unset-upstream [<branchname>]
+git branch (-m | -M) [<oldbranch>] <newbranch>
+git branch (-d | -D) [-r] <branchname>…
+git branch --edit-description [<branchname>]
+Shell
+描述如果给出了--list，或者如果没有非选项参数，则列出现有的分支; 当前分支将以星号突出显示。 选项-r导致远程跟踪分支被列出，而选项-a显示本地和远程分支。 如果给出了一个<pattern>，它将被用作一个shell通配符，将输出限制为匹配的分支。 如果给出多个模式，如果匹配任何模式，则显示分支。 请注意，提供<pattern>时，必须使用--list; 否则命令被解释为分支创建。
+使用--contains，仅显示包含命名提交的分支(换句话说，提示提交的分支是指定的提交的后代)，--no-contains会反转它。 随着已经有了，只有分支合并到命名提交(即从提交提交可以提前提交的分支)将被列出。 使用--no合并只会将未合并到命名提交中的分支列出。 如果缺少<commit>参数，则默认为HEAD(即当前分支的提示)。/
 ```
 
 ## git tag 

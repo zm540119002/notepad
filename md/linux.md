@@ -1343,7 +1343,17 @@ free 命令显示系统内存的使用情况，包括物理内存、交换内存
     buff/cache 列显示被 buffer 和 cache 使用的物理内存大小。
     available 列显示还可以被应用程序使用的物理内存大小。
     
-available  = free + buffer + cache 请注意，这只是一个很理想的计算方式，实际中的数据往往有较大的误差。
+其中：
+    total 内存总数
+    used 已经使用的内存数
+    free 空闲的内存数
+    shared 多个进程共享的内存总额
+    buffers Buffer Cache和cached Page Cache 磁盘缓存的大小
+    -buffers/cache 的内存数:used - buffers - cached
+    +buffers/cache 的内存数:free + buffers + cached
+    
+可用的内存 = free memory + buffers + cached
+available  = free + buffers + cache （请注意，这只是一个很理想的计算方式，实际中的数据往往有较大的误差。）
 ```
 
 ### top
@@ -1375,7 +1385,41 @@ https://www.cnblogs.com/niuben/p/12017242.html
 　　M：按%MEM排行
 ```
 
+### vmstat
+
+http://www.ha97.com/4512.html
+
+https://www.cnblogs.com/ggjucheng/archive/2012/01/05/2312625.html
+
+```
+
+```
+
+### Cache内存占用过高
+
+https://www.cnblogs.com/rocky-AGE-24/p/7629500.html
+
+```
+buffers/cache占用的较多，说明系统中有进程曾经读写过文件，但是不要紧，这部分内存是当空闲来用的。
+
+Linux内核会在内存将要耗尽的时候，触发内存回收的工作，以便释放出内存给急需内存的进程使用。一般情况下，这个操作中主要的内存释放都来自于对buffer／cache的释放。尤其是被使用更多的cache空间。既然它主要用来做缓存，只是在内存够用的时候加快进程对文件的读写速度，那么在内存压力较大的情况下，当然有必要清空释放cache，作为free空间分给相关进程使用。所以一般情况下，我们认为buffer/cache空间可以被释放，这个理解是正确的。
+
+但是这种清缓存的工作也并不是没有成本。理解cache是干什么的就可以明白清缓存必须保证cache中的数据跟对应文件中的数据一致，才能对cache进行释放。所以伴随着cache清除的行为的，一般都是系统IO飙高。因为内核要对比cache中的数据和对应硬盘文件上的数据是否一致，如果不一致需要写回，之后才能回收。
+
+在系统中除了内存将被耗尽的时候可以清缓存以外，我们还可以使用下面这个文件来人工触发缓存清除的操作：
+[root@tencent64 ~]# cat /proc/sys/vm/drop_caches 
+0
+这个文件可以设置的值分别为1、2、3。它们所表示的含义为：
+	echo 1 > /proc/sys/vm/drop_caches:表示清除pagecache。
+	echo 2 > /proc/sys/vm/drop_caches:表示清除回收slab分配器中的对象（包括目录项缓存和inode缓存）。slab分配器是内核中管理内存的一种机制，其中很多缓存数据实现都是用的pagecache。
+	echo 3 > /proc/sys/vm/drop_caches:表示清除pagecache和slab分配器中的缓存对象。
+```
+
+
+
 ## 磁盘
+
+https://www.linuxprobe.com/linux-lvm.html
 
 ```
 1、查看未挂载磁盘命令：
@@ -1406,9 +1450,6 @@ du -sh /*
 du -sh /usr/local/* | sort -nr
 
 lsblk 可以看成是“List block device”的缩写，即列为出所有存储设备。
-
-参考：
-	https://www.linuxprobe.com/linux-lvm.html
 ```
 
 ## date
@@ -1500,7 +1541,27 @@ netstat查看端口占用情况
 ### 端口映射
 
 ```
+示例一：
+公司内网机器（工作机器），能同时连接58.248.109.28和172.16.7.54，但是58.248.109.28和172.16.7.54互不通
+在工作机器建立58.248.109.28的shell连接，然后
+打开xshell配置隧道：
+    类型（方向）：Remote（Incoming）
+    源主机：localhost
+    侦听端口：2200
+    目标主机：172.16.7.54
+    目标端口：22
+然后58.248.109.28上访问：	git clone  ssh://git@127.0.0.1:2200/php/inc_chk.git
 
+示例二：
+公司内网机器（工作机器），能同时连接58.248.109.28和172.16.7.56，但是58.248.109.28和172.16.7.56互不通
+在工作机器建立58.248.109.28的shell连接，然后
+打开xshell配置隧道：
+    类型（方向）：Remote（Incoming）
+    源主机：localhost
+    侦听端口：2220
+    目标主机：172.16.7.6
+    目标端口：22
+scp -r -P 2220 root@127.0.0.1:/usr/local/apache2.4/htdocs/inc_chk/new_index/svg/* .
 ```
 
 
@@ -1556,12 +1617,16 @@ ulimit 是一个计算机命令，用于shell启动进程所占用的资源，�
         或者：
         * - noproc 65535
         * - nofile 65535
+	或者：
+    	echo "* - nofile 65535" >> /etc/security/limits.conf
+	 	echo "* - nproc 65535" >> /etc/security/limits.conf
+	 	
     以上内容表示，将-u和-n的软限制和硬限制同时修改为65535
     
     说明：* 代表针对所有用户
         noproc 是代表最大进程数
         nofile 是代表最大文件打开数
-        
+     
 步骤二（次步奏可忽略）：
 	vim /etc/pam.d/login
 	添加如下内容：
@@ -1574,11 +1639,9 @@ ulimit 是一个计算机命令，用于shell启动进程所占用的资源，�
     vim /etc/profile # 所有用户有效
     ulimit -u 65535
     ulimit -n 65535
-    每次登陆shell后，会初始执行这两条ulimit命令，并使其生效。
-
-生效：
-	重新登录或使用source /etc/profile|. /etc/profile立即生效。
-	source使当前shell对指定文件内容生效。
+    
+    重新登录或使用：source ~/.bash_profile | . ~/.bash_profile
+    重新登录或使用：source /etc/profile | . /etc/profile
 	
 /etc/security/limits.conf配置详解：  
     domain 是指生效实体

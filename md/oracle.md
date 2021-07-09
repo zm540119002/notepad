@@ -2,9 +2,7 @@
 
 ## ora-01502
 
-```
-参考：	https://www.cnblogs.com/lijiaman/p/9277149.html
-```
+https://www.cnblogs.com/lijiaman/p/9277149.html
 
 ```
 Oracle分区表删除分区引发错误ORA-01502: 索引或这类索引的分区处于不可用状态
@@ -109,6 +107,29 @@ select to_date('2011-03-21 10:10:10','YYYY-MM-DD HH24:MI:SS') from dual;
 	source ~/.bash_profile
 重启apache（注意：不能restart，需先stop，再start）：
 ```
+
+## plsql可以连接oracle但是OCILogon连接不上
+
+https://jingyan.baidu.com/article/fc07f98977ec0f12fee51941.html
+
+```
+------解决方案--------------------
+print_r(oci_error());
+发现报：ora-28001
+
+--查看用户密码默认管理方式
+select profile from dba_users where username='ua_dbg';
+select profile from dba_users where username='ltdba';
+
+--查看数据库默认的密码管理方式有效期
+SELECT * FROM dba_profiles WHERE profile='DEFAULT' AND resource_name='PASSWORD_LIFE_TIME';
+
+--修改用户密码并设置数据库默认密码为永久有效
+alter user ua_dbg identified by ua_dbgrica;
+ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED ;
+```
+
+
 
 # 环境变量(linux)
 

@@ -174,3 +174,35 @@ Content-Security-Policy: default-src 'self' ：限制所有的外部资源，都
 
 ```
 
+# 禁止显示或发送Apache版本号（设置ServerTokens）
+
+```
+# vim httpd.conf 末尾添加
+    ServerTokens Prod
+    ServerSignature Off
+
+默认地，服务器HTTP响应头会包含apache和php版本号。像下面的，这是有危害的，因为这会让黑客通过知道详细的版本号而发起已知该版本的漏洞攻击。
+为了阻止这个，需要在httpd.conf设置ServerTokens为Prod，这会在响应头中显示“Server:Apache”而不包含任何的版本信息。
+
+#仅软件名称，例如：apache
+	ServerTokens Prod
+包括主版本号，例如：apache/2
+	ServerTokens Major
+#包括次版本号，例如：apache/2.0
+	ServerTokens Minor
+#仅apache的完整版本号，例如：apache/2.0.54
+	ServerTokens Min
+#包括操作系统类型，例如：apache/2.0.54（Unix）
+	ServerTokens OS
+#包括apache支持的模块及模块版本号，例如：Apache/2.0.54 (Unix) mod_ssl/2.0.54 OpenSSL/0.9.7g
+	ServerTokens Ful
+
+下面是ServerTokens的一些可能的赋值：
+    ServerTokens Prod 显示“Server: Apache”
+    ServerTokens Major 显示 “Server: Apache/2″
+    ServerTokens Minor 显示“Server: Apache/2.2″
+    ServerTokens Min 显示“Server: Apache/2.2.17″
+    ServerTokens OS 显示 “Server: Apache/2.2.17 (Unix)”
+    ServerTokens Full 显示 “Server: Apache/2.2.17 (Unix) PHP/5.3.5″ (如果你这指定任何的值，这个是默认的返回信息)
+```
+

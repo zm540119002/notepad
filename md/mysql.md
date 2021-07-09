@@ -22,6 +22,33 @@
 ps: 如果数据库表没有加索引，那么更新操作的时候会锁住整张表，也就是所谓的表级锁；如果有索引，并且查询条件中也带有这些字段，那么就会使用行级锁。行级锁并不是锁记录，而是锁索引。
 ```
 
+## 事务隔离级别
+
+https://www.cnblogs.com/jrri/p/11651709.html
+
+```
+show variables like '%tx_isolation%';
+
+select @@global.tx_isolation;
+set global transaction isolation level read committed;
+
+select @@global.tx_isolation;
+set tx_isolation='READ-COMMITTED';
+
+mysql8:
+    select @@global.transaction_isolation;
+    set global transaction isolation level read committed;
+    
+    select @@transaction_isolation;
+    set session transaction isolation level read committed;
+    
+vim /home/mysql/my.cnf
+[mysqld]下面添加：
+transaction_isolation = READ-COMMITTED
+```
+
+
+
 # 常见问题
 
 ## ONLY_FULL_GROUP_BY
@@ -41,6 +68,14 @@ set @@SESSION.sql_mode='STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_F
 
 sql_mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
 ```
+
+## 数据库最大连接数设置太小
+
+```
+linux ulimit 句柄设置大点
+```
+
+
 
 # 慢查询分析
 

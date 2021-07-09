@@ -8,13 +8,109 @@ ini_set('display_errors', true);
 error_reporting(E_ALL);
 ```
 
+## header头
+
+```
+###内容类型###
+header('Content-Type: text/html; charset=utf-8'); //网页编码
+header('Content-Type: text/plain'); //纯文本格式
+header('Content-Type: image/jpeg'); //JPG、JPEG
+header('Content-Type: application/zip'); // ZIP文件
+header('Content-Type: application/pdf'); // PDF文件
+header('Content-Type: audio/mpeg'); // 音频文件
+header('Content-type: text/css'); //css文件
+header('Content-type: text/javascript'); //js文件
+header('Content-type: application/json'); //json
+header('Content-type: application/pdf'); //pdf
+header('Content-type: text/xml'); //xml
+header('Content-Type: application/x-shockw**e-flash'); //Flash动画
+
+######
+
+###声明一个下载的文件###
+header('Content-Type: application/octet-stream');
+header('Content-Disposition: attachment; filename="ITblog.zip"');
+header('Content-Transfer-Encoding: binary');
+readfile('test.zip');
+######
+
+###对当前文档禁用缓存###
+header('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+######
+
+###显示一个需要验证的登陆对话框###
+header('HTTP/1.1 401 Unauthorized');
+header('WWW-Authenticate: Basic realm="Top Secret"');
+######
+
+
+###声明一个需要下载的xls文件###
+header('Content-Disposition: attachment; filename=ithhc.xlsx');
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header('Content-Length: '.filesize('./test.xls'));
+header('Content-Transfer-Encoding: binary');
+header('Cache-Control: must-revalidate');
+header('Pragma: public');
+readfile('./test.xls');
+######
+?>
+```
+
+### apache配置方式
+
+```
+
+```
+
+
+
 # 常见问题
 
 ## **连不上数据库常见原因**
 
+### ip限制
+
+### ip冲突
+
 ```
-ip限制
-ip冲突
+今天运维同事说重启程序后数据库连接不上，让我帮忙看看。
+
+其它机器连接数据库是正常的，应该是网络出现问题。
+
+我上去后先试一下在应用服务器ping数据库服务器，发现可以正常ping通。
+
+再用telnet试一下应用服务器连接数据库服务器端口是否通，发现telnet提示No route to host
+
+本来以为是路由设置问题，但发现两台机是在同一个局域网内，路由配置正常。
+
+再检查了一下数据库服务器的防火墙和iptables，发现配置也没问题，即使把防火墙关了也没用。
+
+能想到的网络问题都排除了，网上也查不到有用的资料，只能暂时放弃。
+
+为了解决问题，我想出了一个临时解决方法：
+
+从数据库服务器上连接回应用服务器，做一个ssh转发，把应用服务器本地的1521端口转到远程的1521端口
+
+这样应用程序就不需要连接数据库服务器的端口，只要连接本地端口就行。
+
+但实际操作时发现一个问题：从数据库服务器ssh连接应用服务器时，提示密码错误。
+
+但使用SecureCRT直接连接应用服务器时，使用相同密码却能正常登录。
+
+当时我心里突然灵光一闪：**“难道连接的不是同一台机？”**
+
+于是用ifconfig 检查一下两台服务器的ip设置，发现一个问题：
+
+**数据库服务器有多个网卡，其中有一个网卡配置的ip地址与应用服务器的一样！**
+
+咨询了一下运费同事，这个配置有问题的网卡并没有用。
+
+于是让他把这个网卡ip改了，然后再试了一下，发现这次应用服务器可以正常使用telnet连接数据库服务器的端口了。
+
+（中间有一个插曲，我使用ip down停了有问题的网卡后，发现连接还是有问题。看到网上说需要把网络全停了，修改配置再启动才有效。于是我就照着操作执行“ service network stop”时，突然发现有问题:SecureCRT所有窗口都断开了。这时我才想起来，我现在是通过远程连接操作服务器的，把网络关了我啥都干不了-_-!。后来只能让现场的运维同事帮忙到机房连接机器重新开启网络服务才行。**远程操作服务器时应该禁止执行关闭机器或者关闭网络的命令，我安全操作意识还是太低了。**）
+
+感概：要是有网络问题检查清单就好了，不用每次靠灵感去查问题。
 ```
 ## ERR_CONNECTION_TIMED_OUT
 
@@ -61,7 +157,18 @@ vim /etc/hosts
 SIMPLIFIED CHINESE_CHINA.ZHS16GBK与AMERICAN_AMERICA.ZHS16GBK区别：
 ```
 
+## session不断变化
 
+```
+现象：
+	https换成http后sessionid不断变化
+原因：
+    session.cookie_secure = true
+    如果开启则表明你的cookie只有通过HTTPS协议传输时才起作用，用http协议是不发送的。
+解决：
+	vim /usr/local/php7/etc/php.ini
+	session.cookie_secure = false
+```
 
 # php-fpm
 
@@ -183,6 +290,8 @@ cd /usr/local/src/php-7.2.31/ext/gd
 ./configure --with-php-config=/usr/local/php/bin/php-config  --with-jpeg-dir=/usr/lib64  --with-png-dir=/usr/lib64   --with-freetype-dir=/usr/lib64
 ```
 
+pdo_oci
+
 # 注意事项
 
 ## 处理 register_globals 
@@ -296,8 +405,25 @@ echo $a;
 
 ```
 会话过期设置php.ini：
-    session.cookie_lifetime = 30
+    session.cookie_lifetime = 30 //设为0时永不过期
     session.gc_maxlifetime = 30
+    
+session 回收机制：
+    PHP采用Garbage Collection process对过期session进行回收，然而并不是每次session建立时，都能够唤起 'garbage collection' process ，gc是按照一定概率启动的。这主要是出于对服务器性能方面的考虑，每个session都触发gc，浏览量大的话，服务器吃不消，然而按照一定概率开启gc，当流览量大的时候，session过期机制能够正常运行，而且服务器效率得到节省。细节应该都是多年的经验积累得出的。
+
+三个与PHP session过期相关的参数(php.ini中)：
+    session.gc_probability = 1
+    session.gc_divisor = 1000
+    session.gc_maxlifetime = 1440
+
+gc启动概率 = gc_probability / gc_divisor = 0.1%
+
+session过期时间 gc_maxlifetime 单位：秒
+
+
+
+当web服务正式提供时，session过期概率就需要根据web服务的浏览量和服务器的性能来综合考虑session过期概率。为每个session都开启gc，显然是不明智的，感觉有点“碰运气”的感觉，要是访问量小命中几率就小。我在本机测试过程中，几乎都没有被命中过，sessionid几天都不变，哪怕机器重启。测试过程中，这个过期概率值要设置大一点命中几率才高点。
+
 ```
 
 # 治理系统
@@ -330,7 +456,6 @@ select distinct C.SERVICE_ID, C.SERVICE_NAME, C.BIZ_DOMAIN, C.SEQU
    select * from tb_ua_cfg_biz_domain where name_cn like ( '主网系统')
    select * from tb_ua_cfg_service_type where biz_domain = (select biz_domain_id from tb_ua_cfg_biz_domain where name_cn like ( '主网系统'))
    select * from tb_ua_cfg_sub_service_type where service_id in (select service_id from tb_ua_cfg_service_type where biz_domain = 1744944)
- 
  
    select * from TB_UC_ROLE_RIGHT where role_id='1000' and uc_rsc_type='SUB_SERVICE' 
    delete TB_UC_ROLE_RIGHT where role_id='1000' and uc_rsc_type='SUB_SERVICE' 

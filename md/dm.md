@@ -11,6 +11,18 @@
 	ALTER USER USER_NAME IDENTIFIED  BY “用户口令”;   ---设置密码
 ```
 
+# 日志
+
+```
+select * from v$dm_ini where para_name ='SVR_LOG';
+-- 开启日志
+alter system set 'SVR_LOG' = 1;
+-- 关闭日志
+alter system set 'SVR_LOG' = 0;
+```
+
+
+
 # 注意事项
 
 ## 扩展
