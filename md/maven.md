@@ -105,3 +105,11 @@ mvn clean install -P dev -Dmaven.test.skip=true -Dmaven.javadoc.skip=true
 </settings>
 ```
 
+# POM
+
+https://www.runoob.com/maven/maven-pom.html
+
+```
+
+```
+

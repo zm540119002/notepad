@@ -1644,29 +1644,31 @@ public class CodeBlock{
 
 # static
 
-```
-参考：
-	https://www.cnblogs.com/dolphin0520/p/3799052.html
+https://www.cnblogs.com/dolphin0520/p/3799052.html
+
 ```
 
-
+```
 
 # Java8的流Stream
 
+https://blog.csdn.net/yitian_66/article/details/80651921
+
 ```
-参考：
-	https://blog.csdn.net/yitian_66/article/details/80651921
+
 ```
 
 # 基础语法
 
+https://www.runoob.com/java/java-data-structures.html
+
 ```
-参考：
-	https://www.runoob.com/java/java-data-structures.html
 
 ```
 
 ## 集合框架
+
+https://www.runoob.com/java/java-collections.html
 
 ```
 Java 集合框架主要包括两种类型的容器，一种是集合（Collection），存储一个元素集合，另一种是图（Map），存储键/值对映射。
@@ -1748,14 +1750,11 @@ JDK和CGLib的性能对比
 
 ### 1、直接注入
 
+https://www.jianshu.com/p/ef7739a01cb0
+
 ```
 @Resource
 private ApplicationContext ctx;
-
-作者：王勇1024
-链接：https://www.jianshu.com/p/ef7739a01cb0
-来源：简书
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 ```
 
 ### 2、实现ApplicationContextAware接口

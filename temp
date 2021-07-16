@@ -1,0 +1,6 @@
+insert into rpt_task_statistics_c(clean_oid, count, status_d, status_r, uc$ds_id, uc$data_date, uc$data_batch_id, uc$tag_1450562588254208)
+select early_H10.clean_oid, H10.clean_oid, '1~2', ((case when H10.clean_oid is null then 0 else H10.clean_oid end) - (case when early_H10.clean_oid is null then 0.00001 else early_H10.clean_oid end)) / (case when early_H10.clean_oid is null then 0.00001 else early_H10.clean_oid end), ${UC_DS_ID}, ${DATA_DATE}, ${DATA_BATCH_ID}, null
+ from tbl_clean_sched early_H10
+left join tbl_clean_sched as H10 on (early_H10.clean_oid = H10.clean_oid AND H10.uc$data_date = '${DataDate_CURR}')
+where H27.hchadd  and early_H10.uc$data_date = '${DataDate_LAST}'
+;

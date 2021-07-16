@@ -664,6 +664,20 @@ dpkg：
 	重新配制一个已经安装的包裹，如果它使用的是 debconf (debconf 为包裹安装提供了一个统一的配制界面)。
 ```
 
+## 进程
+
+https://www.cnblogs.com/leisure_chn/p/10393707.html
+
+https://blog.51cto.com/vinsent/1962388
+
+https://zhuanlan.zhihu.com/p/93553600
+
+```
+echo $$         # 获取当前bash的进程号
+```
+
+
+
 ## 内核
 
 ```
@@ -674,14 +688,6 @@ dpkg：
     网络协议
     设备管理
 ```
-## 进程管理
-
-```
-
-```
-
-
-
 ## shell
 
 ```
@@ -822,6 +828,19 @@ Defaults      env_reset
 
 不行的话在用户的主目录里的.bashrc中添加:
 	alias sudo='sudo env PATH=$PATH'
+```
+
+#### LANG
+
+```
+sudo vim /etc/default/locale
+LANG=zh_CN.UTF-8 | zh_CN.gbk | en_US.UTF-8 | zh_CN.GB2312
+LANGUAGE=zh_CN
+
+export LANG=zh_CN.GB2312
+export LC_CTYPE=zh_CN.GBK
+
+export LANG=zh_CN.GBK
 ```
 
 #### export
@@ -1349,11 +1368,12 @@ free 命令显示系统内存的使用情况，包括物理内存、交换内存
     free 空闲的内存数
     shared 多个进程共享的内存总额
     buffers Buffer Cache和cached Page Cache 磁盘缓存的大小
-    -buffers/cache 的内存数:used - buffers - cached
-    +buffers/cache 的内存数:free + buffers + cached
+    -buffers/cache used的内存数:used - buffers - cached
+    +buffers/cache free的内存数:free + buffers + cached
     
 可用的内存 = free memory + buffers + cached
 available  = free + buffers + cache （请注意，这只是一个很理想的计算方式，实际中的数据往往有较大的误差。）
+
 ```
 
 ### top
@@ -1387,12 +1407,15 @@ https://www.cnblogs.com/niuben/p/12017242.html
 
 ### vmstat
 
+https://www.cnblogs.com/ftl1012/p/vmstat.html
+
 http://www.ha97.com/4512.html
 
 https://www.cnblogs.com/ggjucheng/archive/2012/01/05/2312625.html
 
 ```
-
+vmstat是Virtual Meomory Statistics（虚拟内存统计）的缩写，可对操作系统的虚拟内存、进程、CPU活动进行监控。
+是对系统的整体情况进行统计，不足之处是无法对某个进程进行深入分析。
 ```
 
 ### Cache内存占用过高
@@ -1736,6 +1759,7 @@ List one file per line. This is the default for ls when standard output is not a
 ls  data-govern-doc/md/*.md|cat
 
 既：ls|cat == ls -1
+ls -lrt|tail
 ```
 
 ## xargs
@@ -2045,8 +2069,12 @@ openssl version
 启动SSH： service sshd start
 设置开机运行： chkconfig sshd on
 
+systemctl restart sshd
+
 SSH 服务配置文件位置
 /etc/ssh/sshd_config
+
+vim /etc/hosts.allow
 ```
 
 
@@ -2319,6 +2347,126 @@ vim /usr/share/vim/vim81/defaults.vim
 输入:wq! 保存即可解决问题。
 ```
 
+### .viminfo和.vimrc
+
+```
+1. ~/.viminfo
+    在vim中操作的行为，vim会自动记录下来，保存在 ~/.viminfo 文件中。
+    这样为了方便下次处理，
+    如：vim打开文件时，光标会自动在上次离开的位置显示。
+    原来搜索过的字符串，新打开文件时自动高亮显示。
+    ~/.viminfo 文件是系统自动生成。
+
+2. /etc/vimrc | /etc/vim/vimrc
+	vimrc是vim的环境设置文件,不建议修改vimrc 文件，每个用户可以在用户根目录中设置vim，新建 ~/.vimrc
+
+```
+
+### vimrc
+
+https://www.jianshu.com/p/793f7ce26281
+
+```
+Vim编辑器相关的所有功能开关都可以通过.vimrc文件进行设置。
+
+.vimrc配置文件分系统配置和用户配置两种。
+
+系统vimrc配置文件存放在Vim的安装目录，默认路径为/usr/share/vim/.vimrc。可以使用命令echo $VIM来确定Vim的安装目录。
+
+用户vimrc文件，存放在用户主目录下~/.vimrc。可以使用命令echo $HOME确定用户主目录。
+
+注意：用户配置文件优先于系统配置文件，Vim启动时会优先读取当前用户根目录下的.vimrc文件。所以与个人用户相关的个性化配置一般都放在~/.vimrc中。
+
+设置编码
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+set termencoding=utf-8
+set encoding=utf-8
+与Vim编码有关的变量包括：encoding、fileencoding、termencoding。
+encoding选项用于缓存的文本、寄存器、Vim 脚本文件等；
+fileencoding选项是Vim写入文件时采用的编码类型；
+termencoding选项表示输出到终端时采用的编码类型。
+
+显示行号
+set nu
+set number
+nu是number的缩写，所以上面两个配置命令是完全等效的。
+
+突出显示当前行
+set cursorline
+
+启用鼠标
+set mouse=a
+set selection=exclusive
+set selectmode=mouse,key
+
+显示括号匹配
+set showmatch
+
+'设置Tab长度为4空格'
+set tabstop=4
+
+'设置自动缩进长度为4空格'
+set shiftwidth=4
+
+'继承前一行的缩进方式，适用于多行注释'
+set autoindent
+
+'总是显示状态栏'
+set laststatus=2
+
+'显示光标当前位置'
+set ruler
+```
+
+### 编码方式的设置
+
+```
+和所有的流行文本编辑器一样，Vim 可以很好的编辑各种字符编码的文件，这当然包括UCS-2、UTF-8 等流行的 Unicode 编码方式。然而不幸的是，和很多来自 Linux 世界的软件一样，这需要你自己动手设置。
+
+Vim 有四个跟字符编码方式有关的选项，encoding、fileencoding、fileencodings、termencoding (这些选项可能的取值请参考 Vim 在线帮助 :help encoding-names)，它们的意义如下:
+* encoding: Vim 内部使用的字符编码方式，包括 Vim 的 buffer (缓冲区)、菜单文本、消息文本等。默认是根据你的locale选择.用户手册上建议只在 .vimrc 中改变它的值，事实上似乎也只有在.vimrc 中改变它的值才有意义。你可以用另外一种编码来编辑和保存文件，如你的vim的encoding为utf-8,所编辑的文件采用cp936编码,vim会 自动将读入的文件转成utf-8(vim的能读懂的方式），而当你写入文件时,又会自动转回成cp936（文件的保存编码).
+
+* fileencoding: Vim 中当前编辑的文件的字符编码方式，Vim 保存文件时也会将文件保存为这种字符编码方式 (不管是否新文件都如此)。
+
+* fileencodings: Vim自动探测fileencoding的顺序列表， 启动时会按照它所列出的字符编码方式逐一探测即将打开的文件的字符编码方式，并且将 fileencoding 设置为最终探测到的字符编码方式。因此最好将Unicode 编码方式放到这个列表的最前面，将拉丁语系编码方式 latin1 放到最后面。
+
+* termencoding: Vim 所工作的终端 (或者 Windows 的 Console 窗口) 的字符编码方式。如果vim所在的term与vim编码相同，则无需设置。如其不然，你可以用vim的termencoding选项将自动转换成term 的编码.这个选项在 Windows 下对我们常用的 GUI 模式的 gVim 无效，而对 Console 模式的Vim 而言就是 Windows 控制台的代码页，并且通常我们不需要改变它。
+
+好了，解释完了这一堆容易让新手犯糊涂的参数，我们来看看 Vim 的多字符编码方式支持是如何工作的。
+1. Vim 启动，根据 .vimrc 中设置的 encoding 的值来设置 buffer、菜单文本、消息文的字符编码方式。
+2. 读取需要编辑的文件，根据 fileencodings 中列出的字符编码方式逐一探测该文件编码方式。并设置 fileencoding 为探测到的，看起来是正确的 (注1) 字符编码方式。
+3. 对比 fileencoding 和 encoding 的值，若不同则调用 iconv 将文件内容转换为encoding 所描述的字符编码方式，并且把转换后的内容放到为此文件开辟的 buffer 里，此时我们就可以开始编辑这个文件了。注意，完成这一步动作需要调用外部的 iconv.dll(注2)，你需要保证这个文件存在于 $VIMRUNTIME 或者其他列在 PATH 环境变量中的目录里。
+4. 编辑完成后保存文件时，再次对比 fileencoding 和 encoding 的值。若不同，再次调用 iconv 将即将保存的 buffer 中的文本转换为 fileencoding 所描述的字符编码方式，并保存到指定的文件中。同样，这需要调用 iconv.dll由于 Unicode 能够包含几乎所有的语言的字符，而且 Unicode 的 UTF-8 编码方式又是非常具有性价比的编码方式 (空间消耗比 UCS-2 小)，因此建议 encoding 的值设置为utf-8。这么做的另一个理由是 encoding 设置为 utf-8 时，Vim 自动探测文件的编码方式会更准确 (或许这个理由才是主要的 ;)。我们在中文 Windows 里编辑的文件，为了兼顾与其他软件的兼容性，文件编码还是设置为 GB2312/GBK 比较合适，因此 fileencoding 建议设置为 chinese (chinese 是个别名，在 Unix 里表示 gb2312，在 Windows 里表示cp936，也就是 GBK 的代码页)。
+```
+
+### 示例
+
+```
+今天解决了vi命令打开日志文件中文总是显示乱码的问题。由于项目组中的日志包含一些特殊字符，所以使用vim打开日志文件时总是不能正确识别出文件字符编码。此时用:set fileencoding命令可以看出vim把文件编码识别成latin1。  
+
+　　在这种情况下无论终端设置成gbk还是utf-8编码，都不能正确显示中文。
+
+　　解决方法有两个：
+
+　　1 使用:e ++enc=utf-8命令强制让vim以utf-8编码重新打开文件 注意：由于我们程序有时也会输出gbk编码的中文字符日志，所以有时还会有少量乱码。
+
+　　2 在打开文件前设置好正确的fileencodings（注意这个参数比前面多了一个s，上面的是vim探测出来的文件编码，这个是可供vim选择的文件编码列表）
+
+　　 在~/.vimrc里面加上一行设置
+
+　　set fileencodings=ucs-bom,utf-8,gbk18030
+
+　　（我们项目组机器默认的fileencodings是ucs-bom,utf-8,latin1，latin1是一种兼容性很强的字符编码，这样的设置让vim很倾向于认为文件编码是latin1）  
+
+　　总结一下今天学到的vim编码知识：vim涉及字符显示的选项有三个，fileencoding文件字符编码，encoding缓冲区字符编码，termencoding终端字符编码。  
+
+　　vim显示字符的顺序:（探测文件编码，从fileencodings里面选择最合适的编码赋值给fileencoding）按fileencoding编码读取文件->将读取到的内容转成encoding编码->将encoding编码转换成termencoding打印到终端->终端(我们平时主要使用的是securecrt)按设置的编码(一般是utf8)显示字符。
+
+　　其中fileencoding必须在文件打开前设置才有效，encoding必须在vim启动前设置才有效，termencoding可以根据需要随时设置。 （之前我一直不知道这几个设置生效限制，按网上介绍修改过四个编码，但还是乱码） 
+
+　　这四个编码如果设置不统一，就很有可能出现中文乱码问题，其中前三个编码可以在vim查看，最后一个编码需要在securecrt设置查看。
+```
+
 
 
 ## ODBC 
@@ -2458,6 +2606,7 @@ scp -r root@172.16.7.71:/usr/local/nginx/conf/nginx_2c.conf .
 scp -r root@172.16.6.45:/usr/local/nginx/conf/nginx_2c.conf .
 scp -r root@172.16.7.57:/root/sbin/INS_convert.sh .
 scp -r root@172.16.7.56:/usr/local/apache2.4/htdocs/inc_chk/new_index/svg/* .
+scp -r root@172.16.7.57:/home/dev/anaconda3/lib/python3.8/site-packages/matplotlib/mpl-data/fonts/ttf/simhei.ttf .
 ```
 
 ## 清空文件5种方法
