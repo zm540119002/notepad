@@ -129,6 +129,14 @@ alter user ua_dbg identified by ua_dbgrica;
 ALTER PROFILE DEFAULT LIMIT PASSWORD_LIFE_TIME UNLIMITED ;
 ```
 
+## 表空间不足的两种解决办法
+
+https://www.cnblogs.com/xiaoxiaoliu888/p/9390857.html
+
+```
+
+```
+
 
 
 # 环境变量(linux)

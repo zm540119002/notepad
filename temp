@@ -4,3 +4,5 @@ select early_H10.clean_oid, H10.clean_oid, '1~2', ((case when H10.clean_oid is n
 left join tbl_clean_sched as H10 on (early_H10.clean_oid = H10.clean_oid AND H10.uc$data_date = '${DataDate_CURR}')
 where H27.hchadd  and early_H10.uc$data_date = '${DataDate_LAST}'
 ;
+
+
