@@ -707,6 +707,14 @@ ${}:用于获取配置文件中的属性值，通常用于获取写在applicatio
 	https://segmentfault.com/a/1190000021415142?utm_source=tag-newest
 ```
 
+### @Scheduled（spring 定时任务）
+
+```
+https://www.cnblogs.com/loong-hon/p/10143322.html
+```
+
+
+
 ## spring mvc
 
 ### @ControllerAdvice 
@@ -1020,9 +1028,39 @@ Bean 的作用域 scope，
 
 ```
 
+# 并发编程
+
+```
+
+```
+
+## java.util.concurrent
+
+https://www.cnblogs.com/miketwais/p/java_util_concurrent.html
+
+```
+
+```
+
+## ReentrantLock与synchronized区别
+
+https://zhuanlan.zhihu.com/p/126085068
+
+https://blog.csdn.net/chenchaofuck1/article/details/51045134
+
+https://blog.csdn.net/zxd8080666/article/details/83214089
+
+```
+
+```
+
+
+
 # Thread
 
 https://www.cnblogs.com/dolphin0520/p/3920357.html
+
+https://www.cnblogs.com/kyoner/p/12318057.html
 
 ## 两种简单用法总结
 
@@ -2540,7 +2578,15 @@ https://www.cnblogs.com/riches/p/12638551.html
 2、使用Spring的拦截器相关接口来自定义拦截器
     实现WebMvcConfigurer接口，重写addCorsMappings()方法和addInterceptors()方法【配置拦截器】
     实现HandlerInterceptor接口或者继承HandlerInterceptorAdapter，重写preHandle()方法【自定义拦截器】
-    
+```
+
+### 使用拦截器记录日志
+
+https://www.pianshen.com/article/880746260/
+
+https://blog.csdn.net/qq_31289187/article/details/83513290
+
+```
 
 ```
 
@@ -2958,6 +3004,20 @@ Spring 容器能够自动装配相互合作的bean，这意味着容器不需要
     模糊特性：自动装配不如显式装配精确，如果有可能，建议使用显式装配。
     
 ```
+
+## 限流-RateLimiter
+
+http://ifeve.com/guava-ratelimiter/
+
+https://www.cnblogs.com/xrq730/p/11025029.html
+
+https://zhuanlan.zhihu.com/p/60979444
+
+```
+
+```
+
+
 
 ## 线程池有几种，锁有哪些
 
