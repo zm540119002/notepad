@@ -1,9 +1,3 @@
-
-
-# 连接
-
-![img](https://www.pianshen.com/images/877/9ddfe4ee7e238bddc3f84ac58c9d7525.JPEG)
-
 # 语法
 
 ## case when
@@ -49,10 +43,9 @@ eg:
 
 ## SQL中on条件与where条件的区别
 
+https://www.cnblogs.com/Dreamice/p/9523533.html
+
 ```
-参考：
-	https://www.cnblogs.com/Dreamice/p/9523533.html
-	
 on、where、having的区别
 on、where、having这三个都可以加条件的子句 中，on是最先执行，where次之，having最后。有时候如果这先后顺序不影响中间结果的话，那最终结果是相同的。但因为on是先把不符合条件的记 录过滤后才进行统计，它就可以减少中间运算要处理的数据，按理说应该速度是最快的。   
     
@@ -63,5 +56,45 @@ on、where、having这三个都可以加条件的子句 中，on是最先执行�
    如果要涉及到计算的字段，就表示在没计算之前，这个字段的值是不确定的，根据上篇写的工作流程，where的作用时间是在计算之前就完成的，而having就是在计算后才起作用的，所以在这种情况下，两者的结果会不同。   
     
    在多表联接查询时，on比where更早起作用。系统首先根据各个表之间的联接条件，把多个表合成一个临时表后，再由where进行过滤，然后再计算，计 算完后再由having进行过滤。由此可见，要想过滤条件起到正确的作用，首先要明白这个条件应该在什么时候起作用，然后再决定放在那里
+```
+
+## sql各种连接
+
+![img](https://www.pianshen.com/images/877/9ddfe4ee7e238bddc3f84ac58c9d7525.JPEG)
+
+【注意】：Oracle数据库支持full join，mysql是不支持full join的，但仍然可以同过左外连接+ union+右外连接实现
+
+https://blog.csdn.net/qq_35826412/article/details/96278160
+
+```
+CREATE TABLE `test_a` (
+  `id` int ,
+  `name` varchar(32) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO test_a VALUES (1,'a1');
+INSERT INTO test_a VALUES (2,'a2');
+INSERT INTO test_a VALUES (null,'a3');
+INSERT INTO test_a VALUES (null,null);
+
+CREATE TABLE `test_b` (
+  `id` int ,
+  `name` varchar(32) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO test_b VALUES (1,'b1');
+INSERT INTO test_b VALUES (2,'b2');
+INSERT INTO test_b VALUES (null,'b3');
+INSERT INTO test_b VALUES (null,null);
+
+select * from test_a ;
+select * from test_b ;
+
+select * from TEST_A a,TEST_B b;
+select * from TEST_A a,TEST_B b where a.ID = b.ID;
+
+select * from TEST_A a inner join TEST_B b on a.ID = b.ID; 
+select * from TEST_A a left join TEST_B b on a.ID = b.ID;
+select * from TEST_A a right join TEST_B b on a.ID = b.ID; 
 ```
 
