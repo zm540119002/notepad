@@ -53,6 +53,15 @@
     SP_CLOSE_SESSION(281466386846224);
 ```
 
+## linux查看版本
+
+```
+shell不能直接查看，需先连接数据库
+/home/dmdbms/bin/disql SYSDBA/SYSDBA
+再执行sql查询
+ select * from v$version
+```
+
 
 
 # 概念

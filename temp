@@ -6,3 +6,18 @@ where H27.hchadd  and early_H10.uc$data_date = '${DataDate_LAST}'
 ;
 
 
+insert into hch_class_copy_r(class_name, uc$ds_id, uc$data_date, uc$data_batch_id, uc$tag_1500934484123648)
+select  case when !( 1=1 ) then 1 else 0 end , ${UC_DS_ID}, ${DATA_DATE}, ${DATA_BATCH_ID}, null
+ from t_stu_class D1
+join hch_class_copy as D2 on ( 1=2 )
+where  1=3 
+;
+
+
+-Xms2048m -Xmx3096m -Xmn1024m -XX:MetaspaceSize=256m -XX:+TraceClassLoading
+
+http://172.16.7.57:9001/api-convert
+http://172.16.7.57:9001/databank-authapi
+
+for (TbUcCfgDiffItem curDiffItem : diffItemList) {
+        }

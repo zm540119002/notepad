@@ -161,6 +161,16 @@ git config branch.develop.merge refs/heads/develop
 
 ```
 
+## 拉取远程所有分支
+
+```
+git branch -r | grep -v '\->' | while read remote; do git branch --track "${remote#origin/}" "$remote"; done
+git fetch --all
+git pull --al
+```
+
+
+
 ## 删除
 
 ```
@@ -425,8 +435,6 @@ git stash clear
 # 后者的所有变化都将被前者抵消，并且应用到当前分支
 $ git revert [commit]
 ```
-
-
 
 ## git branch
 

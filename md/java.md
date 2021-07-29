@@ -235,9 +235,10 @@ public class FilterConfig {
 
 ## SpringCloud获取Eureka中服务的注册信息
 
+https://blog.csdn.net/ZZY1078689276/article/details/88647051?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&dist_request_id=1328741.50950.16170906332807269&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
+
 ```
-参考：
-	https://blog.csdn.net/ZZY1078689276/article/details/88647051?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&dist_request_id=1328741.50950.16170906332807269&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
+	
 ```
 
 # Spring Boot
@@ -2785,8 +2786,6 @@ Oracle公司宣布在不久的将来（大约应在发布JDK 8的时候）会完
 使用HotSpot的JIT编译器与混合的运行时系统。
 ```
 
-
-
 # JVM
 
 https://blog.csdn.net/shengmingqijiquan/article/details/77508471
@@ -2958,6 +2957,14 @@ https://www.cnblogs.com/haimishasha/p/11229386.html
 ```
 
 ```
+
+## 有用的 jvm 参数
+
+```
+打印出类的加载顺序-XX:+TraceClassLoading
+```
+
+
 
 # 问题统计
 

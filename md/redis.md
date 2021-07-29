@@ -79,14 +79,17 @@ redis-cli -h host -p port -a password
 ```
 ping 
 select index //备注：index为(0-15)
-keys '*'
+keys * | keys '*'
+set key 456
+get key
+del key
 
 redis的连接：
     1、redis-cli 连接本地redis
     2、redis-cli -p<port>  连接指定端口的redis
     3、redis-cli -h 192.168.1.1  连接远端或本地redis
 
-查看所有key：key *
+查看所有key：keys *
 查询内容：get 或smembers  后加对应key值
 
 key的添加删除：
