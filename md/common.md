@@ -200,3 +200,103 @@ https://www.zhihu.com/question/330356466/answer/965877274
 非阻塞系统调用（non-blocking I/O system call 与 asynchronous I/O system call） 的存在可以用来实现线程级别的 I/O 并发， 与通过多进程实现的 I/O 并发相比可以减少内存消耗以及进程切换的开销。
 ```
 
+# 数据治理-新系统
+
+```
+
+```
+
+## 迁移
+
+```
+
+```
+
+### mysql
+
+```
+select version()
+
+#1、去掉 ONLY_FULL_GROUP_BY
+SELECT @@GLOBAL.sql_mode;
+set @@GLOBAL.sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'
+
+SET GLOBAL log_bin_trust_function_creators = 1;
+
+CREATE DEFINER=`dev`@`%` FUNCTION `getChildrenMenu`(menuid VARCHAR(128)) RETURNS varchar(4000) CHARSET utf8
+BEGIN
+    DECLARE oTemp VARCHAR(4000);
+    DECLARE oTempChild VARCHAR(4000);
+
+    SET oTemp = '';
+    SET oTempChild = CAST(menuid AS CHAR);
+
+    WHILE oTempChild IS NOT NULL
+    DO
+    SET oTemp = CONCAT(oTemp,',',oTempChild);
+    SELECT GROUP_CONCAT(menu_id) INTO oTempChild FROM t_sys_menu
+    WHERE FIND_IN_SET(parent_id,oTempChild) > 0;
+    END WHILE;
+    RETURN oTemp;
+END
+
+CREATE DEFINER=`dev`@`%` FUNCTION `getChildrenOrg`(orgid VARCHAR(4000)) RETURNS varchar(4000) CHARSET utf8
+BEGIN
+    DECLARE oTemp VARCHAR(4000);
+    DECLARE oTempChild VARCHAR(4000);
+
+    SET oTemp = '';
+    SET oTempChild = CAST(orgid AS CHAR);
+
+    WHILE oTempChild IS NOT NULL
+    DO
+    SET oTemp = CONCAT(oTemp,',',oTempChild);
+    SELECT GROUP_CONCAT(organizational_code) INTO oTempChild FROM t_sys_organizational_structure_config 
+    WHERE FIND_IN_SET(parent_code,oTempChild) > 0;
+    END WHILE;
+    RETURN oTemp;
+END
+
+#2、隔离级别
+    select @@transaction_isolation;
+    select @@global.transaction_isolation;
+    set session transaction isolation level read committed;
+    set global transaction isolation level read committed;
+
+#3、需要copy表数据的表：
+    select * from convert.tb_ua_cfg_var #内置变量
+    select * from convert.tb_uc_cfg_data_class #归属业务域
+    select * from convert.tb_uc_cfg_data_cust_class #一级分类
+    select * from convert.tb_uc_cfg_data_cust_class2 #二级分类
+    select * from convert.tc_gvn_system #系统名称
+    select * from convert.tb_ua_sys_data_define #字段类型
+    select * from convert.tb_uc_cfg_data_domain
+    select * from convert.tb_uc_cfg_source_system #
+    select * from convert.tb_ua_cfg_meta_rule #清洗元规则
+    
+    #tb_ua_sys_code两个库都有，记录一样的
+    select * from convert.tb_ua_sys_code #系统内置规则编码
+    select * from dev.tb_ua_sys_code #系统内置规则编码
+    
+    select * from dev.tc_gvn_db_clct_re_algorithm #字段转换方法
+```
+
+### java
+
+#### [xxl-job, admin JobLosedMonitorHelper] ERROR
+
+```
+[xxl-job, admin JobLosedMonitorHelper] ERROR [com.zaxxer.hikari.pool.HikariPool:574] - throwPoolInitializationException() - HikariCP - Exception during pool initialization.
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+解决办法在警告中已经说明：
+    1.在数据库连接的url中添加useSSL=false;
+    2.url中添加useSSL=true，并且提供服务器的验证证书。
+```
+
+# 数据治理-旧系统
+
+```
+
+```
+

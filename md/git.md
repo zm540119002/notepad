@@ -234,15 +234,15 @@ git remote -vv
 
 ```
 1：建立本地仓test 并建立追踪关系，如果建立了本地仓也建立了追踪会修改追踪关系（ 建议使用）
-	git branch --set-upstream test origin/master
+	git branch --set-upstream test origin/test
 
 2:建立test仓库 并建立追踪关系 
-	git branck --track test origin/develop
+	git branch --track test origin/test
 
 3:修改追踪关系
     切换到test，修改追踪仓库（一定要先切换）
     git checkout test
-    git branch --set-upstream-to  origin/master
+    git branch --set-upstream-to test origin/test
 
 4：另一个更为简洁的方式是初次push时，加入-u参数，
     例如git push -u origin develop或git push --set-upstream origin my_remote_branch_name
