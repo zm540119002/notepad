@@ -1800,6 +1800,14 @@ JDK和CGLib的性能对比
 
 # 常用示例
 
+## Collections
+
+https://www.cnblogs.com/fysola/p/6021134.html
+
+```
+
+```
+
 ## 5种方式获取ApplicationContext
 
 ### 1、直接注入

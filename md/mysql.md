@@ -87,6 +87,26 @@ show variables like '%slow_query_log%';
 show global status like 'slow_query';
 ```
 
+## long_query_time
+
+```
+long_query_time是一个global，session变量
+
+session变量：会话变量，每一个连接单独拥有的变量，不影响其他连接。这里修改要查询的数据库就会更改一个连接
+
+global变量：全局变量，对所有连接都有效
+
+查看：show [global | session] variables like 'long_query_time'
+
+中括号可省略，省略默认指session变量，下同
+
+编辑：set [global | session] long_query_time = 1
+set global long_query_time = 1
+set session long_query_time = 1
+ 
+关于设置了新的global long_query_time却发现还是原来的值的问题，直接不带[global | session] 查询的是session值，加上global可以发现global变量已经改变，只是当前连接值未改变。设置了global变量后，这个改变并没有立即影响到你当前连接的long_query_time，所以这里可以通过不断切换数据库，或是重启mysql来切换连接，获取最新的long_query_time
+```
+
 
 
 # 概念解析
