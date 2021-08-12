@@ -383,7 +383,7 @@ iptables通过控制端口来控制服务，而firewalld则是通过控制协议
     ping DNS服务器地址
 ```
 
-### linux文件最大连接数问题
+### linux文件最大连接数问题(Resource temporarily unavailable)
 
 ```
 描述：
@@ -401,6 +401,13 @@ iptables通过控制端口来控制服务，而firewalld则是通过控制协议
     oracle              hard    nproc   16384
     oracle              soft    nofile  1024
     oracle              hard    nofile  65536
+    
+cd /etc/security/limits.d
+vim 90-nproc.conf
+dev              soft    nproc   65535
+
+ulimit -a
+ulimit -u
 ```
 
 ### linux JAVA_HOME和 java -version不匹配
@@ -717,9 +724,14 @@ https://zhuanlan.zhihu.com/p/93553600
 
 ```
 echo $$         # 获取当前bash的进程号
+top -H -p PID
 ```
 
+### 线程
 
+```
+
+```
 
 ## 内核
 
@@ -1331,14 +1343,6 @@ systemd对应的进程管理命令是systemctl
         验证一下是否为开机启动
         [root@localhost ~]# systemctl is-enabled nginx
         [root@localhost ~]# systemctl is-enabled supervisord
-```
-
-
-
-## 进程
-
-```
-
 ```
 
 ### ps
@@ -2482,35 +2486,17 @@ Vim 有四个跟字符编码方式有关的选项，encoding、fileencoding、fi
 4. 编辑完成后保存文件时，再次对比 fileencoding 和 encoding 的值。若不同，再次调用 iconv 将即将保存的 buffer 中的文本转换为 fileencoding 所描述的字符编码方式，并保存到指定的文件中。同样，这需要调用 iconv.dll由于 Unicode 能够包含几乎所有的语言的字符，而且 Unicode 的 UTF-8 编码方式又是非常具有性价比的编码方式 (空间消耗比 UCS-2 小)，因此建议 encoding 的值设置为utf-8。这么做的另一个理由是 encoding 设置为 utf-8 时，Vim 自动探测文件的编码方式会更准确 (或许这个理由才是主要的 ;)。我们在中文 Windows 里编辑的文件，为了兼顾与其他软件的兼容性，文件编码还是设置为 GB2312/GBK 比较合适，因此 fileencoding 建议设置为 chinese (chinese 是个别名，在 Unix 里表示 gb2312，在 Windows 里表示cp936，也就是 GBK 的代码页)。
 ```
 
-### 示例
+### 中文乱码
+
+https://blog.csdn.net/weixin_36250487/article/details/79888103
 
 ```
-今天解决了vi命令打开日志文件中文总是显示乱码的问题。由于项目组中的日志包含一些特殊字符，所以使用vim打开日志文件时总是不能正确识别出文件字符编码。此时用:set fileencoding命令可以看出vim把文件编码识别成latin1。  
+vim /etc/vimrc
 
-　　在这种情况下无论终端设置成gbk还是utf-8编码，都不能正确显示中文。
-
-　　解决方法有两个：
-
-　　1 使用:e ++enc=utf-8命令强制让vim以utf-8编码重新打开文件 注意：由于我们程序有时也会输出gbk编码的中文字符日志，所以有时还会有少量乱码。
-
-　　2 在打开文件前设置好正确的fileencodings（注意这个参数比前面多了一个s，上面的是vim探测出来的文件编码，这个是可供vim选择的文件编码列表）
-
-　　 在~/.vimrc里面加上一行设置
-
-　　set fileencodings=ucs-bom,utf-8,gbk18030
-
-　　（我们项目组机器默认的fileencodings是ucs-bom,utf-8,latin1，latin1是一种兼容性很强的字符编码，这样的设置让vim很倾向于认为文件编码是latin1）  
-
-　　总结一下今天学到的vim编码知识：vim涉及字符显示的选项有三个，fileencoding文件字符编码，encoding缓冲区字符编码，termencoding终端字符编码。  
-
-　　vim显示字符的顺序:（探测文件编码，从fileencodings里面选择最合适的编码赋值给fileencoding）按fileencoding编码读取文件->将读取到的内容转成encoding编码->将encoding编码转换成termencoding打印到终端->终端(我们平时主要使用的是securecrt)按设置的编码(一般是utf8)显示字符。
-
-　　其中fileencoding必须在文件打开前设置才有效，encoding必须在vim启动前设置才有效，termencoding可以根据需要随时设置。 （之前我一直不知道这几个设置生效限制，按网上介绍修改过四个编码，但还是乱码） 
-
-　　这四个编码如果设置不统一，就很有可能出现中文乱码问题，其中前三个编码可以在vim查看，最后一个编码需要在securecrt设置查看。
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+set termencoding=utf-8
+set encoding=utf-8
 ```
-
-
 
 ## ODBC 
 

@@ -170,6 +170,39 @@ SIMPLIFIED CHINESE_CHINA.ZHS16GBK与AMERICAN_AMERICA.ZHS16GBK区别：
 	session.cookie_secure = false
 ```
 
+## Allowed memory size of 134217728 bytes exhausted (tried to allocate 2611816 bytes)
+
+```
+一个php脚本一次请求的内存空间就要超过128M，那不管你以后将memory_limit设置成多大，以后肯定有出问题的时候。
+
+究其原因，是我在在编码时，仅仅对变量赋值，却从来没有 unset ($var) 过。导致了内存占用越来越多，所以以后一个变量不再使用之后，一定要记得unset掉它。
+
+memory_limit的内存分配，标配是128M。一旦独立的线程超过了128M，那PHP会报错： Fatal error: Allowed memory size of 33554432 bytes对于8G内存的服务器，如果同时并发的响应达到50,每个都是128M的峰值，那估计也是服务器会卡死的时候。 
+
+这里有三种解决方案 ：
+1、修改php.ini （改配置）
+    memory_limit = 128
+    这种方法需要重启服务器，很显然，此方法对虚拟机有限制。
+    
+2、通过ini_set函数修改配置选项值 （改代码）
+	ini_set (‘memory_limit’, ‘128M’) ;
+
+3、直接取消PHP的内存限制（改代码）
+	ini_set ("memory_limit","-1");
+
+值得注意的是：如果通过上面的方式修改后还会报这个错误，那你要检查一下你写的代码是否存在效率问题。（举例：从数据库查询到的数据加载到内存里面，然后php 进行数据处理，如果代码写的不是很严谨存在效率问题，特别是数据量非常大的时候也会导致内存耗尽）
+
+本人遇到这个问题就是因为最开始做公司后台管理系统某个统计功能的时候代码写的不是很严谨，导致后来数据量达到一定量后，出现了内存耗尽。当然咯，自己留的坑最后还得自己填上。本人最终通过重构之前的代码，优化了代码执行效率，解决了内存耗尽问题。
+```
+
+## phpExcel导出大量数据出现内存溢出错误的解决方法
+
+```
+
+```
+
+
+
 # php-fpm
 
 ```
@@ -200,9 +233,7 @@ vim /usr/local/php/etc/php-fpm.conf
 pid = /usr/local/php/var/run/php-fpm.pid
 ```
 
-
-
-# **安装**
+# 安装
 
 ## php7.2.31
 
@@ -289,8 +320,6 @@ cd /usr/local/src/php-7.2.31/ext/gd
 /usr/local/php/bin/phpize
 ./configure --with-php-config=/usr/local/php/bin/php-config  --with-jpeg-dir=/usr/lib64  --with-png-dir=/usr/lib64   --with-freetype-dir=/usr/lib64
 ```
-
-pdo_oci
 
 # 注意事项
 
@@ -399,7 +428,33 @@ echo $a;
     floor(3.64159);    // 3
 ```
 
+## 上传相关参数
 
+```
+php.ini 配置对php上传文件大小的影响参数有： 
+配置项 可能值 功能描述 
+file_uploads ON 确定服务器上的PHP脚本是否可以接受HTTP文件上传 
+memory_limit 8M 设置脚本可以分配的最大内存量，防止失控的脚本独占服务器内存 
+upload_max_filesize 改为8M 限制PHP处理上传文件的最大值，此值必须小于post_max_size值 
+
+post_max_size 改为16M 限制通过POST方法可以接受的信息最大量
+
+php.ini配置信息可以在前台输入<?php echo phpinfo();?>进行查看php.ini目录信息。
+
+但如果要上传>8M的大体积文件，只设置上述四项还一定能行的通。进一步配置以下的参数 
+
+max_execution_time = 600 ;每个PHP页面运行的最大时间值(秒)，默认30秒 
+max_input_time = 600 ;每个PHP页面接收数据所需的最大时间，默认60秒 
+memory_limit = 8m ;每个PHP页面所吃掉的最大内存，默认8M 
+
+max_execution_time = 18000
+max_input_time = 18000
+memory_limit = 2048m
+upload_max_filesize = 2000m
+post_max_size = 80m
+
+max_file_uploads = 800
+```
 
 # session
 

@@ -107,6 +107,26 @@ from a left join (select id, 1  as check_id from b) b on (a.id = b.id)
 ssh -L 9527:172.16.7.56:80 -Ng 172.16.7.71
 ```
 
+# 峰哥
+
+## 分享一个根据traceId查找到错误的源头例子
+
+1.在性能测试的231上发现错误日志，找到traceId
+
+![image-20210810112045192](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20210810112045192.png)
+
+2.根据traceId在日志里找到请求接口地址；
+
+![image-20210810112125831](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20210810112125831.png)
+
+3.找到具体代码位置，错误原因：data_govern模块配置的是dev库，但这里至今调用了convert库的操作，所以日志提示找不到表
+
+![image-20210810112231301](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20210810112231301.png)
+
+错误原因：data_govern模块配置的是dev库，但这里至今调用了convert库的操作，所以日志提示找不到表
+
+
+
 # 流程配置
 
 ```
@@ -298,5 +318,141 @@ com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failur
 
 ```
 
+```
+
+## 迁移
+
+```
+
+```
+
+## 存储过程
+
+```
+
+```
+
+### 稽核点没有要执行的任务，请先配置好执行流程及环节
+
+```
+  SELECT *  FROM TB_UC_TASK WHERE sub_service_id = 1753487 ORDER BY source_id, source_task_sequ
+```
+
+## 172.16.7.56
+
+### 前端
+
+```
+
+```
+
+### 后端（172.16.7.71）
+
+```
+旧系统后台逻辑分几块：
+    1 存储过程实现的配置生成逻辑 （前台录入数据后，调用相应存储过程将配置转成sql任务）
+    2 存储过程实现的治理点调度逻辑（负责定时生成治理点任务）
+    3 golang实现的任务调度逻辑（负责按流程图顺序启动治理点内的任务 ）
+    4 shell实现的任务执行逻辑（负责执行具体某个任务的sql逻辑，主要是调用达梦客户端disql）
+    5 c语言实现的采集程序和golang实现的入库逻辑
+
+关键业务流程说明：
+    用户在前台配置任务->php服务将配置保存到相应配置表->触发器记录配置表数据变化情况->php服务调用存储过程，分析配置生成sql任务（此时部分sql含有变量）
+    存储过程job定期扫描，发现符合启动时间的治理点，则将该治理点下的sql任务进行变量替换，生成调度任务，任务状态统一置为待调度
+    golang调度程序根据治理点流程图，按顺序将调度任务状态改为待执行
+    shell进程获取待执行的调度任务sql，调用disql（或者sqlplus）执行，将结果登记回调度任务
+    存储过程job将所有调度任务均完成的治理点状态改为已完成或失败，并开始调度更低优先级的治理点
+    
+/root/filecollection/start.sh
+/root/user/zhanglw/src/filecollection/start.sh
+/home/lugl/unify_audit/bin/start.sh
+/home/lugl/unify_audit/src/filecollection/start.sh
+/home/dev/gocode/scheduler/src/scheduler/start.sh
+/home/dev/gocode/fileimport/start.sh
+/home/dev/gocode/tableclean/start.sh
+/home/dev/gocode/data_clean/src/onlineClean/start.sh
+/home/dev/gocode/data_clean/src/fileServer/start.sh
+/home/dev/gocode/syncdb/start.sh
+/home/dev/bin/tableclean/start.sh
+/home/dev/iperf/start.sh
+/home/htgx/bin/tableclean/start.sh
+/home/htgx/bin/fileimport/start.sh
+/home/htgx/bin/syncdb/start.sh
+/home/htgx/bin/csvimport/start.sh
+/sunshine/develop/v3.0/tbas/product/tbassh/program/unify_audit/bin/start.sh
+/sunshine/develop/v3.0/tbas/product/tbassh/program/unify_audit/src/filecollection/start.sh
+/sunshine/develop/v3.0/tbas/product/tbassh/program/unify_audit/src/filecollection.bak/start.sh
+/data/zhiyun/admin/pkgadmin2/start.sh
+
+
+nohup sh /home/htgx/shell/bin/ua_run_control.sh &
+sh /home/dev/gocode/scheduler/src/scheduler/start.sh
+```
+
+#### 启动任务语句执行脚本ua_run_control.sh
+
+```
+chmod -R +x /home/htgx/shell/bin
+cd /home/htgx/shell/bin/
+nohup sh  ua_run_control.sh &
+后台脚本 ua_run_control.sh
+
+脚本日志比较分散，一部分在nohup.out，一部分在
+/home/htgx/src/shell/running/
+文件是隐藏的，要用ls -lrta
+
+如果任务启动后一直处于等待执行状态，一般是这个脚本出问题了
+
+如果脚本启动后迅速退出，一般是evn.sh里面配置的用户名和密码有错。
+```
+
+#### 启动前后端交互程序ua_cmd_test
+
+```
+cd /home/htgx/c/ua_cmd_test
+make clean
+make
+
+这个程序现在比较少用了，是通过数据库管道进行前后通信
+```
+
+#### 启动采集程序filecollection
+
+```
+cd /home/htgx/c/filecollection
+make 
+mv filecollection* ..
+cd ..
+
+启动前需要修改采集日志
+update tb_cfg_filecollection set program_id = 21  ;
+update tb_cfg_filecollection  set program_id = 20,  ftp_host = 'htgx:Aacd!234:127.0.0.1:22', local_host = '127.0.0.1', ftp_path = '/home/htgx/data_file/xml',
+local_path = '/home/htgx/src/go/fileimport/target', min = '*/2'  where ftpparm_id = 1740138;
+
+sh start.sh
+
+这个程序主要任务是将南网的gis文件和计量文件通过sftp采集到本机，由入库程序入库使用。
+
+程序测试方法：
+v_file_name="中坑变电站_725_FEDR_20200511081551.XML"
+echo test > ${v_file_name}
+touch -d 20210623 ${v_file_name}
+v_gbk_name=$(ls **725_FEDR_20200511081551.XML|iconv -f utf8 -t gbk)
+mv  ${v_file_name} /home/htgx/data_file/xml/${v_gbk_name}
+l  /home/htgx/data_file/xml/
+# 过一会再看，文件是否正确移动到/home/htgx/src/go/fileimport/target
+```
+
+#### 启动调度程序scheduler
+
+```
+cd /home/dev/gocode/scheduler/src/scheduler
+go build
+
+sh /home/dev/gocode/scheduler/src/scheduler/start.sh
+
+这个程序主要负责将符合运行条件的任务状态改为待执行，另外也会负责扫描工单附件任务，如果有的话执行sql生成工单附件
+
+如果任务状态一直是等待中，一般是这个程序出错
 ```
 

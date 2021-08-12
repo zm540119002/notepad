@@ -1,3 +1,17 @@
+# 概念解析
+
+## 什么是JavaBean、bean? 什么是POJO、PO、DTO、VO、BO ? 什么是EJB、EntityBean？
+
+https://blog.csdn.net/chenchunlin526/article/details/69939337?utm_medium=distribute.pc_relevant_download.none-task-blog-2~default~BlogCommendFromBaidu~default-2.test_version_3&depth_1-utm_source=distribute.pc_relevant_download.none-task-blog-2~default~BlogCommendFromBaidu~default-2.test_version_
+
+https://blog.csdn.net/ipenrojun/article/details/8222318?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control
+
+https://blog.csdn.net/qq_35246620/article/details/77247427
+
+```
+
+```
+
 # shiro
 
 ## 使用注解控制鉴权授权
@@ -2913,6 +2927,14 @@ S0CMX:年轻代中第一个survivor(幸存区)的最大容量(字节)
 S1CMX:年轻代中第二个survivor(幸存区)的最大容量(字节)
 ECMX:年轻代中Eden(伊甸园)的最大容量(字节)
 DSS:当前需要survivor(幸存区)的容量(字节)
+```
+
+### java.lang.OutOfMemoryError: unable to create new native thread
+
+https://www.cnblogs.com/woniu4/p/12359575.html
+
+```
+
 ```
 
 

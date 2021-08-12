@@ -232,6 +232,33 @@ WHEN NOT MATCHED THEN
 
 ```
 
+### Oracle 将旧表插入表结构一致的新表中，并添加自增主键
+
+https://www.cnblogs.com/leeniux/p/13560514.html
+
+```
+select * from SJY_ZNW3GCWBB
+
+alter table SJY_ZNW3GCWBB drop column id;
+
+drop table zm_test
+create table zm_test as select * from SJY_ZNW3GCWBB where 1=0
+select * from zm_test 
+alter table zm_test add id number
+alter table zm_test add constraint pk_id primary key (id)
+
+create sequence zm_sequence
+minvalue 1
+maxvalue 9999999999
+start with 1
+increment by 1
+cache 20;
+
+ select zm_sequence.nextval from dual
+ 
+insert into zm_test select to_number(zm_sequence.nextval),t.* from SJY_ZNW3GCWBB t
+```
+
 ### 示例
 
 ```
